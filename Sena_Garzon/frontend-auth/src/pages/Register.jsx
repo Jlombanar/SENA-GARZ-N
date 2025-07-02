@@ -11,14 +11,16 @@ const Register = () => {
     nombre: "",
     correo: "",
     password: "",
-    rol: "user",
+    rol: "aprendiz", // valor por defecto
   });
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
-      if (storedUser.rol === "admin" || storedUser.isAdmin) {
+      if (storedUser.rol === "admin") {
         navigate("/admin-dashboard");
+      } else if (storedUser.rol === "instructor") {
+        navigate("/instructor-dashboard");
       } else {
         navigate("/dashboard");
       }
@@ -51,9 +53,17 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-white px-4">
       <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Crear Cuenta</h2>
+        <div className="text-center mb-6">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
+            alt="Logo SENA"
+            className="h-12 mx-auto mb-2"
+          />
+          <h2 className="text-2xl font-bold text-green-700">Registro SENA Garzón</h2>
+          <p className="text-sm text-gray-600">Plataforma educativa complementaria</p>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -62,7 +72,7 @@ const Register = () => {
             placeholder="Nombre completo"
             value={formData.nombre}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
             required
           />
 
@@ -72,7 +82,7 @@ const Register = () => {
             placeholder="Correo electrónico"
             value={formData.correo}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
             required
           />
 
@@ -83,7 +93,7 @@ const Register = () => {
               placeholder="Contraseña"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 pr-10"
               required
             />
             <div
@@ -94,22 +104,34 @@ const Register = () => {
             </div>
           </div>
 
+          <select
+            name="rol"
+            value={formData.rol}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+            required
+          >
+            <option value="">Selecciona tu rol</option>
+            <option value="aprendiz">Aprendiz</option>
+            <option value="instructor">Instructor</option>
+          </select>
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
+            className="w-full bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition duration-200"
           >
             Registrarse
           </button>
 
           <p className="text-center text-gray-600 mt-4 text-sm">
-            ¿Ya tienes cuenta?{" "}
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">
+            ¿Ya tienes cuenta?{' '}
+            <Link to="/login" className="text-green-700 hover:underline font-medium">
               Inicia sesión
             </Link>
           </p>
 
           <p className="text-center text-gray-600 mt-2 text-sm">
-            <Link to="/" className="text-blue-600 hover:underline font-medium">
+            <Link to="/" className="text-green-700 hover:underline font-medium">
               Volver al inicio
             </Link>
           </p>

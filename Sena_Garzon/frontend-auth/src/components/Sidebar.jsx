@@ -12,7 +12,6 @@ import {
 const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
   const [user, setUser] = useState(propUser || null);
 
-  // Sincroniza con localStorage en caso de recarga o delay de props
   useEffect(() => {
     if (!propUser) {
       const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -23,26 +22,34 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
   }, [propUser]);
 
   const isAdmin = user?.rol === "admin";
+  const isInstructor = user?.rol === "instructor";
 
   const adminItems = [
     { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
     { name: "Usuarios", icon: <FaUser />, path: "/admin/usuarios" },
-    { name: "Productos", icon: <FaBox />, path: "/admin/productos" },
+    { name: "Cursos", icon: <FaBox />, path: "/admin/cursos" },
+    { name: "Reportes", icon: <FaChartBar />, path: "/admin/reportes" },
   ];
 
-  const userItems = [
+  const instructorItems = [
     { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
+    { name: "Cursos", icon: <FaBox />, path: "/instructor/cursos" },
     { name: "Perfil", icon: <FaUser />, path: "/perfil" },
-    { name: "Pedidos", icon: <FaBox />, path: "/pedidos" },
   ];
 
-  const menuItems = isAdmin ? adminItems : userItems;
+  const aprendizItems = [
+    { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
+    { name: "Mis Cursos", icon: <FaBox />, path: "/aprendiz/cursos" },
+    { name: "Perfil", icon: <FaUser />, path: "/perfil" },
+  ];
+
+  const menuItems = isAdmin ? adminItems : isInstructor ? instructorItems : aprendizItems;
 
   return (
     <>
       {menuOpen && (
         <div
-          className="fixed inset-0 bg-gradient-to-br from-white/60 via-blue-100/40 to-transparent backdrop-blur-sm z-10 md:hidden"
+          className="fixed inset-0 bg-gradient-to-br from-white/60 via-green-100/40 to-transparent backdrop-blur-sm z-10 md:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -50,11 +57,11 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
       <div
         className={`bg-white w-64 shadow-lg fixed md:relative z-20 transition-transform duration-300 md:translate-x-0 ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:block flex flex-col justify-between min-h-screen`}
+        } md:block flex flex-col justify-between min-h-screen border-r border-green-200`}
       >
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-red-600">Panel</h2>
+            <h2 className="text-xl font-bold text-green-700">SENA Panel</h2>
             <button className="md:hidden" onClick={() => setMenuOpen(false)}>
               <FaTimes size={20} />
             </button>
@@ -62,7 +69,7 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
 
           <div className="text-gray-600 mb-6">
             <p className="font-medium">Bienvenido,</p>
-            <p className="font-semibold">{user?.nombre || "Usuario"}</p>
+            <p className="font-semibold text-gray-900">{user?.nombre || "Usuario"}</p>
             <p className="text-sm text-gray-500 italic capitalize">
               {user?.rol || "usuario"}
             </p>
@@ -72,7 +79,7 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
             <Link
               to="/"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 text-gray-700 hover:text-red-600 transition-colors"
+              className="flex items-center gap-3 text-gray-700 hover:text-green-700 transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +103,7 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
                 key={item.name}
                 to={item.path}
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 text-gray-700 hover:text-red-600 transition-colors"
+                className="flex items-center gap-3 text-gray-700 hover:text-green-700 transition-colors"
               >
                 {item.icon}
                 {item.name}
@@ -108,7 +115,7 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
         <div className="p-4">
           <button
             onClick={onLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 w-full"
+            className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 w-full"
           >
             Cerrar sesión
           </button>

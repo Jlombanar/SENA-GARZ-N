@@ -47,6 +47,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        
 
         {/* rutas protegidas del panel admin */}
         <Route
@@ -56,6 +57,7 @@ const App = () => {
               <AdminLayout user={user} onLogout={onLogout} />
             </AdminRoute>
           }
+          
         >
           <Route index element={<AdminWelcome user={user} />} />
           <Route path="usuarios" element={<Usuarios />} />
