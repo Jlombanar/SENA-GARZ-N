@@ -1,7 +1,7 @@
-import { FaSearch, FaBox } from "react-icons/fa";
+import { FaSearch, FaChalkboardTeacher } from "react-icons/fa";
 
-const AdminProductsTable = ({
-  productos,
+const AdminCursoTable = ({
+  cursos,
   onEdit,
   onDelete,
   onCreate,
@@ -15,14 +15,14 @@ const AdminProductsTable = ({
     <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-5xl mx-auto mt-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <FaBox className="text-green-700" />
-          Lista de Productos
+          <FaChalkboardTeacher className="text-green-700" />
+          Lista de Cursos
         </h2>
         <button
           onClick={onCreate}
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
         >
-          + Nuevo Producto
+          + Nuevo Curso
         </button>
       </div>
 
@@ -49,31 +49,31 @@ const AdminProductsTable = ({
             </tr>
           </thead>
           <tbody>
-            {productos.map((p) => (
-              <tr key={p._id} className="bg-gray-50 hover:bg-green-50 rounded transition">
+            {cursos.map((curso) => (
+              <tr key={curso._id} className="bg-gray-50 hover:bg-green-50 rounded transition">
                 <td className="px-4 py-3">
-                  {p.imagen ? (
+                  {curso.imagen ? (
                     <img
-                      src={`http://localhost:5000/uploads/${p.imagen}`}
-                      alt="producto"
+                      src={`http://localhost:5000/uploads/${curso.imagen}`}
+                      alt="curso"
                       className="h-12 w-12 object-cover rounded-md"
                     />
                   ) : (
                     <span className="text-gray-400 italic">Sin imagen</span>
                   )}
                 </td>
-                <td className="px-4 py-3 font-medium text-gray-900">{p.nombre}</td>
-                <td className="px-4 py-3 text-gray-700">{p.cantidad}</td>
-                <td className="px-4 py-3 text-gray-700">${p.valor}</td>
+                <td className="px-4 py-3 font-medium text-gray-900">{curso.nombre}</td>
+                <td className="px-4 py-3 text-gray-700">{curso.cantidad}</td>
+                <td className="px-4 py-3 text-gray-700">${curso.valor}</td>
                 <td className="px-4 py-3 text-center space-x-2">
                   <button
-                    onClick={() => onEdit(p)}
+                    onClick={() => onEdit(curso)}
                     className="px-4 py-1 text-sm font-medium text-white bg-yellow-500 rounded hover:bg-yellow-600"
                   >
                     Editar
                   </button>
                   <button
-                    onClick={() => onDelete(p._id)}
+                    onClick={() => onDelete(curso._id)}
                     className="px-4 py-1 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700"
                   >
                     Eliminar
@@ -106,4 +106,4 @@ const AdminProductsTable = ({
   );
 };
 
-export default AdminProductsTable;
+export default AdminCursoTable;

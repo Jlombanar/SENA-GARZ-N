@@ -104,17 +104,7 @@ const Register = () => {
             </div>
           </div>
 
-          <select
-            name="rol"
-            value={formData.rol}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-            required
-          >
-            <option value="">Selecciona tu rol</option>
-            <option value="aprendiz">Aprendiz</option>
-            <option value="instructor">Instructor</option>
-          </select>
+         
 
           <button
             type="submit"

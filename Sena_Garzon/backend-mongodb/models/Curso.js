@@ -1,6 +1,7 @@
+// models/Curso.js
 import mongoose from "mongoose";
 
-const productSchema = new mongoose.Schema(
+const cursoSchema = new mongoose.Schema(
   {
     nombre: { type: String, required: true },
     cantidad: { type: Number, required: true },
@@ -10,4 +11,5 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Product", productSchema);
+const Curso = mongoose.models.Curso || mongoose.model("Curso", cursoSchema);
+export default Curso;

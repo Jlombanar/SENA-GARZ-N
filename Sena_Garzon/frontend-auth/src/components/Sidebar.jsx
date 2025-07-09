@@ -27,19 +27,19 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
   const adminItems = [
     { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
     { name: "Usuarios", icon: <FaUser />, path: "/admin/usuarios" },
-    { name: "Cursos", icon: <FaBox />, path: "/admin/cursos" },
+    { name: "Curso", icon: <FaBox />, path: "/admin/curso" },
     { name: "Reportes", icon: <FaChartBar />, path: "/admin/reportes" },
   ];
 
   const instructorItems = [
     { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
-    { name: "Cursos", icon: <FaBox />, path: "/instructor/cursos" },
+    { name: "Curso", icon: <FaBox />, path: "/instructor/curso" },
     { name: "Perfil", icon: <FaUser />, path: "/perfil" },
   ];
 
   const aprendizItems = [
     { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
-    { name: "Mis Cursos", icon: <FaBox />, path: "/aprendiz/cursos" },
+    { name: "Mis Curso", icon: <FaBox />, path: "/aprendiz/curso" },
     { name: "Perfil", icon: <FaUser />, path: "/perfil" },
   ];
 

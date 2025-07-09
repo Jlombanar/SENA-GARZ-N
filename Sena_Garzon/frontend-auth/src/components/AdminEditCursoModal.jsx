@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-const AdminEditProductsModal = ({
-  product,
+const AdminEditCursoModal = ({
+  curso,
   onClose,
   onChange,
   onSave,
   onCreate,
   isEditing,
 }) => {
-  if (!product) return null;
+  if (!curso) return null;
 
   const [previewImage, setPreviewImage] = useState(
-    product.imagen && typeof product.imagen === 'string'
-      ? `http://localhost:5000/uploads/${product.imagen}`
+    curso.imagen && typeof curso.imagen === 'string'
+      ? `http://localhost:5000/uploads/${curso.imagen}`
       : null
   );
 
@@ -20,7 +20,7 @@ const AdminEditProductsModal = ({
     const file = e.target.files[0];
     if (file) {
       setPreviewImage(URL.createObjectURL(file));
-      onChange({ ...product, imagen: file });
+      onChange({ ...curso, imagen: file });
     }
   };
 
@@ -41,31 +41,31 @@ const AdminEditProductsModal = ({
         className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-md animate-fade-in scale-100 transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-red-600">
-          {isEditing ? "Editar Producto" : "Nuevo Producto"}
+        <h2 className="text-2xl font-bold mb-6 text-center text-green-700">
+          {isEditing ? "Editar Curso" : "Nuevo Curso"}
         </h2>
 
         <div className="space-y-4">
           <input
             type="text"
-            value={product.nombre}
-            onChange={(e) => onChange({ ...product, nombre: e.target.value })}
-            className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-red-400 outline-none"
-            placeholder="Nombre del producto"
+            value={curso.nombre}
+            onChange={(e) => onChange({ ...curso, nombre: e.target.value })}
+            className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-green-400 outline-none"
+            placeholder="Nombre del curso"
           />
           <input
             type="number"
-            value={product.cantidad}
-            onChange={(e) => onChange({ ...product, cantidad: e.target.value })}
-            className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-red-400 outline-none"
+            value={curso.cantidad}
+            onChange={(e) => onChange({ ...curso, cantidad: e.target.value })}
+            className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-green-400 outline-none"
             placeholder="Cantidad"
           />
           <input
             type="number"
-            value={product.valor}
-            onChange={(e) => onChange({ ...product, valor: e.target.value })}
-            className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-red-400 outline-none"
-            placeholder="valor"
+            value={curso.valor}
+            onChange={(e) => onChange({ ...curso, valor: e.target.value })}
+            className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-green-400 outline-none"
+            placeholder="Valor"
           />
 
           <input
@@ -92,9 +92,9 @@ const AdminEditProductsModal = ({
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
           >
-            {isEditing ? "Guardar Cambios" : "Crear Producto"}
+            {isEditing ? "Guardar Cambios" : "Crear Curso"}
           </button>
         </div>
       </div>
@@ -102,4 +102,4 @@ const AdminEditProductsModal = ({
   );
 };
 
-export default AdminEditProductsModal;
+export default AdminEditCursoModal;

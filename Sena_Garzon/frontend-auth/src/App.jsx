@@ -11,13 +11,12 @@ import AdminLayout from "./components/AdminLayout";
 import AdminRoute from "./components/AdminRoute";
 import PrivateRoute from "./components/PrivateRoute";
 import Usuarios from "./pages/admin/UserList";
-import Productos from "./pages/admin/Productos";
+import Curso from "./pages/admin/Curso"; // <- Renombrado correctamente
 import Reportes from "./pages/admin/Reportes";
 import AdminWelcome from "./components/Welcome";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -47,7 +46,6 @@ const App = () => {
             </PrivateRoute>
           }
         />
-        
 
         {/* rutas protegidas del panel admin */}
         <Route
@@ -57,11 +55,10 @@ const App = () => {
               <AdminLayout user={user} onLogout={onLogout} />
             </AdminRoute>
           }
-          
         >
           <Route index element={<AdminWelcome user={user} />} />
           <Route path="usuarios" element={<Usuarios />} />
-          <Route path="productos" element={<Productos />} />
+          <Route path="curso" element={<Curso />} /> {/* Aquí cambiamos productos por cursos */}
           <Route path="reportes" element={<Reportes />} />
         </Route>
 
