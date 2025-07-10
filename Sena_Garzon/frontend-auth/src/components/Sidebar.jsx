@@ -24,12 +24,14 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
   const isAdmin = user?.rol === "admin";
   const isInstructor = user?.rol === "instructor";
 
-  const adminItems = [
-    { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
-    { name: "Usuarios", icon: <FaUser />, path: "/admin/usuarios" },
-    { name: "Curso", icon: <FaBox />, path: "/admin/curso" },
-    { name: "Reportes", icon: <FaChartBar />, path: "/admin/reportes" },
-  ];
+const adminItems = [
+  { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
+  { name: "Usuarios", icon: <FaUser />, path: "/admin/usuarios" },
+  { name: "Curso", icon: <FaBox />, path: "/admin/curso" },
+  { name: "Instructores", icon: <FaUser />, path: "/admin/instructores" }, // ✅ añadido
+  { name: "Reportes", icon: <FaChartBar />, path: "/admin/reportes" },
+];
+
 
   const instructorItems = [
     { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },

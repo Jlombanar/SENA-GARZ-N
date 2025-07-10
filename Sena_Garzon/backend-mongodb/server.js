@@ -3,7 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
-import cursoRoutes from './routes/cursoRoutes.js'; // ✅ Cambiado aquí
+import cursoRoutes from './routes/cursoRoutes.js'; 
+import instructorRoutes from './routes/instructorRoutes.js';// ✅ Cambiado aquí
 
 dotenv.config();
 connectDB();
@@ -15,8 +16,12 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api/cursos', cursoRoutes); // ✅ Cambiado aquí
 app.use('/uploads', express.static('uploads'));
+app.use('/api/instructores', instructorRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`);
 });
+
+app.use('/api/instructores', instructorRoutes);
+

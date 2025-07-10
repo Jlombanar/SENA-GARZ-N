@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaArrowRight, FaSignInAlt } from "react-icons/fa";
+
+// Colores oficiales del SENA
+const SENA_GREEN = '#3C8A34';
+const SENA_WHITE = '#FFFFFF';
 
 const Login = () => {
   const [correo, setCorreo] = useState("");
@@ -39,77 +43,119 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-white px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md">
-        <div className="text-center mb-6">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
-            alt="Logo SENA"
-            className="h-12 mx-auto mb-2"
-          />
-          <h2 className="text-2xl font-bold text-green-700">Ingreso a SENA Garzón</h2>
-          <p className="text-sm text-gray-600">Plataforma educativa complementaria</p>
+    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] px-4">
+      {/* Diseño de fondo innovador */}
+      <div className="absolute inset-0 overflow-hidden z-0">
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-[#3C8A34] to-[#3C8A34]/80"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#3C8A34]/10 rounded-full transform translate-x-1/2 translate-y-1/2"></div>
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-[#3C8A34]/20 rounded-full"></div>
+      </div>
+
+      {/* Tarjeta de login */}
+      <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+        {/* Encabezado con efecto de onda */}
+        <div className="relative h-24 bg-[#3C8A34] flex items-center justify-center">
+          <div className="absolute -bottom-1 w-full">
+            <svg viewBox="0 0 500 20" className="w-full h-8">
+              <path 
+                d="M0,10 C150,25 350,-5 500,10 L500,0 L0,0 Z" 
+                fill="#FFFFFF"
+              ></path>
+            </svg>
+          </div>
+          <div className="flex items-center space-x-3 z-10">
+            <div className="bg-white p-2 rounded-lg shadow-md">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
+                alt="Logo SENA"
+                className="h-10"
+              />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Iniciar Sesión</h2>
+          </div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Correo institucional"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-            required
-          />
+        <div className="p-8">
+          <p className="text-center text-gray-600 mb-6">
+            Accede a la plataforma educativa del SENA Garzón
+          </p>
 
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 pr-10"
-              required
-            />
-            <div
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600"
-            >
-              {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+          <form onSubmit={handleLogin} className="space-y-5">
+            {/* Campo de correo */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#3C8A34]">
+                <FaEnvelope size={16} />
+              </div>
+              <input
+                type="email"
+                placeholder="Correo institucional"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border-b-2 border-gray-300 focus:border-[#3C8A34] focus:outline-none bg-transparent transition duration-200"
+                required
+              />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="w-full bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition duration-200"
-          >
-            Iniciar Sesión
-          </button>
+            {/* Campo de contraseña */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#3C8A34]">
+                <FaLock size={16} />
+              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-10 py-3 border-b-2 border-gray-300 focus:border-[#3C8A34] focus:outline-none bg-transparent transition duration-200"
+                required
+              />
+              <div
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-400 hover:text-[#3C8A34] transition duration-200"
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </div>
+            </div>
 
-          <p className="text-center text-gray-600 text-sm">
-            <a
-              href="/forgot-password"
-              className="text-green-700 hover:underline font-medium"
+            {/* Enlace de contraseña olvidada */}
+            <div className="text-right">
+              <Link 
+                to="/forgot-password" 
+                className="text-sm text-[#3C8A34] hover:underline font-medium"
+              >
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
+
+            {/* Botón de login */}
+            <button
+              type="submit"
+              className="w-full flex items-center justify-center space-x-2 bg-[#3C8A34] text-white px-6 py-3 rounded-lg hover:bg-[#2d6a28] transition duration-200 shadow-md hover:shadow-lg"
             >
-              ¿Olvidaste tu contraseña?
-            </a>
-          </p>
+              <FaSignInAlt />
+              <span>Iniciar Sesión</span>
+            </button>
 
-          <p className="text-center text-gray-600 mt-4 text-sm">
-            ¿No tienes cuenta?{' '}
-            <a
-              href="/register"
-              className="text-green-700 hover:underline font-medium"
-            >
-              Regístrate
-            </a>
-          </p>
-
-          <p className="text-center text-gray-600 mt-4 text-sm">
-            <a href="/" className="text-green-700 hover:underline font-medium">
-              Volver al inicio
-            </a>
-          </p>
-        </form>
+            {/* Enlaces adicionales */}
+            <div className="flex flex-col items-center space-y-3 mt-6">
+              <Link 
+                to="/register" 
+                className="text-sm text-[#3C8A34] hover:underline font-medium flex items-center"
+              >
+                ¿No tienes cuenta? Regístrate aquí
+              </Link>
+              <Link 
+                to="/" 
+                className="text-sm text-gray-600 hover:text-[#3C8A34] transition duration-200 flex items-center"
+              >
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al inicio
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

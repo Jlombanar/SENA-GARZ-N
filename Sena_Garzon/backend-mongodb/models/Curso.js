@@ -7,6 +7,11 @@ const cursoSchema = new mongoose.Schema(
     cantidad: { type: Number, required: true },
     valor: { type: Number, required: true },
     imagen: { type: String },
+    instructorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );

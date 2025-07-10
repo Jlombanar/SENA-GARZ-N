@@ -21,12 +21,17 @@ export const register = async (req, res) => {
     await newUser.save();
 
     // Enviar correo de bienvenida
-    const html = `
-      <h2>¡Bienvenido a la plataforma, ${nombre}!</h2>
-      <p>Tu cuenta ha sido creada exitosamente con el correo <strong>${correo}</strong>.</p>
-      <p>Gracias por confiar en nosotros.</p>
-    `;
-    await sendEmail(correo, '🎉 Bienvenido a la plataforma', html);
+  const html = `
+  <div style="font-family: Arial, sans-serif; color: #333;">
+    <h2 style="color: #1A6C37;">¡Bienvenido a la plataforma SENA Garzón, ${nombre}!</h2>
+    <p>Nos complace informarte que tu cuenta ha sido creada exitosamente con el correo: <strong>${correo}</strong>.</p>
+    <p>A partir de ahora podrás acceder a nuestra plataforma de formación, donde encontrarás una variedad de <strong>cursos complementarios</strong> diseñados para fortalecer tus habilidades y conocimientos.</p>
+    <p>Te invitamos a explorar los contenidos, inscribirte en los cursos de tu interés y continuar creciendo con el respaldo del <strong>SENA Garzón</strong>.</p>
+    <p style="margin-top: 20px;">Gracias por formar parte de nuestra comunidad de aprendizaje.</p>
+    <p style="color: #1A6C37;"><strong>Equipo SENA Garzón</strong></p>
+  </div>
+`;
+await sendEmail(correo, '🎓 Bienvenido a SENA Garzón - Plataforma de Cursos Complementarios', html);
 
     const userWithoutPassword = {
       _id: newUser._id,
