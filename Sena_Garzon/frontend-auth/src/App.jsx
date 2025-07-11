@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
@@ -26,9 +25,14 @@ import AdminWelcome from "./components/Welcome";
 
 // Panel Instructor
 import InstructorLayout from "./components/InstructorLayout";
-
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
-import InstructorCursos from "./pages/instructor/InstructorCursos"; // Cursos del instructor
+import InstructorCursos from "./pages/instructor/InstructorCursos";
+
+// Panel Usuario
+import UserLayout from "./components/UserLayout";
+import Dashboard from "./pages/Dashboard"; // dashboard del usuario
+import Miscurso from "./pages/user/Miscurso"; // cursos del usuario
+import UserProfile from "./pages/user/UserProfile"; // perfil del usuario (asegúrate de crearlo)
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -49,15 +53,19 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* Ruta general para usuario autenticado */}
+        {/* Panel del usuario */}
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <UserLayout user={user} onLogout={onLogout} />
             </PrivateRoute>
           }
-        />
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="miscurso" element={<Miscurso />} />
+          <Route path="perfil" element={<UserProfile />} />
+        </Route>
 
         {/* Panel del administrador */}
         <Route

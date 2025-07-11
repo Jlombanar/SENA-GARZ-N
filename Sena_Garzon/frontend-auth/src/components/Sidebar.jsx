@@ -5,7 +5,6 @@ import {
   FaUser,
   FaBox,
   FaChartBar,
-  FaCog,
   FaDashcube,
 } from "react-icons/fa";
 
@@ -23,29 +22,35 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
 
   const isAdmin = user?.rol === "admin";
   const isInstructor = user?.rol === "instructor";
+  const isUser = user?.rol === "user" || user?.rol === "aprendiz";
 
-const adminItems = [
-  { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
-  { name: "Usuarios", icon: <FaUser />, path: "/admin/usuarios" },
-  { name: "Curso", icon: <FaBox />, path: "/admin/curso" },
-  { name: "Instructores", icon: <FaUser />, path: "/admin/instructores" }, // ✅ añadido
-  { name: "Reportes", icon: <FaChartBar />, path: "/admin/reportes" },
-];
-
+  const adminItems = [
+    { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
+    { name: "Usuarios", icon: <FaUser />, path: "/admin/usuarios" },
+    { name: "Curso", icon: <FaBox />, path: "/admin/curso" },
+    { name: "Instructores", icon: <FaUser />, path: "/admin/instructores" },
+    { name: "Reportes", icon: <FaChartBar />, path: "/admin/reportes" },
+  ];
 
   const instructorItems = [
-    { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
-    { name: "Curso", icon: <FaBox />, path: "/instructor/curso" },
-    { name: "Perfil", icon: <FaUser />, path: "/perfil" },
+    { name: "Dashboard", icon: <FaDashcube />, path: "/instructor" },
+    { name: "Cursos", icon: <FaBox />, path: "/instructor/cursos" },
+    { name: "Perfil", icon: <FaUser />, path: "/instructor/perfil" },
   ];
 
-  const aprendizItems = [
+  const userItems = [
     { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
-    { name: "Mis Curso", icon: <FaBox />, path: "/aprendiz/curso" },
-    { name: "Perfil", icon: <FaUser />, path: "/perfil" },
+    { name: "Mis Cursos", icon: <FaBox />, path: "/dashboard/miscurso" },
+    { name: "Perfil", icon: <FaUser />, path: "/dashboard/perfil" },
   ];
 
-  const menuItems = isAdmin ? adminItems : isInstructor ? instructorItems : aprendizItems;
+  const menuItems = isAdmin
+    ? adminItems
+    : isInstructor
+    ? instructorItems
+    : isUser
+    ? userItems
+    : [];
 
   return (
     <>
