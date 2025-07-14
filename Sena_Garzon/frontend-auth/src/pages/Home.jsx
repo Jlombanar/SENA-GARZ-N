@@ -68,11 +68,11 @@ const Home = () => {
     },
     {
       id: 3,
-      title: "Programación Básica",
+      title: "Educacion Sexual",
       category: "tecnologia",
       duration: "160 horas",
       likes: 156,
-      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+      image: "https://www.viapais.com.ar/resizer/v2/MMZTONBVMI2TEMBTMNSTIZRTMQ.jpg?quality=75&smart=true&auth=beac066b1b73eac681ead096f064679b6ac2a79edf4b2951c4036496bb94e288&width=980&height=640"
     },
     {
       id: 4,

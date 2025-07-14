@@ -23,5 +23,5 @@ app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`);
 });
 
-app.use('/api/instructores', instructorRoutes);
+
 

@@ -27,12 +27,13 @@ import AdminWelcome from "./components/Welcome";
 import InstructorLayout from "./components/InstructorLayout";
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
 import InstructorCursos from "./pages/instructor/InstructorCursos";
+import InstructorPerfil from "./pages/instructor/InstructorPerfil"; // 👈 IMPORTACIÓN AÑADIDA
 
 // Panel Usuario
 import UserLayout from "./components/UserLayout";
-import Dashboard from "./pages/Dashboard"; // dashboard del usuario
-import Miscurso from "./pages/user/Miscurso"; // cursos del usuario
-import UserProfile from "./pages/user/UserProfile"; // perfil del usuario (asegúrate de crearlo)
+import Dashboard from "./pages/Dashboard";
+import Miscurso from "./pages/user/Miscurso";
+import UserProfile from "./pages/user/UserProfile";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -94,6 +95,7 @@ const App = () => {
         >
           <Route index element={<InstructorDashboard />} />
           <Route path="cursos" element={<InstructorCursos />} />
+          <Route path="perfil" element={<InstructorPerfil />} /> {/* 👈 NUEVA RUTA */}
         </Route>
 
         {/* Ruta no válida */}
