@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', authRoutes);
-app.use('/api/cursos', cursoRoutes); // ✅ Cambiado aquí
+app.use('/api/curso', cursoRoutes); // ✅ Cambiado aquí
 app.use('/uploads', express.static('uploads'));
 app.use('/api/instructores', instructorRoutes);
 

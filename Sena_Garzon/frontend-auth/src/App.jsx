@@ -35,6 +35,8 @@ import Dashboard from "./pages/Dashboard";
 import Miscurso from "./pages/user/Miscurso";
 import UserProfile from "./pages/user/UserProfile";
 
+
+
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 

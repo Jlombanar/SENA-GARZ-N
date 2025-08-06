@@ -1,120 +1,365 @@
+import React, { useEffect, useState } from "react";
 import {
-  FaUserShield,
-  FaChalkboardTeacher,
-  FaUserGraduate,
   FaHeart,
   FaEdit,
   FaTrash,
   FaCheckCircle,
-  FaChartLine,
-  FaUsers,
   FaBook,
-  FaCertificate,
-  FaUpload,
-  FaCalendarAlt,
-  FaInfoCircle,
-  FaPlusCircle,
+  FaPlus,
+  FaUsers,
+  FaChalkboardTeacher,
+  FaUserGraduate,
+  FaSearch,
+  FaBell,
+  FaUserCircle
 } from "react-icons/fa";
-import { useState } from "react";
 
-const cursosDemo = [
-  {
-    id: 1,
-    titulo: "Mantenimiento Técnico",
-    descripcion: "Curso de soporte en hardware y redes.",
-    imagen: "https://images.unsplash.com/photo-1581090700227-1e8e287c0a5e",
-    inscritos: 12,
-    duracion: "80 horas",
-    nivel: "Básico"
-  },
-  {
-    id: 2,
-    titulo: "Barismo",
-    descripcion: "Aprende el arte del café de especialidad.",
-    imagen: "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
-    inscritos: 25,
-    duracion: "60 horas",
-    nivel: "Intermedio"
-  },
-  {
-    id: 3,
-    titulo: "Programación Web",
-    descripcion: "Desarrolla sitios modernos con HTML, CSS y JS.",
-    imagen: "https://images.unsplash.com/photo-1537432376769-00a5f8ad3c4c",
-    inscritos: 40,
-    duracion: "150 horas",
-    nivel: "Avanzado"
-  },
-];
-
-const Welcome = ({ user }) => {
+const Welcome = () => {
+  const [user, setUser] = useState({});
   const [likes, setLikes] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
 
-  const toggleLike = (id) => {
+  useEffect(() => {
+    // Simular carga de usuario
+    const storedUser = {
+      nombre: "yeffry",
+      rol: "usuario", // Puede ser 'admin', 'instructor' o 'usuario'
+    };
+    setUser(storedUser);
+  }, []);
+
+  const handleLike = (id) => {
     setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
+    if (!likes[id]) {
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+    }
   };
 
-  const handleEdit = (id) => alert(`Editar curso con ID: ${id}`);
-  const handleDelete = (id) => alert(`Eliminar curso con ID: ${id}`);
-  const handleInscribirse = (id) => alert(`Inscribirse al curso con ID: ${id}`);
-  const handleVerDetalles = (id) => alert(`Ver detalles del curso con ID: ${id}`);
-  const handleVerInscritos = (id) => alert(`Ver inscritos del curso con ID: ${id}`);
-
-  const InfoRol = () => {
-    const base = "text-white p-4 rounded-2xl shadow-md flex flex-col md:flex-row gap-4";
-    if (user?.rol === "admin") {
-      return (
-        <div className={`${base} bg-gradient-to-r from-[#007832] to-[#3BA900]`}>
-          <FaUserShield className="text-4xl" />
-          <div>
-            <h2 className="font-bold text-xl">Rol: Administrador</h2>
-            <p>Control total sobre usuarios, cursos y reportes del sistema.</p>
-            <div className="flex gap-3 mt-3">
-              <button className="bg-white text-[#007832] px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition">
-                <FaChartLine /> Estadísticas
-              </button>
-              <button className="bg-[#005522] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-[#00441a] transition">
-                <FaUsers /> Gestionar Usuarios
-              </button>
-            </div>
-          </div>
-        </div>
-      );
+  const cursosEjemplo = [
+    {
+      id: 1,
+      titulo: "Programación Avanzada",
+      descripcion: "Domina algoritmos, estructuras de datos y patrones de diseño.",
+      imagen: "https://source.unsplash.com/400x300/?coding",
+      categoria: "Tecnología",
+      duracion: "8 semanas",
+      nivel: "Avanzado"
+    },
+    {
+      id: 2,
+      titulo: "Diseño UX/UI Profesional",
+      descripcion: "Aprende a crear interfaces centradas en el usuario con Figma y Adobe XD.",
+      imagen: "https://source.unsplash.com/400x300/?design",
+      categoria: "Diseño",
+      duracion: "6 semanas",
+      nivel: "Intermedio"
+    },
+    {
+      id: 3,
+      titulo: "Mecánica Automotriz Moderna",
+      descripcion: "Tecnologías híbridas y eléctricas en la industria automotriz.",
+      imagen: "https://source.unsplash.com/400x300/?car",
+      categoria: "Automotriz",
+      duracion: "10 semanas",
+      nivel: "Principiante"
+    },
+    {
+      id: 4,
+      titulo: "Marketing Digital 360°",
+      descripcion: "Estrategias integrales para redes sociales, SEO y publicidad digital.",
+      imagen: "https://source.unsplash.com/400x300/?marketing",
+      categoria: "Negocios",
+      duracion: "12 semanas",
+      nivel: "Intermedio"
     }
+  ];
 
-    if (user?.rol === "instructor") {
-      return (
-        <div className={`${base} bg-gradient-to-r from-[#1A6C37] to-[#3BA900]`}>
-          <FaChalkboardTeacher className="text-4xl" />
-          <div>
-            <h2 className="font-bold text-xl">Rol: Instructor</h2>
-            <p>Gestiona cursos, materiales y visualiza aprendices.</p>
-            <div className="flex gap-3 mt-3">
-              <button className="bg-white text-[#1A6C37] px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition">
-                <FaPlusCircle /> Crear Curso
-              </button>
-              <button className="bg-[#0f4d25] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-[#0c3b1b] transition">
-                <FaUpload /> Subir Material
-              </button>
-            </div>
-          </div>
+  const filteredCursos = cursosEjemplo.filter(curso =>
+    curso.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    curso.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const renderCard = (curso) => (
+    <div
+      key={curso.id}
+      style={{
+        backgroundColor: "#1e1e1e",
+        borderRadius: "12px",
+        overflow: "hidden",
+        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+        border: "1px solid #2e2e2e",
+        position: "relative",
+        transform: "translateY(0)"
+      }}
+      className="card-hover"
+    >
+      <div style={{ position: "relative" }}>
+        <img
+          src={curso.imagen}
+          alt={curso.titulo}
+          style={{
+            width: "100%",
+            height: "200px",
+            objectFit: "cover",
+            borderBottom: "1px solid #3BA900"
+          }}
+        />
+        <div style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          color: "#fff",
+          padding: "4px 8px",
+          borderRadius: "4px",
+          fontSize: "0.8rem"
+        }}>
+          {curso.categoria}
         </div>
-      );
-    }
+      </div>
+      
+      <div style={{ padding: "1.2rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h3 style={{ 
+            fontSize: "1.3rem", 
+            marginBottom: "0.5rem", 
+            color: "#fff",
+            fontWeight: "600"
+          }}>
+            {curso.titulo}
+          </h3>
+          <span style={{
+            backgroundColor: "#3BA900",
+            color: "#fff",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            fontSize: "0.7rem",
+            fontWeight: "bold"
+          }}>
+            {curso.nivel}
+          </span>
+        </div>
+        
+        <p style={{ 
+          fontSize: "0.95rem", 
+          color: "#b0b0b0",
+          marginBottom: "1rem",
+          lineHeight: "1.5"
+        }}>
+          {curso.descripcion}
+        </p>
+        
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
+          fontSize: "0.85rem",
+          color: "#888"
+        }}>
+          <span>Duración: {curso.duracion}</span>
+          <span>⭐️⭐️⭐️⭐️☆</span>
+        </div>
+        
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "10px",
+        }}>
+          <button
+            onClick={() => handleLike(curso.id)}
+            style={{
+              backgroundColor: likes[curso.id] ? "#3BA900" : "#2a2a2a",
+              border: likes[curso.id] ? "none" : "1px solid #3BA900",
+              padding: "8px 16px",
+              borderRadius: "6px",
+              color: likes[curso.id] ? "#fff" : "#3BA900",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "0.9rem",
+              fontWeight: "500",
+              transition: "all 0.2s ease",
+              transform: "scale(1)"
+            }}
+            className="button-hover"
+          >
+            <FaHeart color={likes[curso.id] ? "#fff" : "#3BA900"} /> 
+            {likes[curso.id] ? "Guardado" : "Guardar"}
+          </button>
+
+          {user.rol === "usuario" && (
+            <button
+              style={{
+                backgroundColor: "#3BA900",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                color: "#fff",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                fontSize: "0.9rem",
+                fontWeight: "500",
+                transition: "transform 0.2s ease",
+                transform: "scale(1)"
+              }}
+              className="button-hover"
+            >
+              <FaCheckCircle /> Inscribirse
+            </button>
+          )}
+
+          {user.rol === "instructor" && (
+            <>
+              <button
+                style={{
+                  backgroundColor: "transparent",
+                  border: "1px solid #3BA900",
+                  padding: "8px 16px",
+                  borderRadius: "6px",
+                  color: "#3BA900",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "0.9rem",
+                  fontWeight: "500",
+                  transition: "transform 0.2s ease",
+                  transform: "scale(1)"
+                }}
+                className="button-hover"
+              >
+                <FaEdit /> Editar
+              </button>
+              <button
+                style={{
+                  backgroundColor: "transparent",
+                  border: "1px solid #e74c3c",
+                  padding: "8px 16px",
+                  borderRadius: "6px",
+                  color: "#e74c3c",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "0.9rem",
+                  fontWeight: "500",
+                  transition: "transform 0.2s ease",
+                  transform: "scale(1)"
+                }}
+                className="button-hover"
+              >
+                <FaTrash /> Eliminar
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderHeader = () => {
+    const baseStyle = {
+      background: "linear-gradient(135deg, #000000 0%, #1a3a00 100%)",
+      padding: "1.5rem 2rem",
+      borderRadius: "12px",
+      textAlign: "left",
+      boxShadow: "0 8px 16px rgba(59, 169, 0, 0.2)",
+      color: "white",
+      marginBottom: "2rem",
+      border: "1px solid #3BA900",
+      position: "relative",
+      overflow: "hidden",
+      opacity: 1,
+      transform: "translateY(0)",
+      transition: "opacity 0.3s ease, transform 0.3s ease"
+    };
+
+    const roleConfig = {
+      admin: {
+        icon: <FaUsers size={36} style={{ color: "#3BA900" }} />,
+        title: "Panel de Administración",
+        subtitle: "Gestiona usuarios, instructores y cursos desde este panel.",
+        button: null
+      },
+      instructor: {
+        icon: <FaChalkboardTeacher size={36} style={{ color: "#3BA900" }} />,
+        title: "Panel del Instructor",
+        subtitle: "Crea y gestiona tus cursos para los aprendices.",
+        button: (
+          <button
+            style={{
+              marginTop: "15px",
+              backgroundColor: "#3BA900",
+              color: "white",
+              padding: "12px 20px",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600",
+              fontSize: "0.95rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              transform: "scale(1)"
+            }}
+            className="button-hover"
+          >
+            <FaPlus /> Crear nuevo curso
+          </button>
+        )
+      },
+      usuario: {
+        icon: <FaUserGraduate size={36} style={{ color: "#3BA900" }} />,
+        title: "Explora Cursos",
+        subtitle: "Encuentra el curso perfecto para tu desarrollo profesional.",
+        button: null
+      }
+    };
+
+    const config = roleConfig[user.rol] || {};
 
     return (
-      <div className={`${base} bg-gradient-to-r from-[#3BA900] to-[#1A6C37]`}>
-        <FaUserGraduate className="text-4xl" />
-        <div>
-          <h2 className="font-bold text-xl">Rol: Aprendiz</h2>
-          <p>Explora cursos, realiza seguimiento y accede a certificados.</p>
-          <div className="flex gap-3 mt-3">
-            <button className="bg-white text-[#3BA900] px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition">
-              <FaCalendarAlt /> Mi Horario
-            </button>
-            <button className="bg-[#2a7a08] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-[#226907] transition">
-              <FaCertificate /> Certificados
-            </button>
+      <div style={baseStyle}>
+        <div style={{ 
+          position: "absolute", 
+          top: "-50px", 
+          right: "-50px", 
+          width: "200px", 
+          height: "200px", 
+          backgroundColor: "rgba(59, 169, 0, 0.1)", 
+          borderRadius: "50%",
+          zIndex: 0
+        }}></div>
+        
+        <div style={{ display: "flex", alignItems: "center", gap: "20px", position: "relative", zIndex: 1 }}>
+          {config.icon}
+          <div>
+            <h1 style={{ 
+              margin: "0.2rem 0", 
+              fontSize: "1.8rem",
+              fontWeight: "700"
+            }}>
+              {config.title}
+            </h1>
+            <p style={{ 
+              margin: 0,
+              fontSize: "1rem",
+              color: "#b0b0b0",
+              maxWidth: "600px"
+            }}>
+              {config.subtitle}
+            </p>
+            {config.button}
           </div>
         </div>
       </div>
@@ -122,79 +367,204 @@ const Welcome = ({ user }) => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-7xl mx-auto border-l-[10px] border-[#3BA900]">
-      <div className="mb-10">
-        <h1 className="text-4xl font-black text-[#3BA900] mb-1">
-          ¡Bienvenido(a) <span className="text-[#007832]">{user?.nombre}</span>!
-        </h1>
-        <p className="text-lg text-gray-700">
-          Has ingresado como <span className="font-semibold">{user?.rol}</span>.
-        </p>
-      </div>
-
-      <InfoRol />
-
-      <h2 className="text-3xl font-bold text-[#007832] mt-10 mb-4">Cursos {user?.rol === "admin" ? "Registrados" : user?.rol === "instructor" ? "Creados" : "Disponibles"}</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cursosDemo.map((curso) => (
-          <div key={curso.id} className="bg-white rounded-xl shadow hover:shadow-xl border border-green-100 overflow-hidden transition">
-            <img src={curso.imagen} alt={curso.titulo} className="w-full h-48 object-cover" />
-            <div className="p-5">
-              <h3 className="text-lg font-bold text-gray-800 mb-2">{curso.titulo}</h3>
-              <p className="text-sm text-gray-600 mb-2">{curso.descripcion}</p>
-              <div className="text-sm text-gray-500 mb-4">
-                <span className="mr-3"><FaCalendarAlt className="inline mr-1" /> {curso.duracion}</span>
-                <span><FaInfoCircle className="inline mr-1" /> {curso.nivel}</span>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => toggleLike(curso.id)}
-                  className={`px-3 py-1 rounded-md text-sm flex items-center gap-1 ${
-                    likes[curso.id] ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600 hover:bg-green-100 hover:text-green-800"
-                  }`}
-                >
-                  <FaHeart /> {likes[curso.id] ? "Me gusta" : "Like"}
-                </button>
-
-                {user?.rol === "usuario" && (
-                  <>
-                    <button onClick={() => handleVerDetalles(curso.id)} className="px-3 py-1 rounded-md text-sm bg-blue-100 text-blue-700 hover:bg-blue-200">
-                      <FaBook className="inline" /> Detalles
-                    </button>
-                    <button onClick={() => handleInscribirse(curso.id)} className="px-3 py-1 rounded-md text-sm bg-green-700 text-white hover:bg-green-800">
-                      <FaCheckCircle className="inline" /> Inscribirme
-                    </button>
-                  </>
-                )}
-
-                {user?.rol === "instructor" && (
-                  <>
-                    <button onClick={() => handleEdit(curso.id)} className="px-3 py-1 rounded-md text-sm bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
-                      <FaEdit /> Editar
-                    </button>
-                    <button onClick={() => handleVerInscritos(curso.id)} className="px-3 py-1 rounded-md text-sm bg-green-600 text-white hover:bg-green-700">
-                      <FaUsers /> Inscritos
-                    </button>
-                  </>
-                )}
-
-                {user?.rol === "admin" && (
-                  <>
-                    <button onClick={() => handleEdit(curso.id)} className="px-3 py-1 rounded-md text-sm bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
-                      <FaEdit /> Editar
-                    </button>
-                    <button onClick={() => handleDelete(curso.id)} className="px-3 py-1 rounded-md text-sm bg-red-100 text-red-700 hover:bg-red-200">
-                      <FaTrash /> Eliminar
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
+    <div
+      style={{
+        padding: "2rem",
+        fontFamily: "'Inter', sans-serif",
+        backgroundColor: "#121212",
+        minHeight: "100vh",
+        color: "#fff"
+      }}
+    >
+      {/* Barra superior */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "2rem",
+        gap: "20px",
+        flexWrap: "wrap"
+      }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "15px"
+        }}>
+          <FaBook size={28} color="#3BA900" />
+          <h1 style={{
+            fontSize: "1.5rem",
+            fontWeight: "700",
+            margin: 0,
+            background: "linear-gradient(to right, #3BA900, #a8ff78)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent"
+          }}>
+            AcademiaPlus
+          </h1>
+        </div>
+        
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "15px"
+        }}>
+          <div style={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center"
+          }}>
+            <FaSearch style={{
+              position: "absolute",
+              left: "12px",
+              color: "#666"
+            }} />
+            <input
+              type="text"
+              placeholder="Buscar cursos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                padding: "10px 15px 10px 40px",
+                borderRadius: "8px",
+                border: "1px solid #333",
+                backgroundColor: "#1e1e1e",
+                color: "#fff",
+                width: "250px",
+                fontSize: "0.9rem",
+                outline: "none",
+                transition: "all 0.3s ease",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+              }}
+            />
           </div>
-        ))}
+          
+          <div 
+            style={{ 
+              position: "relative", 
+              cursor: "pointer",
+              transition: "transform 0.2s ease",
+              transform: "scale(1)"
+            }}
+            className="button-hover"
+          >
+            <FaBell size={20} color="#b0b0b0" />
+            <span style={{
+              position: "absolute",
+              top: "-5px",
+              right: "-5px",
+              backgroundColor: "#e74c3c",
+              color: "white",
+              borderRadius: "50%",
+              width: "16px",
+              height: "16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.6rem",
+              fontWeight: "bold"
+            }}>3</span>
+          </div>
+          
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            cursor: "pointer"
+          }}>
+            <img 
+              src={user.avatar} 
+              alt="User" 
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "2px solid #3BA900"
+              }} 
+            />
+            <span style={{ fontWeight: "500" }}>{user.nombre}</span>
+          </div>
+        </div>
       </div>
+
+      {renderHeader()}
+      
+      <h2 style={{
+        fontSize: "1.5rem",
+        fontWeight: "600",
+        marginBottom: "1.5rem",
+        display: "flex",
+        alignItems: "center",
+        gap: "10px"
+      }}>
+        <span style={{
+          height: "24px",
+          width: "6px",
+          backgroundColor: "#3BA900",
+          borderRadius: "3px",
+          display: "inline-block"
+        }}></span>
+        {user.rol === "usuario" ? "Cursos Recomendados" : 
+         user.rol === "instructor" ? "Tus Cursos" : "Todos los Cursos"}
+      </h2>
+      
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+          gap: "1.8rem",
+          marginBottom: "3rem"
+        }}
+      >
+        {filteredCursos.map((curso) => renderCard(curso))}
+      </div>
+
+      {/* Notificación */}
+      {showNotification && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "30px",
+            right: "30px",
+            backgroundColor: "#3BA900",
+            color: "white",
+            padding: "15px 25px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            zIndex: 1000,
+            animation: "fadeIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards"
+          }}
+        >
+          <FaHeart /> Curso guardado en tus favoritos
+        </div>
+      )}
+
+      {/* Estilos CSS para animaciones */}
+      <style>
+        {`
+          .card-hover:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+          }
+          
+          .button-hover:hover {
+            transform: scale(1.05) !important;
+          }
+          
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+          }
+        `}
+      </style>
     </div>
   );
 };

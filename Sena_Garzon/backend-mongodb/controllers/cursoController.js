@@ -1,14 +1,12 @@
-import Curso from '../models/Curso.js';
-import fs from 'fs';
-import path from 'path';
+import Curso from "../models/Curso.js";
 
 // Obtener todos los cursos
 export const getCursos = async (req, res) => {
   try {
-    const curso = await Curso.find();
-    res.json(curso);
+    const cursos = await Curso.find();
+    res.json(cursos);
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener cursos' });
+    res.status(500).json({ message: "Error al obtener cursos" });
   }
 };
 
@@ -24,21 +22,35 @@ export const getCursosGallery = async (req, res) => {
 
     res.json({ cursos, total });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener cursos' });
+    res.status(500).json({ message: "Error al obtener cursos" });
   }
 };
 
-// Crear un curso
+// Crear nuevo curso (solo instructores)
 export const createCurso = async (req, res) => {
-  const { nombre, cantidad, valor } = req.body;
-  const imagen = req.file?.filename;
+  const { nombre, descripcion, cantidad, valor, imagen } = req.body;
 
   try {
-    const nuevoCurso = new Curso({ nombre, cantidad, valor, imagen });
+    if (!req.user) {
+      return res.status(401).json({ message: "Usuario no autenticado" });
+    }
+
+    const instructorId = req.user._id;
+
+    const nuevoCurso = new Curso({
+      nombre,
+      descripcion,
+      cantidad,
+      valor,
+      imagen,
+      instructorId,
+    });
+
     await nuevoCurso.save();
-    res.status(201).json({ message: 'Curso creado correctamente', curso: nuevoCurso });
+    res.status(201).json({ message: "Curso creado correctamente", curso: nuevoCurso });
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear el curso' });
+    console.error("Error en crear curso:", error);
+    res.status(500).json({ message: "Error al crear el curso" });
   }
 };
 
@@ -46,43 +58,66 @@ export const createCurso = async (req, res) => {
 export const deleteCurso = async (req, res) => {
   try {
     const curso = await Curso.findById(req.params.id);
-    if (!curso) return res.status(404).json({ message: 'Curso no encontrado' });
-
-    if (curso.imagen) {
-      const imagePath = path.join('uploads', curso.imagen);
-      if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
-    }
+    if (!curso) return res.status(404).json({ message: "Curso no encontrado" });
 
     await curso.deleteOne();
-    res.json({ message: 'Curso eliminado' });
+    res.json({ message: "Curso eliminado" });
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar el curso' });
+    res.status(500).json({ message: "Error al eliminar el curso" });
   }
 };
 
 // Actualizar un curso
 export const updateCurso = async (req, res) => {
-  const { nombre, cantidad, valor } = req.body;
+  const { nombre, descripcion, cantidad, valor, imagen } = req.body;
 
   try {
     const curso = await Curso.findById(req.params.id);
-    if (!curso) return res.status(404).json({ message: 'Curso no encontrado' });
-
-    if (req.file) {
-      if (curso.imagen) {
-        const oldPath = path.join('uploads', curso.imagen);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-      }
-      curso.imagen = req.file.filename;
-    }
+    if (!curso) return res.status(404).json({ message: "Curso no encontrado" });
 
     curso.nombre = nombre;
+    curso.descripcion = descripcion;
     curso.cantidad = cantidad;
     curso.valor = valor;
+    if (imagen) curso.imagen = imagen;
+
+    await curso.save();
+    res.json({ message: "Curso actualizado", curso });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar el curso" });
+  }
+};
+
+export const inscribirseCurso = async (req, res) => {
+  try {
+    const curso = await Curso.findById(req.params.id);
+    if (!curso) return res.status(404).json({ message: "Curso no encontrado" });
+
+    const yaInscrito = curso.inscritos.some(
+      (i) => i.userId.toString() === req.user._id.toString()
+    );
+    if (yaInscrito) {
+      return res.status(400).json({ message: "Ya estás inscrito en este curso" });
+    }
+
+    const tarjetaPDFUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!tarjetaPDFUrl) {
+      return res.status(400).json({ message: "Archivo PDF faltante" });
+    }
+
+    const nuevaInscripcion = {
+      userId: req.user._id,
+      numeroTarjeta: req.body.numeroTarjeta,
+      tarjetaPDFUrl
+    };
+
+    curso.inscritos.push(nuevaInscripcion);
     await curso.save();
 
-    res.json({ message: 'Curso actualizado', curso });
+    res.status(200).json({ message: "Inscripción exitosa" });
   } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar el curso' });
+    console.error("Error inscripción:", error);
+    res.status(500).json({ message: "Error al inscribirse" });
   }
 };

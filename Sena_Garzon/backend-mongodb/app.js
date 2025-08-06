@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api', authRoutes);
-app.use('/api/curso', cursoRoutes); // ← corregido
+app.use('/api/cursos', cursoRoutes); //
 app.use('/uploads', express.static('uploads'));
 
 export default app;

@@ -1,21 +1,24 @@
 import express from 'express';
 import {
-  getCursos,         // ✅ Correcto
+  getCursos,
   createCurso,
   deleteCurso,
   updateCurso,
-  getCursosGallery   // si también lo necesitas
+  getCursosGallery,
+  inscribirseCurso
 } from '../controllers/cursoController.js';
+import { verificarToken, esInstructor } from '../middleware/authMiddleware.js';
+import upload from "../middleware/multer.js";
 
 const router = express.Router();
 
-// Endpoints
 router.get('/', getCursos);
-router.post('/', createCurso);
-router.delete('/:id', deleteCurso);
-router.put('/:id', updateCurso);
-
-// Si usas galería paginada
 router.get('/galeria', getCursosGallery);
+router.post('/', verificarToken, esInstructor, createCurso);
+router.put('/:id', verificarToken, esInstructor, updateCurso);
+router.delete('/:id', verificarToken, esInstructor, deleteCurso);
+
+// ✅ RUTA CORRECTA PARA INSCRIBIRSE (con multer)
+router.post('/:id/inscribirse', verificarToken, upload.single("tarjetaPDF"), inscribirseCurso);
 
 export default router;
