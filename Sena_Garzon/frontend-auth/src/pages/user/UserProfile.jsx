@@ -1,13 +1,31 @@
-import { FaUser, FaEnvelope, FaUserShield, FaChalkboardTeacher, FaUserGraduate, FaEdit, FaSignOutAlt, FaHistory } from "react-icons/fa";
-import { useState } from "react";
+import { FaUser, FaEnvelope, FaUserShield, FaChalkboardTeacher, FaUserGraduate, FaEdit, FaSignOutAlt, FaHistory, FaSave, FaTimes } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const UserProfile = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    nombre: user?.nombre || "",
-    correo: user?.correo || ""
+    nombre: "",
+    correo: "",
+    telefono: "",
+    direccion: ""
   });
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+      setFormData({
+        nombre: storedUser.nombre || "",
+        correo: storedUser.correo || "",
+        telefono: storedUser.telefono || "",
+        direccion: storedUser.direccion || ""
+      });
+    }
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -20,16 +38,44 @@ const UserProfile = () => {
     });
   };
 
-  const handleSave = () => {
-    const updatedUser = { ...user, ...formData };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setIsEditing(false);
-    window.location.reload();
+  const handleSave = async () => {
+    if (!user) return;
+
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `http://localhost:5000/api/users/${user._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      const updatedUser = response.data;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      setIsEditing(false);
+      toast.success("Perfil actualizado correctamente");
+    } catch (error) {
+      console.error("Error al actualizar perfil:", error);
+      toast.error(error.response?.data?.message || "Error al actualizar el perfil");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "/login";
+  const handleCancel = () => {
+    setFormData({
+      nombre: user?.nombre || "",
+      correo: user?.correo || "",
+      telefono: user?.telefono || "",
+      direccion: user?.direccion || ""
+    });
+    setIsEditing(false);
   };
 
   const renderRolIcon = () => {
@@ -39,11 +85,24 @@ const UserProfile = () => {
       case "instructor":
         return <FaChalkboardTeacher className="text-3xl text-[#1A6C37]" />;
       case "usuario":
+      case "aprendiz":
         return <FaUserGraduate className="text-3xl text-[#3BA900]" />;
       default:
         return <FaUser className="text-3xl text-gray-500" />;
     }
   };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#f0f7f0] to-[#d0e6d0] py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 text-center">
+            <p className="text-gray-600">Cargando perfil...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f0f7f0] to-[#d0e6d0] py-8 px-4 sm:px-6 lg:px-8">
@@ -55,20 +114,34 @@ const UserProfile = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold">Mi Perfil</h1>
               <div className="flex space-x-3">
-                <button 
-                  onClick={handleEdit}
-                  className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full flex items-center transition-all duration-200"
-                >
-                  <FaEdit className="mr-2" />
-                  {isEditing ? "Cancelar" : "Editar"}
-                </button>
-                <button 
-                  onClick={handleLogout}
-                  className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full flex items-center transition-all duration-200"
-                >
-                  <FaSignOutAlt className="mr-2" />
-                  Cerrar Sesión
-                </button>
+                {isEditing ? (
+                  <>
+                    <button 
+                      onClick={handleSave}
+                      disabled={loading}
+                      className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full flex items-center transition-all duration-200 disabled:opacity-50"
+                    >
+                      <FaSave className="mr-2" />
+                      {loading ? "Guardando..." : "Guardar"}
+                    </button>
+                    <button 
+                      onClick={handleCancel}
+                      disabled={loading}
+                      className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full flex items-center transition-all duration-200"
+                    >
+                      <FaTimes className="mr-2" />
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  <button 
+                    onClick={handleEdit}
+                    className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full flex items-center transition-all duration-200"
+                  >
+                    <FaEdit className="mr-2" />
+                    Editar
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -94,35 +167,61 @@ const UserProfile = () => {
                       <FaEnvelope className="mr-2 text-[#3BA900]" />
                       {user?.correo}
                     </p>
+                    {user?.telefono && (
+                      <p className="text-gray-600 text-sm">
+                        📞 {user.telefono}
+                      </p>
+                    )}
+                    {user?.direccion && (
+                      <p className="text-gray-600 text-sm">
+                        📍 {user.direccion}
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <div className="w-full space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
                       <input
                         type="text"
                         name="nombre"
                         value={formData.nombre}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3BA900] focus:border-[#3BA900]"
+                        required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Correo</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Correo *</label>
                       <input
                         type="email"
                         name="correo"
                         value={formData.correo}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3BA900] focus:border-[#3BA900]"
+                        required
                       />
                     </div>
-                    <button
-                      onClick={handleSave}
-                      className="w-full bg-[#3BA900] hover:bg-[#2f8c00] text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center"
-                    >
-                      Guardar Cambios
-                    </button>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                      <input
+                        type="tel"
+                        name="telefono"
+                        value={formData.telefono}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3BA900] focus:border-[#3BA900]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                      <input
+                        type="text"
+                        name="direccion"
+                        value={formData.direccion}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3BA900] focus:border-[#3BA900]"
+                      />
+                    </div>
                   </div>
                 )}
               </div>
@@ -131,31 +230,39 @@ const UserProfile = () => {
               <div className="w-full md:w-2/3">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
                   <FaHistory className="mr-2 text-[#1A6C37]" />
-                  Historial Reciente
+                  Información de la Cuenta
                 </h3>
                 
                 <div className="bg-[#f8faf8] p-4 rounded-xl border border-[#e0e8e0] hover:border-[#3BA900] transition duration-200 mb-6">
                   <div className="flex items-center mb-2">
                     <div className="bg-[#3BA900]/10 p-2 rounded-full mr-3">
-                      <FaHistory className="text-[#3BA900]" />
+                      <FaUser className="text-[#3BA900]" />
                     </div>
-                    <h4 className="font-medium text-gray-800">Últimas actividades</h4>
+                    <h4 className="font-medium text-gray-800">Detalles de la cuenta</h4>
                   </div>
-                  <p className="text-sm text-gray-600">Aquí aparecerán tus interacciones recientes con la plataforma</p>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p><strong>ID de Usuario:</strong> {user._id}</p>
+                    <p><strong>Rol:</strong> {user.rol}</p>
+                    <p><strong>Fecha de registro:</strong> {new Date(user.createdAt || Date.now()).toLocaleDateString()}</p>
+                  </div>
                 </div>
 
                 {/* Estadísticas básicas */}
                 <div className="bg-[#f0f7f0] p-5 rounded-xl border border-[#d0e6d0]">
-                  <h4 className="font-semibold text-[#007832] mb-3">Tu actividad</h4>
+                  <h4 className="font-semibold text-[#007832] mb-3">Estado de la cuenta</h4>
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Sesión activa</span>
-                        <span>Ahora</span>
+                        <span>Estado</span>
+                        <span className="text-green-600 font-medium">Activo</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5">
                         <div className="bg-[#3BA900] h-2.5 rounded-full w-full"></div>
                       </div>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      <p>✅ Cuenta verificada</p>
+                      <p>✅ Acceso completo a la plataforma</p>
                     </div>
                   </div>
                 </div>

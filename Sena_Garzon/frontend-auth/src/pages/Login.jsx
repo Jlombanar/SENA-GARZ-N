@@ -22,7 +22,14 @@ const Login = () => {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
-      navigate("/dashboard");
+      // Redirigir según el rol del usuario
+      if (storedUser.rol === "admin") {
+        navigate("/admin");
+      } else if (storedUser.rol === "instructor") {
+        navigate("/instructor");
+      } else {
+        navigate("/dashboard");
+      }
     }
   }, [navigate]);
 
@@ -41,7 +48,15 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(user));
 
       toast.success("Inicio de sesión exitoso");
-      navigate("/dashboard");
+      
+      // Redirigir según el rol del usuario
+      if (user.rol === "admin") {
+        navigate("/admin");
+      } else if (user.rol === "instructor") {
+        navigate("/instructor");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "Error al iniciar sesión");

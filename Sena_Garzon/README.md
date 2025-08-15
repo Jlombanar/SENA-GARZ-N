@@ -1,190 +1,214 @@
 
-# 🧠 Proyecto Base Full Stack MERN: Autenticación, Gestión de Usuarios y Productos
+# SENA Garzón - Sistema de Gestión de Cursos
 
-Este proyecto es una **plantilla funcional avanzada** que integra un **frontend en React + Vite** con un **backend en Node.js + Express + MongoDB** para implementar:
+## 🚀 Funcionalidades Implementadas
 
-- Autenticación de usuarios con JWT.
-- Gestión y CRUD de usuarios desde un panel administrativo.
-- Recuperación de contraseña por correo electrónico.
-- CRUD de productos con carga de imágenes.
-- Visualización de productos en la página principal.
-- Modal de producto con detalles y opción de compra.
-- Scroll infinito para navegación de productos.
-- Scripts unificados de desarrollo con `concurrently`.
+### 👥 Sistema de Usuarios
+- **Registro e Inicio de Sesión**: Sistema completo de autenticación
+- **Roles de Usuario**: 
+  - Usuario regular (aprendiz)
+  - Instructor
+  - Administrador
+- **Gestión de Perfiles**: Los usuarios pueden ver y editar su información
 
-Ideal como base para dashboards administrativos, catálogos de productos o aplicaciones e-commerce básicas.
+### 📚 Gestión de Cursos
+- **Creación de Cursos**: Los instructores pueden crear cursos con información completa
+- **Categorización**: Los cursos se organizan por categorías (tecnología, gastronomía, construcción, idiomas, moda)
+- **Imágenes**: Soporte para imágenes de cursos
+- **Cupos y Valores**: Control de disponibilidad y precios
 
----
+### ❤️ Sistema de Likes Mejorado
+- **Registro Completo**: Cada like se registra con información del usuario
+- **Estadísticas en Tiempo Real**: Conteo preciso de likes por curso
+- **Ranking de Popularidad**: Los cursos se ordenan por cantidad de likes
+- **Persistencia en Base de Datos**: Todos los likes se almacenan permanentemente
+- **Información del Usuario**: Se guarda nombre y email del usuario que dio like
 
-## 🗂 Estructura general del proyecto
+### 📊 Estadísticas y Reportes
+- **Dashboard de Instructor**: Vista completa de inscripciones y estadísticas
+- **Estadísticas de Likes**: 
+  - Total de likes por curso
+  - Promedio de likes
+  - Curso más popular
+  - Ranking completo
+- **Estadísticas de Inscripciones**:
+  - Total de inscripciones
+  - Pendientes, aprobadas y rechazadas
+  - Filtros por estado
+
+### 🎯 Sistema de Inscripciones
+- **Inscripción Completa**: Los usuarios pueden inscribirse a cursos
+- **Documentos PDF**: Subida de tarjetas de inscripción
+- **Estados de Inscripción**: 
+  - Pendiente (por defecto)
+  - Aprobada
+  - Rechazada
+- **Gestión del Instructor**: Los instructores pueden aprobar/rechazar inscripciones
+- **Observaciones**: Los instructores pueden agregar comentarios
+
+### 🏠 Página de Inicio Mejorada
+- **Redirección Inteligente**: 
+  - Usuarios no registrados → Registro
+  - Usuarios registrados → Mis Cursos
+- **Ranking Visual**: Los cursos se muestran ordenados por popularidad
+- **Badges de Popularidad**: Indicadores visuales del ranking
+- **Conteo Real de Likes**: Muestra el número exacto de likes
+
+### 👨‍🏫 Panel del Instructor
+- **Gestión de Cursos**: Crear, editar y eliminar cursos
+- **Vista de Inscripciones**: Lista completa de aspirantes
+- **Aprobación/Rechazo**: Control total sobre las inscripciones
+- **Filtros por Estado**: Organizar inscripciones por estado
+- **Observaciones**: Agregar comentarios a cada solicitud
+- **Descarga de PDFs**: Acceso a documentos de inscripción
+
+### 📱 Página de Mis Cursos
+- **Estado de Inscripciones**: Los usuarios ven el estado de sus solicitudes
+- **Reenvío de Solicitudes**: Posibilidad de reenviar si fueron rechazadas
+- **Información Detallada**: Precios, cupos, likes y categorías
+- **Formularios Dinámicos**: Campos que se adaptan según el estado
+
+### 🏆 Top Cursos
+- **Ranking por Popularidad**: Los cursos más populares primero
+- **Estadísticas Detalladas**: Métricas completas del sistema
+- **Visualización Mejorada**: Badges de ranking y estadísticas
+- **Información en Tiempo Real**: Datos actualizados constantemente
+
+## 🛠️ Tecnologías Utilizadas
+
+### Backend
+- **Node.js** con **Express.js**
+- **MongoDB** con **Mongoose**
+- **JWT** para autenticación
+- **Multer** para manejo de archivos
+- **Nodemailer** para envío de emails
+
+### Frontend
+- **React.js** con **Vite**
+- **Tailwind CSS** para estilos
+- **React Router** para navegación
+- **Axios** para peticiones HTTP
+- **React Icons** para iconografía
+
+## 📁 Estructura del Proyecto
 
 ```
-.
-├── backend-mongodb/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── config/
-│   └── server.js
-│
-└── frontend-auth/
-    ├── src/
-    │   ├── pages/
-    │   ├── components/
-    │   ├── layouts/
-    │   ├── App.jsx
-    │   └── main.jsx
+Sena_Garzon/
+├── backend-mongodb/          # API del servidor
+│   ├── controllers/          # Lógica de negocio
+│   ├── models/              # Modelos de datos
+│   ├── routes/              # Rutas de la API
+│   ├── middleware/          # Middlewares de autenticación
+│   └── utils/               # Utilidades (envío de emails)
+├── frontend-auth/           # Aplicación React
+│   ├── src/
+│   │   ├── components/      # Componentes reutilizables
+│   │   ├── pages/           # Páginas de la aplicación
+│   │   ├── services/        # Servicios para API
+│   │   └── assets/          # Recursos estáticos
+└── img/                     # Imágenes del proyecto
 ```
 
----
+## 🚀 Instalación y Uso
 
-## ✅ Frontend (React + Vite + TailwindCSS)
+### Prerrequisitos
+- Node.js (v14 o superior)
+- MongoDB
+- npm o yarn
 
-- Login, Registro y Recuperación de contraseña con validación.
-- Redirección dinámica según rol (`admin` / `user`).
-- Layout dinámico para cada tipo de usuario.
-- Dashboard administrativo con CRUD de usuarios y productos.
-- Modal para crear/editar productos con vista previa de imagen.
-- Galería de productos en Home con scroll infinito.
-- Modal para ver detalles del producto y comprar.
-- Protección de rutas mediante `PrivateRoute` y `AdminRoute`.
-
----
-
-## ✅ Backend (Node.js + Express + MongoDB)
-
-- Endpoints RESTful para login, registro y CRUD de usuarios/productos.
-- Autenticación segura con JWT.
-- Encriptación de contraseñas con `bcrypt`.
-- Verificación por correo para recuperación de contraseña.
-- Subida de imágenes de productos con `multer`.
-- Controladores separados para usuarios y productos.
-- Middleware para validación de tokens y roles.
-
----
-
-## 🖼 Capturas de pantalla
-
-A continuación, algunas vistas de la aplicación:
-
-1. **Pantalla de Home**
-   ![Login](./img/001.png)
-
-2. **Prudctos Modal**
-   ![Register](./img/002.png)
-
-3. **Login**
-   ![Dashboard Admin](./img/003.png)
-
-4. **Recuperar Contraseña**
-   ![Productos](./img/004.png)
-
-5. **Registro**
-   ![Galería](./img/005.png)
-
-6. **Dashboard ADMIN**
-   ![Modal Producto](./img/006.png)
-
-7. **Productos Admin**
-   ![Reset Password](./img/007.png)
-
-8. **Edicion de Productos**
-   ![Usuarios](./img/008.png)
-
-9. **Mobile View**
-   ![Editar Producto](./img/009.png)
-
-10. **Mobile View**
-    ![Responsive](./img/010.png)
-
-
----
-
-## 🧪 ¿Cómo correr el proyecto?
-
-### 1. Clonar el repositorio
-
+### Backend
 ```bash
-git clone https://github.com/hdtoledo/mern-template.git
-cd mern-template
-```
-
-### 2. Instalar dependencias del backend y frontend
-
-```bash
+cd backend-mongodb
 npm install
+npm start
 ```
 
-### 3. Variables de entorno
+### Frontend
+```bash
+cd frontend-auth
+npm install
+npm run dev
+```
 
-### 📧 Configuración de envío de correos (Gmail)
+## 🔧 Configuración
 
-Este proyecto utiliza **Gmail con clave de aplicación** para el envío de correos electrónicos (por ejemplo, confirmación de cuenta o recuperación de contraseña). Para que funcione correctamente:
-
-1. Accede a tu cuenta de Gmail.
-2. Activa la **verificación en dos pasos**.
-3. Ve a [https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords).
-4. Genera una nueva **clave de aplicación** (elige "Correo" y "Otro").
-5. Copia la clave generada (16 caracteres) y úsala como valor de `EMAIL_APP_PASS`.
-
-#### Backend (`backend-mongodb/.env`)
-
+### Variables de Entorno
+Crear archivo `.env` en el backend:
 ```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/mern_auth_products
-JWT_SECRET=tu_clave_secreta
-EMAIL_USER=tu_correo@gmail.com
-EMAIL_APP_PASS=tu_contraseña_app
+MONGODB_URI=mongodb://localhost:27017/sena_garzon
+JWT_SECRET=tu_secreto_jwt
+EMAIL_USER=tu_email@gmail.com
+EMAIL_PASS=tu_password_email
 ```
 
+### Base de Datos
+El sistema creará automáticamente las colecciones necesarias en MongoDB.
+
+## 📊 API Endpoints
+
+### Cursos
+- `GET /api/cursos` - Obtener todos los cursos
+- `GET /api/cursos/top-likes` - Cursos ordenados por likes
+- `GET /api/cursos/estadisticas-likes` - Estadísticas de likes
+- `POST /api/cursos/:id/like` - Dar/quitar like a un curso
+- `POST /api/cursos/:id/inscribirse` - Inscribirse a un curso
+
+### Inscripciones (Instructores)
+- `GET /api/cursos/:id/inscripciones` - Ver inscripciones de un curso
+- `PUT /api/cursos/:cursoId/inscripciones/:inscripcionId/revisar` - Aprobar/rechazar inscripción
+- `DELETE /api/cursos/:cursoId/inscripciones/:inscripcionId` - Eliminar inscripción
+
+## 🧪 Pruebas
+
+Para probar el sistema de likes:
+```bash
+cd backend-mongodb
+node test/test-likes.js
+```
+
+## 🔒 Seguridad
+
+- **Autenticación JWT**: Tokens seguros para sesiones
+- **Middleware de Autorización**: Control de acceso por roles
+- **Validación de Datos**: Verificación de entrada de datos
+- **Sanitización**: Prevención de inyección de código
+
+## 📈 Características Destacadas
+
+### Sistema de Likes Inteligente
+- **Persistencia Completa**: Cada like se registra con metadatos
+- **Estadísticas en Tiempo Real**: Conteo preciso y actualizado
+- **Ranking Automático**: Los cursos se ordenan por popularidad
+- **Información del Usuario**: Se guarda contexto completo de cada like
+
+### Gestión de Inscripciones
+- **Flujo Completo**: Desde solicitud hasta aprobación
+- **Estados Múltiples**: Control granular del proceso
+- **Observaciones**: Comunicación entre instructor y aprendiz
+- **Documentos**: Manejo seguro de archivos PDF
+
+### Dashboard Intuitivo
+- **Vista de Instructor**: Control total sobre cursos e inscripciones
+- **Filtros Avanzados**: Organización por múltiples criterios
+- **Estadísticas Visuales**: Métricas claras y comprensibles
+- **Acciones Rápidas**: Botones para tareas comunes
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 📞 Contacto
+
+Para preguntas o soporte, contactar al equipo de desarrollo del SENA Garzón.
+
 ---
 
-## 🧰 Endpoints principales
-
-### Autenticación
-| Método | Ruta                 | Descripción                        |
-|--------|----------------------|------------------------------------|
-| POST   | `/api/register`      | Registro de usuario                |
-| POST   | `/api/login`         | Inicio de sesión                   |
-| POST   | `/api/forgot-password` | Enviar link para reset de clave  |
-| POST   | `/api/reset-password/:token` | Restablecer contraseña       |
-
-### Usuarios
-| Método | Ruta             | Descripción                    |
-|--------|------------------|--------------------------------|
-| GET    | `/api/users`     | Listar usuarios                |
-| PUT    | `/api/users/:id` | Actualizar usuario             |
-| DELETE | `/api/users/:id` | Eliminar usuario               |
-
-### Productos
-| Método | Ruta                     | Descripción                   |
-|--------|--------------------------|-------------------------------|
-| GET    | `/api/productos`         | Listar productos              |
-| POST   | `/api/productos`         | Crear producto                |
-| PUT    | `/api/productos/:id`     | Editar producto               |
-| DELETE | `/api/productos/:id`     | Eliminar producto             |
-
----
-
-## 🧠 Características técnicas adicionales
-
-- ✉️ Notificaciones por correo para registro y recuperación.
-- 🖼 Vista previa de imagen antes de subir.
-- 🔁 Scroll infinito para productos.
-- 💾 Almacenamiento local de imágenes.
-- 🧩 Componentes desacoplados y reutilizables.
-- 🔒 Middleware personalizado para roles.
-
----
-
-## 🤝 Créditos
-
-Desarrollado por [@hdtoledo](https://github.com/hdtoledo)
-
-🚀 Proyecto educativo libre para modificación, mejora y aprendizaje.
-
----
-
-## 📝 Licencia
-
-Este proyecto se entrega bajo la licencia MIT. Puedes modificarlo, distribuirlo y adaptarlo a tus necesidades. (2025)
+**SENA Garzón** - Transformando vidas a través de la educación técnica de calidad.

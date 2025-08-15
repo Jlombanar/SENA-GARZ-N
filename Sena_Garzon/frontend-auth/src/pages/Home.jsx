@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiArrowRight, FiHeart, FiMapPin, FiPhone, FiMail, FiClock } from "react-icons/fi";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [user, setUser] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState("todos");
-  const [likes, setLikes] = useState({});
+  const [cursos, setCursos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -14,11 +18,90 @@ const Home = () => {
 
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
+    
+    // Cargar cursos reales
+    cargarCursos();
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLike = (courseId) => {
-    setLikes(prev => ({ ...prev, [courseId]: !prev[courseId] }));
+  const cargarCursos = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/cursos");
+      setCursos(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al cargar cursos:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleLike = async (cursoId) => {
+    if (!user) {
+      toast.info("Debes registrarte para dar like a los cursos");
+      navigate("/register");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `http://localhost:5000/api/cursos/${cursoId}/like`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      // Actualizar el curso en el estado local
+      setCursos(prevCursos => 
+        prevCursos.map(curso => 
+          curso._id === cursoId 
+            ? { 
+                ...curso, 
+                likes: response.data.hasLiked 
+                  ? [...(curso.likes || []), { 
+                      userId: user._id,
+                      nombreUsuario: user.nombre,
+                      emailUsuario: user.email || user.correo,
+                      fechaLike: new Date()
+                    }]
+                  : (curso.likes || []).filter(like => like.userId !== user._id)
+              }
+            : curso
+        )
+      );
+
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Error al procesar like:", error);
+      toast.error("Error al procesar like");
+    }
+  };
+
+  const handleVerDetalles = (cursoId) => {
+    if (!user) {
+      toast.info("Debes registrarte para ver los detalles del curso");
+      navigate("/register");
+      return;
+    }
+    
+    // Redirigir a mis cursos
+    navigate("/dashboard/miscurso");
+  };
+
+  const isLiked = (curso) => {
+    if (!user || !curso.likes) return false;
+    return curso.likes.some(like => like.userId === user._id);
+  };
+
+  const getLikesCount = (curso) => {
+    return curso.likes ? curso.likes.length : 0;
+  };
+
+  // Función para obtener cursos ordenados por likes
+  const getCursosOrdenadosPorLikes = () => {
+    return [...cursos].sort((a, b) => getLikesCount(b) - getLikesCount(a));
   };
 
   // Datos del componente
@@ -28,21 +111,18 @@ const Home = () => {
     { title: "Certificación SENA", description: "Obtén certificados con validez nacional", icon: "🏅" }
   ];
 
-  const popularCourses = [
-    { id: 1, title: "Diseño Gráfico Digital", category: "tecnologia", duration: "120 horas", likes: 124, image: "https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
-    { id: 2, title: "Panadería Artesanal", category: "gastronomia", duration: "80 horas", likes: 98, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
-    { id: 3, title: "Educación Sexual", category: "tecnologia", duration: "160 horas", likes: 156, image: "https://www.viapais.com.ar/resizer/v2/MMZTONBVMI2TEMBTMNSTIZRTMQ.jpg?quality=75&smart=true&auth=beac066b1b73eac681ead096f064679b6ac2a79edf4b2951c4036496bb94e288&width=980&height=640" },
-    { id: 4, title: "Electricidad Residencial", category: "construccion", duration: "100 horas", likes: 87, image: "https://images.unsplash.com/photo-1506790409786-287062b21cfe?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
-    { id: 5, title: "Inglés Básico", category: "idiomas", duration: "120 horas", likes: 210, image: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
-    { id: 6, title: "Corte y Confección", category: "moda", duration: "140 horas", likes: 76, image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" }
-  ];
+  const filteredCursos = activeTab === "todos" ? cursos : cursos.filter(curso => curso.categoria === activeTab);
 
-  const testimonials = [
-    { id: 1, quote: "El SENA Garzón me dio las herramientas para montar mi propio negocio. Hoy tengo una panadería que da empleo a 3 personas más.", author: "María Fernanda", role: "Egresada de Panadería", avatar: "https://randomuser.me/api/portraits/women/44.jpg" },
-    { id: 2, quote: "Gracias al curso de programación conseguí mi primer empleo en una empresa de desarrollo de software en Neiva.", author: "Carlos Andrés", role: "Egresado de Programación", avatar: "https://randomuser.me/api/portraits/men/32.jpg" }
-  ];
-
-  const filteredCourses = activeTab === "todos" ? popularCourses : popularCourses.filter(course => course.category === activeTab);
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-700 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando cursos...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
@@ -160,8 +240,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Sección de características con efecto vidrio */}
-     
       {/* Sección de cursos con diseño mejorado */}
       <section id="cursos" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -195,48 +273,63 @@ const Home = () => {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredCourses.map(course => (
+            {getCursosOrdenadosPorLikes().map((curso, index) => (
               <div 
-                key={course.id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-100 group"
+                key={curso._id}
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-100 group relative"
               >
+                {/* Badge de ranking */}
+                <div className="absolute top-4 left-4 z-10">
+                  <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
+                    #{index + 1}
+                  </div>
+                </div>
+
                 <div className="relative overflow-hidden">
                   <img 
-                    src={course.image} 
-                    alt={course.title} 
+                    src={curso.imagen || "https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"} 
+                    alt={curso.nombre} 
                     className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <button 
-                    onClick={() => handleLike(course.id)}
+                    onClick={() => handleLike(curso._id)}
                     className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
-                      likes[course.id] 
+                      isLiked(curso)
                         ? "bg-red-500 text-white shadow-lg" 
                         : "bg-white/90 text-gray-700 hover:bg-gray-100"
                     }`}
                   >
-                    <FiHeart className={`${likes[course.id] ? "fill-current" : ""}`} />
+                    <FiHeart className={`${isLiked(curso) ? "fill-current" : ""}`} />
                   </button>
                   <span className="absolute bottom-4 left-4 bg-green-600 text-white text-xs px-2 py-1 rounded-full capitalize shadow-md">
-                    {course.category}
+                    {curso.categoria || 'general'}
                   </span>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{course.title}</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{curso.nombre}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{curso.descripcion}</p>
                   <div className="flex items-center text-gray-500 mb-4">
                     <FiClock className="mr-1" />
-                    <span className="text-sm">{course.duration}</span>
+                    <span className="text-sm">{curso.duracion || '120 horas'}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 text-sm">
-                      {course.likes + (likes[course.id] ? 1 : 0)} likes
-                    </span>
-                    <Link 
-                      to={`/curso/${course.id}`} 
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600 text-sm font-medium">
+                        {getLikesCount(curso)} likes
+                      </span>
+                      {index === 0 && getLikesCount(curso) > 0 && (
+                        <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                          🏆 Más popular
+                        </span>
+                      )}
+                    </div>
+                    <button 
+                      onClick={() => handleVerDetalles(curso._id)}
                       className="text-green-600 hover:text-green-800 font-medium text-sm flex items-center transition-colors group-hover:underline"
                     >
                       Ver detalles <FiArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -244,19 +337,41 @@ const Home = () => {
           </div>
           
           <div className="text-center mt-12">
-            <Link 
-              to="/cursos" 
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 transition-all transform hover:-translate-y-1"
-            >
-              Ver todos los cursos <FiArrowRight className="ml-2 animate-pulse" />
-            </Link>
+            {!user ? (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link 
+                  to="/register" 
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 transition-all transform hover:-translate-y-1"
+                >
+                  Registrarse para ver todos los cursos <FiArrowRight className="ml-2 animate-pulse" />
+                </Link>
+                <Link 
+                  to="/top-cursos" 
+                  className="inline-flex items-center px-6 py-3 border border-green-600 text-green-600 rounded-md text-base font-medium hover:bg-green-50 transition-all transform hover:-translate-y-1"
+                >
+                  Ver cursos más populares <FiArrowRight className="ml-2" />
+                </Link>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link 
+                  to="/dashboard/miscurso" 
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 transition-all transform hover:-translate-y-1"
+                >
+                  Ver mis cursos <FiArrowRight className="ml-2 animate-pulse" />
+                </Link>
+                <Link 
+                  to="/top-cursos" 
+                  className="inline-flex items-center px-6 py-3 border border-green-600 text-green-600 rounded-md text-base font-medium hover:bg-green-50 transition-all transform hover:-translate-y-1"
+                >
+                  Ver cursos más populares <FiArrowRight className="ml-2" />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Sección de testimonios con diseño moderno */}
-    
-      
       {/* Sección de contacto con diseño profesional */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -380,7 +495,7 @@ const Home = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/cursos" className="text-gray-400 hover:text-green-300 transition flex items-center">
+                  <Link to="/dashboard/miscurso" className="text-gray-400 hover:text-green-300 transition flex items-center">
                     <FiArrowRight className="mr-2 text-xs opacity-0 group-hover:opacity-100 transition" />
                     Cursos
                   </Link>

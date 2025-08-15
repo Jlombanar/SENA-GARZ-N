@@ -1,17 +1,36 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
 
-const AdminLayout = ({ user, onLogout, children }) => {
+const AdminLayout = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser || storedUser.rol !== "admin") {
+      navigate("/login");
+    } else {
+      setUser(storedUser);
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gray-100 grid md:grid-cols-[16rem_1fr] relative">
       {/* Sidebar */}
       <Sidebar
         user={user}
-        onLogout={onLogout}
+        onLogout={handleLogout}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
       />

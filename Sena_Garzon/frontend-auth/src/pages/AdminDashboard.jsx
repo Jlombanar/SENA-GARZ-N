@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminLayout from "../components/AdminLayout";
 import AdminWelcome from "../components/AdminWelcome";
 
 const AdminDashboard = () => {
@@ -16,18 +15,10 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   if (!user) return null;
 
   return (
-    <AdminLayout user={user} onLogout={handleLogout}>
-      <AdminWelcome />
-    </AdminLayout>
+    <AdminWelcome />
   );
 };
 

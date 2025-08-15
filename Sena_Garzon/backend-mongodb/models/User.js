@@ -11,14 +11,31 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    email: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
     password: {
       type: String,
       required: true,
     },
     rol: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["admin", "user", "instructor", "aprendiz"],
       default: "user",
+    },
+    telefono: {
+      type: String,
+    },
+    especialidad: {
+      type: String,
+    },
+    direccion: {
+      type: String,
+    },
+    experiencia: {
+      type: String,
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date,

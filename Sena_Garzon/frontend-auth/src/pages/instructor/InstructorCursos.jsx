@@ -4,17 +4,24 @@ import {
   FaTrash,
   FaUsers,
   FaCalendarAlt,
-  FaClock
+  FaClock,
+  FaEye,
+  FaCheck,
+  FaTimes,
+  FaDownload
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  getCursos,
+  getCursosInstructor,
   createCurso,
   updateCurso,
   deleteCurso
 } from "../../services/cursoService";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const InstructorDashboard = () => {
+const InstructorCursos = () => {
   const [cursos, setCursos] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
   const [nuevoCurso, setNuevoCurso] = useState({
@@ -24,8 +31,14 @@ const InstructorDashboard = () => {
     cantidad: 0,
     valor: 0
   });
+  const [selectedCurso, setSelectedCurso] = useState(null);
+  const [inscripciones, setInscripciones] = useState([]);
+  const [inscripcionesOriginales, setInscripcionesOriginales] = useState([]);
+  const [showInscripciones, setShowInscripciones] = useState(false);
+  const [observaciones, setObservaciones] = useState({});
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     cargarCursos();
@@ -33,10 +46,11 @@ const InstructorDashboard = () => {
 
   const cargarCursos = async () => {
     try {
-      const res = await getCursos(token);
+      const res = await getCursosInstructor(token);
       setCursos(res.data);
     } catch (err) {
       console.error("Error al cargar cursos", err);
+      toast.error("Error al cargar cursos");
     }
   };
 
@@ -61,8 +75,10 @@ const InstructorDashboard = () => {
       });
       setEditandoId(null);
       cargarCursos();
+      toast.success(editandoId ? "Curso actualizado" : "Curso creado");
     } catch (err) {
       console.error("Error al guardar curso", err);
+      toast.error("Error al guardar curso");
     }
   };
 
@@ -75,14 +91,21 @@ const InstructorDashboard = () => {
     try {
       await deleteCurso(id, token);
       cargarCursos();
+      toast.success("Curso eliminado");
     } catch (err) {
       console.error("Error al eliminar curso", err);
+      toast.error("Error al eliminar curso");
     }
+  };
+
+  // Redirigir al dashboard para ver inscripciones
+  const verInscripciones = () => {
+    navigate('/instructor');
   };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold text-green-700 mb-4">Panel del Instructor</h1>
+      <h1 className="text-3xl font-bold text-green-700 mb-4">Mis Cursos</h1>
 
       <div className="bg-white p-4 rounded-lg shadow mb-6">
         <h2 className="text-xl font-semibold mb-4 text-green-800">Agregar / Editar Curso</h2>
@@ -113,6 +136,9 @@ const InstructorDashboard = () => {
               <button onClick={() => handleEliminar(curso._id)} className="flex-1 bg-red-100 text-red-700 px-3 py-1 rounded flex items-center justify-center hover:bg-red-200">
                 <FaTrash className="mr-1" /> Eliminar
               </button>
+              <button onClick={verInscripciones} className="flex-1 bg-green-100 text-green-700 px-3 py-1 rounded flex items-center justify-center hover:bg-green-200">
+                <FaEye className="mr-1" /> Ver Inscripciones
+              </button>
             </div>
           </div>
         ))}
@@ -121,4 +147,4 @@ const InstructorDashboard = () => {
   );
 };
 
-export default InstructorDashboard;
+export default InstructorCursos;
