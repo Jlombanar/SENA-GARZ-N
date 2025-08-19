@@ -13,8 +13,11 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) setUser(storedUser);
+    try {
+      const raw = localStorage.getItem("user");
+      const storedUser = raw ? JSON.parse(raw) : null;
+      if (storedUser) setUser(storedUser);
+    } catch (_) {}
 
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);

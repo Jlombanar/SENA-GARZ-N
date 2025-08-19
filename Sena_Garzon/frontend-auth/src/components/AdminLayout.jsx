@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
+import { getStoredUser } from "../utils/storage";
 
 const AdminLayout = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,7 +10,7 @@ const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = getStoredUser();
     if (!storedUser || storedUser.rol !== "admin") {
       navigate("/login");
     } else {

@@ -15,16 +15,19 @@ const UserProfile = () => {
   });
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-      setFormData({
-        nombre: storedUser.nombre || "",
-        correo: storedUser.correo || "",
-        telefono: storedUser.telefono || "",
-        direccion: storedUser.direccion || ""
-      });
-    }
+    try {
+      const raw = localStorage.getItem("user");
+      const storedUser = raw ? JSON.parse(raw) : null;
+      if (storedUser) {
+        setUser(storedUser);
+        setFormData({
+          nombre: storedUser.nombre || "",
+          correo: storedUser.correo || "",
+          telefono: storedUser.telefono || "",
+          direccion: storedUser.direccion || ""
+        });
+      }
+    } catch (_) {}
   }, []);
 
   const handleEdit = () => {
@@ -105,12 +108,10 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f0f7f0] to-[#d0e6d0] py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Tarjeta principal del perfil */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-l-8 border-[#3BA900] transition-all duration-300 hover:shadow-lg">
-          {/* Encabezado con fondo degradado */}
-          <div className="bg-gradient-to-r from-[#007832] to-[#3BA900] p-6 text-white">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+          <div className="bg-gradient-to-r from-green-700 to-green-600 p-6 text-white">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold">Mi Perfil</h1>
               <div className="flex space-x-3">

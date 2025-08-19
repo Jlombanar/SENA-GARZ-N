@@ -24,10 +24,13 @@ const Register = () => {
   });
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      navigate("/dashboard");
-    }
+    try {
+      const raw = localStorage.getItem("user");
+      const storedUser = raw ? JSON.parse(raw) : null;
+      if (storedUser) {
+        navigate("/dashboard");
+      }
+    } catch (_) {}
   }, [navigate]);
 
   const handleChange = (e) => {

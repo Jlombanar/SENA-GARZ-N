@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
+import { getStoredUser } from "../utils/storage";
 
 const InstructorRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   if (!user || user.rol !== "instructor") {
     return <Navigate to="/login" />;

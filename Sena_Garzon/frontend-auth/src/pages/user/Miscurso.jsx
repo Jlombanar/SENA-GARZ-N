@@ -1,21 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { getCursos } from "../../services/cursoService";
 import { toast } from "react-toastify";
 
 const Miscurso = () => {
   const [cursos, setCursos] = useState([]);
+  const [likedCursos, setLikedCursos] = useState([]);
   const [inscripciones, setInscripciones] = useState({});
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState({});
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  let user = null;
+  try {
+    const raw = localStorage.getItem("user");
+    user = raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    user = null;
+  }
 
   useEffect(() => {
     const fetchCursos = async () => {
       try {
         const res = await getCursos(token);
         setCursos(res.data);
+        // liked by current user
+        const uid = user?._id;
+        const liked = res.data.filter(c => Array.isArray(c.likes) && c.likes.some(l => l.userId === uid));
+        setLikedCursos(liked);
+        // Si venimos de Bienvenidos con un courseId, enfocar/mostrar
+        const params = new URLSearchParams(window.location.search);
+        const courseId = params.get('courseId');
+        if (courseId) {
+          const target = res.data.find(c => String(c._id) === String(courseId));
+          if (target) {
+            setShowForm(prev => ({ ...prev, [target._id]: true }));
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        }
       } catch (err) {
         console.error("Error al cargar cursos", err.response?.data || err);
         toast.error("Error al cargar los cursos");
@@ -99,16 +120,7 @@ const Miscurso = () => {
     formData.append("tarjetaPDF", datos.file);
 
     try {
-      const response = await axios.post(
-        `http://localhost:5000/api/cursos/${cursoId}/inscribirse`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`http://localhost:5000/api/cursos/${String(cursoId)}/inscribirse`, formData, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } });
 
       toast.success(response.data.message || "Solicitud de inscripción enviada correctamente.");
       
@@ -182,9 +194,36 @@ const Miscurso = () => {
     }
   };
 
+  const cursosPendientes = useMemo(() => cursos.filter(c => {
+    const uid = user?._id;
+    const ins = (c.inscritos || []).find(i => i.userId === uid);
+    return ins?.estado === 'pendiente';
+  }), [cursos, user]);
+
+  const cursosAprobados = useMemo(() => cursos.filter(c => {
+    const uid = user?._id;
+    const ins = (c.inscritos || []).find(i => i.userId === uid);
+    return ins?.estado === 'aprobada';
+  }), [cursos, user]);
+
+  const cursosRechazados = useMemo(() => cursos.filter(c => {
+    const uid = user?._id;
+    const ins = (c.inscritos || []).find(i => i.userId === uid);
+    return ins?.estado === 'rechazada';
+  }), [cursos, user]);
+
+  // Solo tus cursos (inscrito en cualquier estado)
+  const cursosInscritos = useMemo(() => cursos.filter(c => {
+    const uid = user?._id;
+    return (c.inscritos || []).some(i => i.userId === uid);
+  }), [cursos, user]);
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold text-green-700 mb-4">Mis Cursos</h1>
+      <div className="mb-6">
+        <h1 className="text-3xl font-extrabold text-green-600">Mis Cursos</h1>
+        <p className="text-gray-600">Gestiona tus inscripciones y continúa tu aprendizaje</p>
+      </div>
       
       {!token && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -192,19 +231,56 @@ const Miscurso = () => {
         </div>
       )}
       
+      {/* Tabs resumen */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white rounded-xl shadow border p-4">
+          <p className="text-sm text-gray-500">Pendientes</p>
+          <p className="text-2xl font-bold text-yellow-600">{cursosPendientes.length}</p>
+        </div>
+        <div className="bg-white rounded-xl shadow border p-4">
+          <p className="text-sm text-gray-500">Aprobados</p>
+          <p className="text-2xl font-bold text-green-600">{cursosAprobados.length}</p>
+        </div>
+        <div className="bg-white rounded-xl shadow border p-4">
+          <p className="text-sm text-gray-500">Rechazados</p>
+          <p className="text-2xl font-bold text-red-600">{cursosRechazados.length}</p>
+        </div>
+        <div className="bg-white rounded-xl shadow border p-4">
+          <p className="text-sm text-gray-500">Favoritos</p>
+          <p className="text-2xl font-bold text-indigo-600">{likedCursos.length}</p>
+        </div>
+      </div>
+
+      {/* Grid de cursos */}
+      {/* Sección de favoritos */}
+      {likedCursos.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-3">Cursos que te gustan</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {likedCursos.map(curso => (
+              <div key={curso._id} className="bg-white p-4 rounded-xl shadow border border-gray-100">
+                <img src={curso.imagen} alt={curso.nombre} className="w-full h-44 object-cover rounded-lg mb-3" />
+                <h3 className="text-lg font-bold text-gray-900">{curso.nombre}</h3>
+                <p className="text-gray-600 text-sm">{curso.descripcion}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {cursos.map((curso) => {
+        {cursosInscritos.map((curso) => {
           const inscrito = isInscrito(curso);
           const estado = getEstadoInscripcion(curso);
           
           return (
-            <div key={curso._id} className="bg-white p-4 rounded shadow">
+            <div key={curso._id} className="bg-white p-4 rounded-xl shadow border border-gray-100">
               <img
                 src={curso.imagen}
                 alt={curso.nombre}
-                className="w-full h-40 object-cover rounded mb-2"
+                className="w-full h-44 object-cover rounded-lg mb-3"
               />
-              <h2 className="text-xl font-bold text-green-800">{curso.nombre}</h2>
+              <h2 className="text-xl font-bold text-gray-900">{curso.nombre}</h2>
               <p className="text-gray-600">{curso.descripcion}</p>
               
               {/* Información del curso */}
@@ -224,131 +300,10 @@ const Miscurso = () => {
                   <div className={`p-3 rounded ${getEstadoColor(estado)}`}>
                     {getEstadoTexto(estado)}
                   </div>
-                  {estado === 'rechazada' && (
-                    <button
-                      onClick={() => toggleForm(curso._id)}
-                      className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
-                    >
-                      Reenviar solicitud
-                    </button>
-                  )}
                 </div>
-              ) : (
-                <button
-                  onClick={() => toggleForm(curso._id)}
-                  className="mt-4 bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 w-full"
-                >
-                  Inscribirse
-                </button>
-              )}
+              ) : null}
 
-              {/* Formulario de inscripción */}
-              {showForm[curso._id] && (
-                <div className="mt-4 p-4 bg-gray-50 rounded border">
-                  <h3 className="font-semibold text-gray-800 mb-3">Datos de Inscripción</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      placeholder="Nombre completo *"
-                      value={inscripciones[curso._id]?.nombreCompleto || ""}
-                      onChange={(e) => handleChange(curso._id, "nombreCompleto", e.target.value)}
-                      className="border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                    <input
-                      type="email"
-                      placeholder="Correo electrónico *"
-                      value={inscripciones[curso._id]?.correo || ""}
-                      onChange={(e) => handleChange(curso._id, "correo", e.target.value)}
-                      className="border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Teléfono *"
-                      value={inscripciones[curso._id]?.telefono || ""}
-                      onChange={(e) => handleChange(curso._id, "telefono", e.target.value)}
-                      className="border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Documento de identidad *"
-                      value={inscripciones[curso._id]?.documentoIdentidad || ""}
-                      onChange={(e) => handleChange(curso._id, "documentoIdentidad", e.target.value)}
-                      className="border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                    <input
-                      type="date"
-                      placeholder="Fecha de nacimiento"
-                      value={inscripciones[curso._id]?.fechaNacimiento || ""}
-                      onChange={(e) => handleChange(curso._id, "fechaNacimiento", e.target.value)}
-                      className="border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Ciudad"
-                      value={inscripciones[curso._id]?.ciudad || ""}
-                      onChange={(e) => handleChange(curso._id, "ciudad", e.target.value)}
-                      className="border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                  </div>
-                  
-                  <div className="mt-3">
-                    <input
-                      type="text"
-                      placeholder="Dirección"
-                      value={inscripciones[curso._id]?.direccion || ""}
-                      onChange={(e) => handleChange(curso._id, "direccion", e.target.value)}
-                      className="w-full border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                  </div>
-
-                  <div className="mt-3 space-y-2">
-                    <input
-                      type="text"
-                      placeholder="Número de tarjeta *"
-                      value={inscripciones[curso._id]?.numeroTarjeta || ""}
-                      onChange={(e) => handleChange(curso._id, "numeroTarjeta", e.target.value)}
-                      className="w-full border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                    <input
-                      type="file"
-                      accept="application/pdf"
-                      onChange={(e) => handleFileChange(curso._id, e.target.files[0])}
-                      className="w-full border p-2 rounded text-sm"
-                      disabled={loading}
-                    />
-                  </div>
-
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      onClick={() => handleInscribirse(curso._id)}
-                      disabled={loading}
-                      className={`flex-1 px-4 py-2 rounded font-medium transition-colors ${
-                        loading
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-green-700 hover:bg-green-800 text-white"
-                      }`}
-                    >
-                      {loading ? "Enviando..." : "Enviar Solicitud"}
-                    </button>
-                    <button
-                      onClick={() => toggleForm(curso._id)}
-                      disabled={loading}
-                      className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              )}
+              {/* Sin formulario aquí: la inscripción se hace desde Bienvenidos */}
             </div>
           );
         })}

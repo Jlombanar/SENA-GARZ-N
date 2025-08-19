@@ -17,7 +17,7 @@ const AdminWelcome = () => {
   const [loadingStats, setLoadingStats] = useState(true);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [errorStats, setErrorStats] = useState(null);
-  const [errorNotifications, setErrorStats] = useState(null);
+  const [errorNotifications, setErrorNotifications] = useState(null);  
   const [migrando, setMigrando] = useState(false);
 
   const fetchStats = async () => {
@@ -41,14 +41,28 @@ const AdminWelcome = () => {
     try {
       setErrorNotifications(null);
       const token = localStorage.getItem('token');
+      if (!token) {
+        setNotifications([]);
+        setErrorNotifications('No hay token de autenticación');
+        return;
+      }
       const res = await fetch('http://localhost:5000/api/auth/admin/notifications', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (!res.ok) throw new Error('Error al cargar notificaciones');
-      const data = await res.json();
-      setNotifications(data);
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(`Error al cargar notificaciones (${res.status})`);
+      }
+      let data = [];
+      try {
+        data = await res.json();
+      } catch (_) {
+        data = [];
+      }
+      setNotifications(Array.isArray(data) ? data : []);
     } catch (err) {
-      setErrorNotifications(err.message);
+      setErrorNotifications(err.message || 'Error al cargar notificaciones');
+      setNotifications([]);
     } finally {
       setLoadingNotifications(false);
     }

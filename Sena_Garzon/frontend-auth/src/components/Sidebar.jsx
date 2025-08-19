@@ -18,8 +18,13 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
 
   useEffect(() => {
     if (!propUser) {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (storedUser) setUser(storedUser);
+      try {
+        const raw = localStorage.getItem("user");
+        const storedUser = raw ? JSON.parse(raw) : null;
+        if (storedUser) setUser(storedUser);
+      } catch (_) {
+        setUser(null);
+      }
     } else {
       setUser(propUser);
     }
@@ -45,7 +50,7 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
   ];
 
   const userItems = [
-    { name: "Dashboard", icon: <FaDashcube />, path: "/dashboard" },
+    { name: "Bienvenidos", icon: <FaDashcube />, path: "/dashboard" },
     { name: "Mis Curso", icon: <FaBox />, path: "/dashboard/miscurso" },
     { name: "Perfil", icon: <FaUser />, path: "/dashboard/profile" },
   ];
@@ -62,7 +67,7 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
       )}
 
       <div
-        className={`fixed md:relative z-20 h-screen transition-all duration-300 ease-in-out ${
+        className={`fixed md:relative md:static z-20 md:z-auto h-screen md:h-auto transition-all duration-300 ease-in-out ${
           isCollapsed ? "w-20" : "w-72"
         } ${menuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
         onMouseEnter={() => setIsCollapsed(false)}

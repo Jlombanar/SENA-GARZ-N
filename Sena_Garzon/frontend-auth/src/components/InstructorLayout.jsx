@@ -2,6 +2,7 @@ import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
+import { getStoredUser } from "../utils/storage";
 
 const InstructorLayout = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,7 +10,7 @@ const InstructorLayout = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = getStoredUser();
     if (!storedUser || storedUser.rol !== "instructor") {
       navigate("/login");
     } else {

@@ -7,11 +7,16 @@ const AdminDashboard = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser || storedUser.rol !== "admin") {
+    try {
+      const raw = localStorage.getItem("user");
+      const storedUser = raw ? JSON.parse(raw) : null;
+      if (!storedUser || storedUser.rol !== "admin") {
+        navigate("/login");
+      } else {
+        setUser(storedUser);
+      }
+    } catch (_) {
       navigate("/login");
-    } else {
-      setUser(storedUser);
     }
   }, [navigate]);
 

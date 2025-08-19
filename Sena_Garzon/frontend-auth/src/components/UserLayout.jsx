@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
+import { getStoredUser } from "../utils/storage";
 
 const UserLayout = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,7 +11,7 @@ const UserLayout = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = getStoredUser();
     if (!storedUser || (storedUser.rol !== "user" && storedUser.rol !== "aprendiz")) {
       navigate("/login");
     } else {
@@ -41,7 +42,7 @@ const UserLayout = ({ children }) => {
         {/* Header móvil */}
         {!menuOpen && (
           <div className="md:hidden flex justify-between items-center px-4 py-3 bg-white shadow z-30 sticky top-0">
-            <h1 className="text-lg font-bold text-blue-600">Panel del Usuario</h1>
+            <h1 className="text-lg font-bold text-green-600">Panel del Usuario</h1>
             <button onClick={() => setMenuOpen(true)}>
               <FaBars size={22} />
             </button>
@@ -49,7 +50,7 @@ const UserLayout = ({ children }) => {
         )}
 
         <main className="flex-1 min-h-screen p-6">
-          <div className="w-full max-w-4xl mx-auto">
+          <div className="w-full max-w-6xl mx-auto">
             {children || <Outlet />}
           </div>
         </main>

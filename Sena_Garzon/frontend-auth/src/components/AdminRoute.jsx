@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
+import { getStoredUser } from "../utils/storage";
 
 const AdminRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
   if (!user) return <Navigate to="/login" />;
   if (user.rol === "admin" || user.isAdmin) return children;
   return <Navigate to="/dashboard" />;

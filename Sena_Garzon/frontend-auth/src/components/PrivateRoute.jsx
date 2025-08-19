@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
+import { getStoredUser } from "../utils/storage";
 
 const PrivateRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
   return user ? children : <Navigate to="/login" />;
 };
 

@@ -8,7 +8,14 @@ const TopCursos = () => {
   const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [estadisticas, setEstadisticas] = useState(null);
-  const [user] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user] = useState(() => {
+    try {
+      const raw = localStorage.getItem("user");
+      return raw ? JSON.parse(raw) : null;
+    } catch (_) {
+      return null;
+    }
+  });
 
   useEffect(() => {
     cargarTopCursos();

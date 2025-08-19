@@ -20,8 +20,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
+    try {
+      const raw = localStorage.getItem("user");
+      const storedUser = raw ? JSON.parse(raw) : null;
+      if (!storedUser) return;
       // Redirigir según el rol del usuario
       if (storedUser.rol === "admin") {
         navigate("/admin");
@@ -30,7 +32,7 @@ const Login = () => {
       } else {
         navigate("/dashboard");
       }
-    }
+    } catch (_) {}
   }, [navigate]);
 
   const handleLogin = async (e) => {

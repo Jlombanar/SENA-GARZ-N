@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Welcome from '../components/Welcome'; // ✅ Mantén esto si lo necesitas
+import Welcome from '../components/Welcome';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser) {
+    try {
+      const raw = localStorage.getItem("user");
+      const storedUser = raw ? JSON.parse(raw) : null;
+      if (!storedUser) {
+        navigate("/login");
+      } else {
+        setUser(storedUser);
+      }
+    } catch (_) {
       navigate("/login");
-    } else {
-      setUser(storedUser);
     }
   }, [navigate]);
 
   if (!user) return null;
 
-  return (
-    <div>
-      <Welcome user={user} />
-    </div>
-  );
+  return <Welcome user={user} />;
 };
 
 export default Dashboard;
