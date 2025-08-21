@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   FaHeart,
   FaCheckCircle,
@@ -91,21 +92,38 @@ const Welcome = () => {
         navigate("/login");
         return;
       }
+      // Validar que es un curso real (ObjectId)
+      const isObjectId = /^[a-fA-F0-9]{24}$/.test(String(inscCourseId || ''));
+      if (!isObjectId) { toast.info("Este es un curso de ejemplo. La inscripción solo está habilitada para cursos reales."); return; }
       const required = ["nombreCompleto","correo","telefono","documentoIdentidad","numeroTarjeta","file"];
-      for (const k of required) {
-        if (!ins[k]) { alert(`Falta ${k}`); return; }
-      }
+      for (const k of required) { if (!ins[k]) { toast.error(`Falta ${k}`); return; } }
       setInsLoading(true);
       const fd = new FormData();
-      Object.entries(ins).forEach(([k,v]) => v && fd.append(k, v));
+      fd.append('nombreCompleto', ins.nombreCompleto);
+      fd.append('correo', ins.correo);
+      fd.append('telefono', ins.telefono);
+      fd.append('documentoIdentidad', ins.documentoIdentidad);
+      if (ins.fechaNacimiento) {
+        let fn = ins.fechaNacimiento;
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(fn)) {
+          const [d, m, y] = fn.split('/');
+          fn = `${y}-${m}-${d}`; // convertir a YYYY-MM-DD
+        }
+        fd.append('fechaNacimiento', fn);
+      }
+      if (ins.direccion) fd.append('direccion', ins.direccion);
+      if (ins.ciudad) fd.append('ciudad', ins.ciudad);
+      fd.append('numeroTarjeta', ins.numeroTarjeta);
+      // El backend espera 'tarjetaPDF'
+      fd.append('tarjetaPDF', ins.file);
       await axios.post(`http://localhost:5000/api/cursos/${inscCourseId}/inscribirse`, fd, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
       });
-      alert("Solicitud enviada correctamente");
+      toast.success("Solicitud enviada correctamente");
       setInscOpen(false);
       setIns({ nombreCompleto:"", correo:"", telefono:"", documentoIdentidad:"", fechaNacimiento:"", direccion:"", ciudad:"", numeroTarjeta:"", file:null });
     } catch (e) {
-      alert(e?.response?.data?.message || "Error al inscribirse");
+      toast.error(e?.response?.data?.message || "Error al inscribirse");
     } finally {
       setInsLoading(false);
     }

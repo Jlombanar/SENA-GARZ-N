@@ -15,13 +15,13 @@ const storage = multer.diskStorage({
   },
 });
 
-// Filtro para permitir solo PDFs
+// Filtro de archivos: PDFs para inscripciones, imágenes para avatar
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") {
-    cb(null, true);
-  } else {
-    cb(new Error("Solo se permiten archivos PDF"), false);
-  }
+  const isPdf = file.mimetype === "application/pdf";
+  const isImage = file.mimetype.startsWith("image/");
+  // Permitir ambos tipos; la ruta decidirá qué acepta
+  if (isPdf || isImage) return cb(null, true);
+  return cb(new Error("Archivo no permitido"), false);
 };
 
 const upload = multer({ storage, fileFilter });

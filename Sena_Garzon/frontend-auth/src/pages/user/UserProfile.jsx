@@ -41,24 +41,32 @@ const UserProfile = () => {
     });
   };
 
+  const [avatarFile, setAvatarFile] = useState(null);
+
   const handleSave = async () => {
     if (!user) return;
 
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
+      // actualizar datos básicos
       const response = await axios.put(
-        `http://localhost:5000/api/users/${user._id}`,
+        `http://localhost:5000/api/auth/users/profile`,
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
+        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
       );
+      let updatedUser = response.data.user || response.data;
 
-      const updatedUser = response.data;
+      if (avatarFile) {
+        const fd = new FormData();
+        fd.append('avatar', avatarFile);
+        const avatarRes = await axios.put(
+          `http://localhost:5000/api/auth/users/profile`,
+          fd,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        updatedUser = avatarRes.data.user || avatarRes.data;
+      }
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
       setIsEditing(false);
@@ -153,8 +161,10 @@ const UserProfile = () => {
               {/* Sección izquierda - Avatar e información básica */}
               <div className="flex flex-col items-center w-full md:w-1/3">
                 <div className="relative mb-6">
-                  <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center border-4 border-[#3BA900] shadow-md">
-                    {renderRolIcon()}
+                  <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center border-4 border-[#3BA900] shadow-md">
+                    {user?.avatarUrl ? (
+                      <img src={user.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+                    ) : renderRolIcon()}
                   </div>
                   <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-[#007832] text-white px-3 py-1 rounded-full text-sm font-medium shadow">
                     {user?.rol}
@@ -222,6 +232,10 @@ const UserProfile = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3BA900] focus:border-[#3BA900]"
                       />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Foto de perfil</label>
+                      <input type="file" accept="image/*" onChange={(e)=>setAvatarFile(e.target.files?.[0]||null)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
                     </div>
                   </div>
                 )}

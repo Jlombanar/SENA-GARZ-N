@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const InstructorInscripciones = () => {
   const [cursos, setCursos] = useState([]);
@@ -58,7 +59,7 @@ const InstructorInscripciones = () => {
           : ins
       )
     );
-    alert('Inscripción aprobada exitosamente');
+    toast.success('Inscripción aprobada exitosamente');
   };
 
   const handleRechazar = (inscripcionId) => {
@@ -69,13 +70,13 @@ const InstructorInscripciones = () => {
           : ins
       )
     );
-    alert('Inscripción rechazada exitosamente');
+    toast.success('Inscripción rechazada exitosamente');
   };
 
   const handleEliminar = (inscripcionId) => {
     if (window.confirm("¿Estás seguro de que quieres eliminar esta inscripción?")) {
       setInscripciones(prev => prev.filter(ins => ins._id !== inscripcionId));
-      alert('Inscripción eliminada exitosamente');
+      toast.success('Inscripción eliminada exitosamente');
     }
   };
 

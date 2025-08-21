@@ -37,6 +37,9 @@ const userSchema = new mongoose.Schema(
     experiencia: {
       type: String,
     },
+    avatarUrl: {
+      type: String,
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
   },

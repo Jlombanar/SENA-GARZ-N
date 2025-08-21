@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const InstructorPerfil = () => {
   const [user, setUser] = useState(null);
@@ -50,7 +51,7 @@ const InstructorPerfil = () => {
     localStorage.setItem("user", JSON.stringify(updatedUser));
     setUser(updatedUser);
     setIsEditing(false);
-    alert("Perfil actualizado exitosamente");
+    toast.success("Perfil actualizado exitosamente");
   };
 
   const handleCancel = () => {

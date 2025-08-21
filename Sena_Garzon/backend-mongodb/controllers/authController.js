@@ -1,7 +1,10 @@
 // controllers/authController.js
 import User from '../models/User.js';
+import path from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import sharp from 'sharp';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecreto123';
 
@@ -49,6 +52,7 @@ export const updateProfile = async (req, res) => {
       return res.status(401).json({ message: 'Usuario no autenticado' });
     }
 
+    // Manejar JSON y FormData: si viene multipart, los campos están en req.body también
     const { nombre, email, telefono, especialidad, direccion, experiencia } = req.body;
 
     // Buscar el usuario por ID
@@ -67,6 +71,37 @@ export const updateProfile = async (req, res) => {
     if (especialidad) user.especialidad = especialidad;
     if (direccion) user.direccion = direccion;
     if (experiencia) user.experiencia = experiencia;
+
+    // Avatar (si viene archivo)
+    if (req.file) {
+      const uploadsDir = path.resolve('uploads');
+      const avatarsDir = path.join(uploadsDir, 'avatars');
+      try {
+        if (!fs.existsSync(avatarsDir)) {
+          fs.mkdirSync(avatarsDir, { recursive: true });
+        }
+        const processedFilename = `avatar-${Date.now()}.jpg`;
+        const processedPath = path.join(avatarsDir, processedFilename);
+        const originalPath = req.file.path;
+
+        // Procesar imagen: cuadrado 256x256 centrado, JPG calidad 85
+        await sharp(req.file.path)
+          .resize(256, 256, { fit: 'cover', position: 'center' })
+          .jpeg({ quality: 85 })
+          .toFile(processedPath);
+
+        // Eliminar original si existe
+        try { fs.unlinkSync(originalPath); } catch (_) {}
+
+        const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+        user.avatarUrl = `${baseUrl}/uploads/avatars/${processedFilename}`;
+      } catch (err) {
+        console.error('Error procesando avatar con sharp:', err);
+        // Fallback: usar el archivo subido sin procesar
+        const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+        user.avatarUrl = `${baseUrl}/uploads/${req.file.filename}`;
+      }
+    }
 
     // Guardar cambios
     await user.save();

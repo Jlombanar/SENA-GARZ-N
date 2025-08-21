@@ -5,6 +5,8 @@ import { forgotPassword } from '../controllers/forgotPasswordController.js';
 import { resetPassword } from '../controllers/resetPasswordController.js';
 import { getAllUsers, deleteUser, updateUser, getAdminStats, getAdminNotifications, migrarInstructores } from '../controllers/adminController.js';
 import { verificarToken, esAdmin } from '../middleware/authMiddleware.js';
+import upload from '../middleware/multer.js';
+import { contact } from '../controllers/contactController.js';
 
 const router = express.Router();
 
@@ -14,8 +16,9 @@ router.post('/register', register);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
 
-// Rutas protegidas
-router.put('/users/profile', verificarToken, updateProfile);
+// Rutas protegidas (prefijo /auth para coherencia con frontend)
+router.put('/auth/users/profile', verificarToken, upload.single('avatar'), updateProfile);
+router.post('/contact', contact);
 
 // Rutas de admin
 router.get('/users', getAllUsers);

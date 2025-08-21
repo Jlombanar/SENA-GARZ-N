@@ -84,6 +84,7 @@ const Register = () => {
                 src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
                 alt="Logo SENA"
                 className="h-10"
+                style={{ filter: 'hue-rotate(85deg) saturate(2)' }}
               />
             </div>
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-green-100 tracking-tight">

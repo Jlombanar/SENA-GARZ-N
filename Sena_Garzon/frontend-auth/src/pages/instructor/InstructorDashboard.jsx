@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import {
   getCursosInstructor,
@@ -163,7 +164,7 @@ const InstructorDashboard = () => {
   const handleAprobar = async (inscripcionId) => {
     if (modoPrueba) {
       setInscripciones(prev => prev.map(ins => ins._id === inscripcionId ? { ...ins, estado: 'aprobada' } : ins));
-      alert("Inscripción aprobada exitosamente (modo prueba)");
+      toast.success("Inscripción aprobada exitosamente (modo prueba)");
       return;
     }
     try {
@@ -171,19 +172,19 @@ const InstructorDashboard = () => {
         estado: "aprobada",
         observacionesInstructor: observaciones[inscripcionId] || ""
       }, token);
-      alert("Inscripción aprobada exitosamente");
+      toast.success("Inscripción aprobada exitosamente");
       await cargarInscripciones(selectedCurso._id);
       await cargarCursos();
       setObservaciones(prev => ({ ...prev, [inscripcionId]: "" }));
     } catch (error) {
-      alert("Error al aprobar la inscripción");
+      toast.error("Error al aprobar la inscripción");
     }
   };
 
   const handleRechazar = async (inscripcionId) => {
     if (modoPrueba) {
       setInscripciones(prev => prev.map(ins => ins._id === inscripcionId ? { ...ins, estado: 'rechazada' } : ins));
-      alert("Inscripción rechazada exitosamente (modo prueba)");
+      toast.success("Inscripción rechazada exitosamente (modo prueba)");
       return;
     }
     try {
@@ -191,12 +192,12 @@ const InstructorDashboard = () => {
         estado: "rechazada",
         observacionesInstructor: observaciones[inscripcionId] || ""
       }, token);
-      alert("Inscripción rechazada exitosamente");
+      toast.success("Inscripción rechazada exitosamente");
       await cargarInscripciones(selectedCurso._id);
       await cargarCursos();
       setObservaciones(prev => ({ ...prev, [inscripcionId]: "" }));
     } catch (error) {
-      alert("Error al rechazar la inscripción");
+      toast.error("Error al rechazar la inscripción");
     }
   };
 
@@ -204,16 +205,16 @@ const InstructorDashboard = () => {
     if (window.confirm("¿Estás seguro de que quieres eliminar esta inscripción?")) {
       if (modoPrueba) {
         setInscripciones(prev => prev.filter(ins => ins._id !== inscripcionId));
-        alert("Inscripción eliminada exitosamente (modo prueba)");
+        toast.success("Inscripción eliminada exitosamente (modo prueba)");
         return;
       }
       try {
         await eliminarInscripcion(selectedCurso._id, inscripcionId, token);
-        alert("Inscripción eliminada exitosamente");
+        toast.success("Inscripción eliminada exitosamente");
         await cargarInscripciones(selectedCurso._id);
         await cargarCursos();
       } catch (error) {
-        alert("Error al eliminar la inscripción");
+        toast.error("Error al eliminar la inscripción");
       }
     }
   };

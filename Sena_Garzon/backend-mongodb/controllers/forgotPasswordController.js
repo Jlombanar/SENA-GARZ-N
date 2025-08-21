@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import { sendEmail } from '../utils/sendEmail.js';
 import dotenv from 'dotenv';
 dotenv.config();
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5175';
 
 export const forgotPassword = async (req, res) => {
   const { correo } = req.body;
@@ -19,7 +20,7 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = tokenExpiration;
     await user.save();
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+    const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
     const html = `
       <h2>Solicitud de cambio de contraseña</h2>
       <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>

@@ -1,4 +1,6 @@
 import Curso from "../models/Curso.js";
+import User from "../models/User.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 // Obtener todos los cursos
 export const getCursos = async (req, res) => {
@@ -167,7 +169,36 @@ export const inscribirseCurso = async (req, res) => {
     curso.inscritos.push(nuevaInscripcion);
     await curso.save();
 
-    res.status(200).json({ 
+    // Notificar por correo: instructor y usuario (pendiente)
+    try {
+      const instructor = await User.findById(curso.instructorId);
+      const nombreCurso = curso.nombre;
+      const asuntoInstructor = `Nueva inscripción pendiente - ${nombreCurso}`;
+      const htmlInstructor = `
+        <h2>Nueva inscripción recibida</h2>
+        <p><strong>Curso:</strong> ${nombreCurso}</p>
+        <p><strong>Aspirante:</strong> ${nuevaInscripcion.nombreCompleto} (${nuevaInscripcion.correo})</p>
+        <p><strong>Fecha:</strong> ${new Date(nuevaInscripcion.fechaInscripcion).toLocaleString()}</p>
+        <p>Por favor revisa la solicitud en el panel de instructor.</p>
+      `;
+      if (instructor?.correo || instructor?.email) {
+        await sendEmail(instructor.correo || instructor.email, asuntoInstructor, htmlInstructor);
+      }
+
+      const asuntoUsuario = `Solicitud enviada - ${nombreCurso}`;
+      const htmlUsuario = `
+        <h2>Tu solicitud está pendiente de revisión</h2>
+        <p>Hemos recibido tu inscripción al curso <strong>${nombreCurso}</strong>.</p>
+        <p>Te notificaremos por correo cuando sea <strong>aprobada</strong> o <strong>rechazada</strong>.</p>
+      `;
+      if (nuevaInscripcion.correo) {
+        await sendEmail(nuevaInscripcion.correo, asuntoUsuario, htmlUsuario);
+      }
+    } catch (errMail) {
+      console.error("Error enviando correos de inscripción:", errMail);
+    }
+
+    res.status(200).json({
       message: "Solicitud de inscripción enviada correctamente. Está pendiente de revisión por el instructor.",
       inscripcion: nuevaInscripcion
     });
@@ -372,9 +403,24 @@ export const revisarInscripcion = async (req, res) => {
 
     await curso.save();
 
-    res.json({ 
+    // Notificar al usuario por correo
+    try {
+      const asunto = `Inscripción ${estado} - ${curso.nombre}`;
+      const html = `
+        <h2>Resultado de tu inscripción</h2>
+        <p>Tu inscripción al curso <strong>${curso.nombre}</strong> ha sido <strong>${estado}</strong>.</p>
+        ${inscripcion.observacionesInstructor ? `<p><strong>Observaciones:</strong> ${inscripcion.observacionesInstructor}</p>` : ''}
+      `;
+      if (inscripcion.correo) {
+        await sendEmail(inscripcion.correo, asunto, html);
+      }
+    } catch (errMail) {
+      console.error("Error enviando correo de revisión:", errMail);
+    }
+
+    res.json({
       message: `Inscripción ${estado === 'aprobada' ? 'aprobada' : 'rechazada'} correctamente`,
-      inscripcion 
+      inscripcion
     });
   } catch (error) {
     console.error("Error al revisar inscripción:", error);

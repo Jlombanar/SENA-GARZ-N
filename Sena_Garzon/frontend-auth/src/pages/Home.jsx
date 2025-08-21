@@ -138,6 +138,7 @@ const Home = () => {
                 src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
                 alt="SENA"
                 className="h-8 transition-transform duration-300 group-hover:rotate-6"
+                style={{ filter: 'hue-rotate(85deg) saturate(2)' }}
               />
             </div>
             <span className={`text-2xl font-bold transition-colors ${isScrolled ? "text-green-800" : "text-white drop-shadow-lg"}`}>
@@ -425,12 +426,27 @@ const Home = () => {
               
               <div className="bg-white p-12">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Envía un mensaje</h3>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={async (e)=>{
+                  e.preventDefault();
+                  const nombre = e.currentTarget.name.value.trim();
+                  const correo = e.currentTarget.email.value.trim();
+                  const mensaje = e.currentTarget.message.value.trim();
+                  if(!nombre || !correo || !mensaje){ toast.error("Completa todos los campos"); return; }
+                  try{
+                    await axios.post('http://localhost:5000/api/contact', { nombre, correo, mensaje });
+                    toast.success('Mensaje enviado correctamente');
+                    e.currentTarget.reset();
+                  }catch(err){
+                    console.error(err);
+                    toast.error(err.response?.data?.message || 'No se pudo enviar el mensaje');
+                  }
+                }}>
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
                     <input 
                       type="text" 
                       id="name" 
+                      name="name"
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
                     />
                   </div>
@@ -440,6 +456,7 @@ const Home = () => {
                     <input 
                       type="email" 
                       id="email" 
+                      name="email"
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
                     />
                   </div>
@@ -448,6 +465,7 @@ const Home = () => {
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Mensaje</label>
                     <textarea 
                       id="message" 
+                      name="message"
                       rows="4" 
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
                     ></textarea>
@@ -477,6 +495,7 @@ const Home = () => {
                     src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
                     alt="SENA"
                     className="h-8"
+                    style={{ filter: 'hue-rotate(85deg) saturate(2)' }}
                   />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">

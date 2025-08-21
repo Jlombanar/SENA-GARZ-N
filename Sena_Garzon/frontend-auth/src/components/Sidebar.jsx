@@ -67,13 +67,13 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
       )}
 
       <div
-        className={`fixed md:relative md:static z-20 md:z-auto h-screen md:h-auto transition-all duration-300 ease-in-out ${
+        className={`fixed md:sticky md:top-0 z-20 md:z-auto h-screen md:h-[calc(100vh-0px)] transition-all duration-300 ease-in-out ${
           isCollapsed ? "w-20" : "w-72"
         } ${menuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
         onMouseEnter={() => setIsCollapsed(false)}
         onMouseLeave={() => setIsCollapsed(false)}
       >
-        <div className="h-full bg-white text-black border-r border-gray-200 flex flex-col shadow-xl">
+        <div className="h-full bg-white text-black border-r border-gray-200 flex flex-col shadow-xl overflow-auto">
           {/* Header del sidebar */}
           <div className="p-4 border-b border-gray-200 bg-green-700 text-white">
             <div className="flex justify-between items-center">
@@ -89,9 +89,13 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
 
           {/* Información del usuario */}
           <div className="p-4 flex items-center gap-3 border-b border-gray-200">
-            <div className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
-              {user?.nombre?.charAt(0)?.toUpperCase() || "U"}
-            </div>
+            {user?.avatarUrl ? (
+              <img src={user.avatarUrl} alt="avatar" className="w-10 h-10 rounded-full object-cover border-2 border-green-600" />
+            ) : (
+              <div className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
+                {user?.nombre?.charAt(0)?.toUpperCase() || "U"}
+              </div>
+            )}
             {!isCollapsed && (
               <div>
                 <p className="text-sm text-gray-300">Bienvenido,</p>
