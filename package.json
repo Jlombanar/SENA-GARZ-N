@@ -1,0 +1,36 @@
+{
+  "name": "sena-garzon",
+  "version": "1.0.0",
+  "description": "Sistema de Gestión de Cursos para el SENA Garzón",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend-mongodb && npm run dev",
+    "client": "cd frontend-auth && npm run dev",
+    "build": "cd frontend-auth && npm run build",
+    "install-all": "npm install && cd backend-mongodb && npm install && cd ../frontend-auth && npm install",
+    "start": "cd backend-mongodb && npm start"
+  },
+  "keywords": [
+    "sena",
+    "cursos",
+    "educacion",
+    "mongodb",
+    "react",
+    "nodejs",
+    "express"
+  ],
+  "author": "SENA Garzón",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sena-garzon/sistema-cursos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sena-garzon/sistema-cursos/issues"
+  },
+  "homepage": "https://github.com/sena-garzon/sistema-cursos#readme"
+}
