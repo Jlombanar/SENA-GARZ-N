@@ -61,7 +61,7 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
     <>
       {menuOpen && (
         <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-lg z-10 md:hidden"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-10 md:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -73,14 +73,14 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
         onMouseEnter={() => setIsCollapsed(false)}
         onMouseLeave={() => setIsCollapsed(false)}
       >
-        <div className="h-full bg-white text-black border-r border-gray-200 flex flex-col shadow-xl overflow-auto">
+        <div className="h-full bg-white text-black border-r sg-border flex flex-col shadow-xl overflow-auto">
           {/* Header del sidebar */}
-          <div className="p-4 border-b border-gray-200 bg-green-700 text-white">
+          <div className="p-4 border-b sg-border bg-[var(--sg-green-700)] text-white">
             <div className="flex justify-between items-center">
-              {!isCollapsed && <h1 className="text-xl font-bold">SENA Panel</h1>}
+              {!isCollapsed && <h1 className="text-xl font-bold tracking-wide">SENA Panel</h1>}
               <button
                 onClick={() => setMenuOpen(false)}
-                className="md:hidden text-white hover:text-green-200"
+                className="md:hidden text-white hover:text-[var(--sg-white)]/80"
               >
                 <FaTimes size={20} />
               </button>
@@ -88,19 +88,19 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
           </div>
 
           {/* Información del usuario */}
-          <div className="p-4 flex items-center gap-3 border-b border-gray-200">
+          <div className="p-4 flex items-center gap-3 border-b sg-border bg-white">
             {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt="avatar" className="w-10 h-10 rounded-full object-cover border-2 border-green-600" />
+              <img src={user.avatarUrl} alt="avatar" className="w-10 h-10 rounded-full object-cover border-2" style={{ borderColor: "var(--sg-green-700)" }} />
             ) : (
-              <div className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white" style={{ background: "var(--sg-green-700)" }}>
                 {user?.nombre?.charAt(0)?.toUpperCase() || "U"}
               </div>
             )}
             {!isCollapsed && (
               <div>
-                <p className="text-sm text-gray-300">Bienvenido,</p>
-                <p className="font-semibold truncate max-w-[140px] text-white">{user?.nombre || "Usuario"}</p>
-                <span className="text-xs bg-white text-green-700 rounded-full px-2 py-0.5 capitalize font-medium">
+                <p className="text-xs text-gray-500">Bienvenido,</p>
+                <p className="font-semibold truncate max-w-[160px] text-black">{user?.nombre || "Usuario"}</p>
+                <span className="text-xs px-2 py-0.5 rounded-full capitalize font-medium sg-chip">
                   {user?.rol || "usuario"}
                 </span>
               </div>
@@ -113,8 +113,8 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
             <Link
               to="/"
               onClick={() => setMenuOpen(false)}
-              className={`flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-green-50 hover:text-green-700 ${
-                location.pathname === "/" ? "bg-green-100 text-green-700 font-semibold" : "text-gray-700"
+              className={`flex items-center p-3 rounded-lg transition-all duration-200 ${
+                location.pathname === "/" ? "bg-green-100 text-[var(--sg-green-700)] font-semibold" : "text-gray-700 hover:bg-green-50 hover:text-[var(--sg-green-700)]"
               } ${isCollapsed ? "justify-center" : "gap-3"}`}
             >
               <FaHome className="w-5 h-5" />
@@ -127,25 +127,22 @@ const Sidebar = ({ user: propUser, onLogout, menuOpen, setMenuOpen }) => {
                 key={item.name}
                 to={item.path}
                 onClick={() => setMenuOpen(false)}
-                className={`flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-green-50 hover:text-green-700 ${
-                  location.pathname === item.path ? "bg-green-100 text-green-700 font-semibold" : "text-gray-700"
+                className={`flex items-center p-3 rounded-lg transition-all duration-200 ${
+                  location.pathname === item.path ? "bg-green-100 text-[var(--sg-green-700)] font-semibold" : "text-gray-700 hover:bg-green-50 hover:text-[var(--sg-green-700)]"
                 } ${isCollapsed ? "justify-center" : "gap-3"}`}
               >
-                <span className="text-green-600">{item.icon}</span>
+                <span className="text-[var(--sg-green-700)]">{item.icon}</span>
                 {!isCollapsed && <span>{item.name}</span>}
               </Link>
             ))}
           </nav>
 
           {/* Botón de cerrar sesión */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t sg-border">
             <button
               onClick={onLogout}
-              className={`w-full py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
-                isCollapsed 
-                  ? "bg-red-100 hover:bg-red-200 text-red-700" 
-                  : "bg-red-600 hover:bg-red-700 text-white"
-              }`}
+              className={`w-full py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-white`}
+              style={{ background: "var(--sg-black)" }}
             >
               <FaSignOutAlt className="w-4 h-4" />
               {!isCollapsed && <span>Cerrar sesión</span>}

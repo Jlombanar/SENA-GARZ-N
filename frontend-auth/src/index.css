@@ -1,1 +1,93 @@
 @import "tailwindcss";
+
+
+/* 🎨 Paleta Betowa (verde/negro/blanco) */
+:root {
+  --sg-green-500: #1aa160; /* acento */
+  --sg-green-600: #148a52; /* primario */
+  --sg-green-700: #0f6f42; /* primario oscuro */
+  --sg-green-800: #0b5533; /* contraste fuerte */
+
+  --sg-black: #0a0f0c;
+  --sg-white: #ffffff;
+}
+
+html, body, #root {
+  background-color: var(--sg-white);
+  color: var(--sg-black);
+  font-family: 'Inter', sans-serif;
+}
+
+/* 🌈 Gradiente institucional */
+.sg-gradient {
+  background-image: linear-gradient(135deg, var(--sg-green-800), var(--sg-green-600));
+}
+
+/* 🚀 Gradiente animado para secciones principales */
+.sg-animated-gradient {
+  background: linear-gradient(-45deg, var(--sg-green-800), var(--sg-green-600), var(--sg-green-500), var(--sg-green-700));
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 📦 Tarjetas */
+.sg-card {
+  background: var(--sg-white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+.sg-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* 🔘 Botones */
+.sg-btn {
+  background: linear-gradient(135deg, var(--sg-green-700), var(--sg-green-500));
+  color: var(--sg-white);
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.sg-btn:hover {
+  background: linear-gradient(135deg, var(--sg-green-800), var(--sg-green-600));
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+/* 🏷 Chips */
+.sg-chip {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--sg-green-700);
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+/* ➖ Bordes */
+.sg-border {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 🔗 Links */
+.sg-link {
+  color: var(--sg-green-700);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.sg-link:hover {
+  color: var(--sg-green-500);
+  text-decoration: underline;
+}

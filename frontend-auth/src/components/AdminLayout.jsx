@@ -27,7 +27,7 @@ const AdminLayout = ({ children }) => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-100 grid md:grid-cols-[16rem_1fr] relative">
+    <div className="min-h-screen grid md:grid-cols-[16rem_1fr] relative" style={{ background: "#f7faf7" }}>
       {/* Sidebar */}
       <Sidebar
         user={user}
@@ -40,8 +40,8 @@ const AdminLayout = ({ children }) => {
       <div className="flex flex-col overflow-y-auto">
         {/* Header móvil */}
         {!menuOpen && (
-          <div className="md:hidden flex justify-between items-center px-4 py-3 bg-white shadow z-30 sticky top-0">
-            <h1 className="text-lg font-bold text-red-600">Panel de Administración</h1>
+          <div className="md:hidden flex justify-between items-center px-4 py-3 bg-white shadow z-30 sticky top-0 border-b sg-border">
+            <h1 className="text-lg font-bold" style={{ color: "var(--sg-green-700)" }}>Panel de Administración</h1>
             <button onClick={() => setMenuOpen(true)}>
               <FaBars size={22} />
             </button>

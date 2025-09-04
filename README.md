@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # SENA Garzón - Sistema de Gestión de Cursos
 
@@ -212,3 +213,6 @@ Para preguntas o soporte, contactar al equipo de desarrollo del SENA Garzón.
 ---
 
 **SENA Garzón** - Transformando vidas a través de la educación técnica de calidad.
+=======
+# Sena-Garzon
+>>>>>>> 5dd542ea2021f3a8415a6658e42f4013f2750c14

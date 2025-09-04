@@ -130,7 +130,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
       {/* Header con efecto vidrio y sombra */}
-      <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? "bg-white/90 backdrop-blur-md shadow-xl" : "bg-transparent"}`}>
+      <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? "bg-white/95 backdrop-blur-md shadow-xl" : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3 group">
             <div className={`p-2 rounded-lg transition-all ${isScrolled ? "bg-green-100/80" : "bg-white/90"}`}>
@@ -141,8 +141,8 @@ const Home = () => {
                 style={{ filter: 'hue-rotate(85deg) saturate(2)' }}
               />
             </div>
-            <span className={`text-2xl font-bold transition-colors ${isScrolled ? "text-green-800" : "text-white drop-shadow-lg"}`}>
-              SENA Garzón
+            <span className={`text-2xl font-bold transition-colors ${isScrolled ? "text-[var(--sg-green-700)]" : "text-white drop-shadow-lg"}`}>
+              Sena Garzón
             </span>
           </Link>
           
@@ -151,13 +151,14 @@ const Home = () => {
               <>
                 <Link
                   to="/login"
-                  className={`px-4 py-2 font-medium rounded-lg transition-all ${isScrolled ? "text-gray-700 hover:text-green-700" : "text-white hover:text-green-200"}`}
+                  className={`px-4 py-2 font-medium rounded-lg transition-all ${isScrolled ? "text-gray-700 hover:text-[var(--sg-green-700)]" : "text-white hover:text-green-200"}`}
                 >
                   Ingresar
                 </Link>
                 <Link
                   to="/register"
-                  className={`px-4 py-2 rounded-lg transition-all shadow-lg hover:shadow-xl ${isScrolled ? "bg-gradient-to-r from-green-600 to-green-700 text-white" : "bg-white text-green-800 font-medium"}`}
+                  className={`px-4 py-2 rounded-lg transition-all shadow-lg hover:shadow-xl ${isScrolled ? "text-white" : "text-[var(--sg-green-700)] font-medium"}`}
+                  style={isScrolled ? { background: "linear-gradient(135deg, var(--sg-green-800), var(--sg-green-600))" } : { background: "var(--sg-white)" }}
                 >
                   Registrarse
                   <FiArrowRight className="ml-2 inline" />
@@ -166,7 +167,8 @@ const Home = () => {
             ) : (
               <Link
                 to="/dashboard"
-                className={`px-4 py-2 rounded-lg transition-all shadow-lg hover:shadow-xl ${isScrolled ? "bg-gradient-to-r from-green-600 to-green-700 text-white" : "bg-white text-green-800 font-medium"}`}
+                className={`px-4 py-2 rounded-lg transition-all shadow-lg hover:shadow-xl ${isScrolled ? "text-white" : "text-[var(--sg-green-700)] font-medium"}`}
+                style={isScrolled ? { background: "linear-gradient(135deg, var(--sg-green-800), var(--sg-green-600))" } : { background: "var(--sg-white)" }}
               >
                 Mi Panel
                 <FiArrowRight className="ml-2 inline" />
@@ -177,7 +179,7 @@ const Home = () => {
       </header>
 
       {/* Hero section con gradiente animado */}
-      <div className="relative pt-32 pb-20 px-6 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white overflow-hidden">
+      <div className="relative pt-32 pb-20 px-6 text-white overflow-hidden sg-gradient">
         {/* Efecto de burbujas decorativas */}
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
           {[...Array(10)].map((_, i) => (
@@ -233,7 +235,7 @@ const Home = () => {
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="relative w-full max-w-md">
-              <div className="absolute -top-6 -left-6 w-full h-full border-4 border-white border-opacity-30 rounded-2xl animate-pulse"></div>
+              <div className="absolute -top-6 -left-6 w-full h-full border-4 border-white/30 rounded-2xl animate-pulse"></div>
               <img 
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
                 alt="Estudiantes SENA"
@@ -284,7 +286,7 @@ const Home = () => {
               >
                 {/* Badge de ranking */}
                 <div className="absolute top-4 left-4 z-10">
-                  <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
+                  <div className="text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg" style={{ background: "linear-gradient(135deg, var(--sg-green-800), var(--sg-green-600))" }}>
                     #{index + 1}
                   </div>
                 </div>
@@ -300,13 +302,15 @@ const Home = () => {
                     onClick={() => handleLike(curso._id)}
                     className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
                       isLiked(curso)
-                        ? "bg-red-500 text-white shadow-lg" 
+                        ? "text-white shadow-lg" 
                         : "bg-white/90 text-gray-700 hover:bg-gray-100"
                     }`}
+                    style={isLiked(curso) ? { background: "var(--sg-green-700)" } : {}}
                   >
                     <FiHeart className={`${isLiked(curso) ? "fill-current" : ""}`} />
                   </button>
-                  <span className="absolute bottom-4 left-4 bg-green-600 text-white text-xs px-2 py-1 rounded-full capitalize shadow-md">
+                  <span className="absolute bottom-4 left-4 text-white text-xs px-2 py-1 rounded-full capitalize shadow-md"
+                    style={{ background: "var(--sg-green-700)" }}>
                     {curso.categoria || 'general'}
                   </span>
                 </div>
@@ -323,7 +327,7 @@ const Home = () => {
                         {getLikesCount(curso)} likes
                       </span>
                       {index === 0 && getLikesCount(curso) > 0 && (
-                        <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                        <span className="text-xs px-2 py-1 rounded-full" style={{ background: "rgba(20,138,82,0.12)", color: "var(--sg-green-700)" }}>
                           🏆 Más popular
                         </span>
                       )}
