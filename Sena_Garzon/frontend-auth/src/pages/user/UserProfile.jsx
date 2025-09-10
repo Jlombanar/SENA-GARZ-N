@@ -256,7 +256,7 @@ const UserProfile = () => {
                     <h4 className="font-medium text-gray-800">Detalles de la cuenta</h4>
                   </div>
                   <div className="space-y-2 text-sm text-gray-600">
-                    <p><strong>ID de Usuario:</strong> {user._id}</p>
+                    
                     <p><strong>Rol:</strong> {user.rol}</p>
                     <p><strong>Fecha de registro:</strong> {new Date(user.createdAt || Date.now()).toLocaleDateString()}</p>
                   </div>

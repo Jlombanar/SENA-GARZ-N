@@ -72,12 +72,11 @@ const InstructorPerfil = () => {
 
   if (loading) {
     return (
-      <div className="p-6 bg-white min-h-screen">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando perfil...</p>
-          </div>
+      <div className="min-h-screen bg-green-50 flex items-center justify-center p-6">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md w-full">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-600 mx-auto mb-6"></div>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">Cargando perfil</h3>
+          <p className="text-gray-500">Espere un momento por favor...</p>
         </div>
       </div>
     );
@@ -85,73 +84,77 @@ const InstructorPerfil = () => {
 
   if (!user) {
     return (
-      <div className="p-6 bg-white min-h-screen">
-        <div className="text-center py-12">
-          <span className="text-6xl">⚠️</span>
-          <p className="text-gray-500 text-lg">No se pudieron cargar los datos del usuario</p>
+      <div className="min-h-screen bg-green-50 flex items-center justify-center p-6">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md w-full">
+          <div className="text-6xl mb-4 text-green-500">⚠️</div>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">Error al cargar datos</h3>
+          <p className="text-gray-500">No se pudieron cargar los datos del usuario</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-white min-h-screen">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-green-50 p-4 md:p-8">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-green-700">Mi Perfil</h1>
-          <div className="flex gap-2">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 p-6 bg-white rounded-2xl shadow-md">
+          <div>
+            <h1 className="text-3xl font-bold text-green-800">Mi Perfil</h1>
+            <p className="text-green-600 mt-1">Gestiona tu información personal y profesional</p>
+          </div>
+          <div className="flex gap-3 mt-4 md:mt-0">
             {!isEditing ? (
               <button
                 onClick={handleEdit}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition-all shadow-md hover:shadow-lg"
               >
-                ✏️ Editar
+                <span>✏️</span> Editar Perfil
               </button>
             ) : (
               <>
                 <button
                   onClick={handleSave}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                  className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition-all shadow-md hover:shadow-lg"
                 >
-                  💾 Guardar
+                  <span>💾</span> Guardar
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                  className="flex items-center gap-2 bg-white text-green-700 border border-green-600 px-5 py-2.5 rounded-xl hover:bg-green-50 transition-all shadow-md hover:shadow-lg"
                 >
-                  ❌ Cancelar
+                  <span>❌</span> Cancelar
                 </button>
               </>
             )}
           </div>
         </div>
 
-        {/* Información del perfil */}
-        <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-          {/* Header del perfil */}
-          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6">
-            <div className="flex items-center">
-              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mr-6">
-                <span className="text-3xl">👤</span>
+        {/* Tarjeta de perfil */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          {/* Header con gradiente verde */}
+          <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mr-0 md:mr-6 mb-4 md:mb-0 shadow-lg">
+                <span className="text-4xl">👤</span>
               </div>
-              <div>
-                <h2 className="text-2xl font-bold">{user.nombre || "Instructor"}</h2>
-                <p className="text-green-100">{user.email || user.correo}</p>
-                <span className="inline-block bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mt-2">
-                  {user.rol || "instructor"}
+              <div className="text-center md:text-left">
+                <h2 className="text-2xl md:text-3xl font-bold">{user.nombre || "Instructor"}</h2>
+                <p className="text-green-100 mt-1">{user.email || user.correo}</p>
+                <span className="inline-block bg-white/20 text-white px-4 py-1.5 rounded-full text-sm font-medium mt-3">
+                  {user.rol ? user.rol.toUpperCase() : "INSTRUCTOR"}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Formulario de datos */}
-          <div className="p-6">
+          {/* Contenido del formulario */}
+          <div className="p-6 md:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Nombre */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  👤 Nombre Completo
+              <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">
+                  <span className="mr-2 text-green-600">👤</span> Nombre Completo
                 </label>
                 {isEditing ? (
                   <input
@@ -159,20 +162,20 @@ const InstructorPerfil = () => {
                     name="nombre"
                     value={formData.nombre}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                     placeholder="Tu nombre completo"
                   />
                 ) : (
-                  <p className="p-3 bg-gray-50 rounded-lg text-gray-900">
+                  <p className="p-3 bg-white rounded-lg text-gray-900 border border-green-100">
                     {user.nombre || "No especificado"}
                   </p>
                 )}
               </div>
 
               {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📧 Correo Electrónico
+              <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">
+                  <span className="mr-2 text-green-600">📧</span> Correo Electrónico
                 </label>
                 {isEditing ? (
                   <input
@@ -180,20 +183,20 @@ const InstructorPerfil = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                     placeholder="tu@email.com"
                   />
                 ) : (
-                  <p className="p-3 bg-gray-50 rounded-lg text-gray-900">
+                  <p className="p-3 bg-white rounded-lg text-gray-900 border border-green-100">
                     {user.email || user.correo || "No especificado"}
                   </p>
                 )}
               </div>
 
               {/* Teléfono */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📞 Teléfono
+              <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">
+                  <span className="mr-2 text-green-600">📞</span> Teléfono
                 </label>
                 {isEditing ? (
                   <input
@@ -201,20 +204,20 @@ const InstructorPerfil = () => {
                     name="telefono"
                     value={formData.telefono}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                     placeholder="+57 300 123 4567"
                   />
                 ) : (
-                  <p className="p-3 bg-gray-50 rounded-lg text-gray-900">
+                  <p className="p-3 bg-white rounded-lg text-gray-900 border border-green-100">
                     {user.telefono || "No especificado"}
                   </p>
                 )}
               </div>
 
               {/* Especialidad */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  🎓 Especialidad
+              <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">
+                  <span className="mr-2 text-green-600">🎓</span> Especialidad
                 </label>
                 {isEditing ? (
                   <input
@@ -222,20 +225,20 @@ const InstructorPerfil = () => {
                     name="especialidad"
                     value={formData.especialidad}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                     placeholder="Tu área de especialización"
                   />
                 ) : (
-                  <p className="p-3 bg-gray-50 rounded-lg text-gray-900">
+                  <p className="p-3 bg-white rounded-lg text-gray-900 border border-green-100">
                     {user.especialidad || "No especificado"}
                   </p>
                 )}
               </div>
 
               {/* Dirección */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📍 Dirección
+              <div className="md:col-span-2 bg-green-50 p-4 rounded-xl border border-green-100">
+                <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">
+                  <span className="mr-2 text-green-600">📍</span> Dirección
                 </label>
                 {isEditing ? (
                   <input
@@ -243,20 +246,20 @@ const InstructorPerfil = () => {
                     name="direccion"
                     value={formData.direccion}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                     placeholder="Tu dirección completa"
                   />
                 ) : (
-                  <p className="p-3 bg-gray-50 rounded-lg text-gray-900">
+                  <p className="p-3 bg-white rounded-lg text-gray-900 border border-green-100">
                     {user.direccion || "No especificado"}
                   </p>
                 )}
               </div>
 
               {/* Experiencia */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  💼 Experiencia Profesional
+              <div className="md:col-span-2 bg-green-50 p-4 rounded-xl border border-green-100">
+                <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">
+                  <span className="mr-2 text-green-600">💼</span> Experiencia Profesional
                 </label>
                 {isEditing ? (
                   <textarea
@@ -264,11 +267,11 @@ const InstructorPerfil = () => {
                     value={formData.experiencia}
                     onChange={handleInputChange}
                     rows="4"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-3 border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                     placeholder="Describe tu experiencia profesional, años de experiencia, logros importantes..."
                   />
                 ) : (
-                  <p className="p-3 bg-gray-50 rounded-lg text-gray-900 min-h-[100px]">
+                  <p className="p-3 bg-white rounded-lg text-gray-900 border border-green-100 min-h-[120px]">
                     {user.experiencia || "No especificado"}
                   </p>
                 )}
@@ -276,24 +279,36 @@ const InstructorPerfil = () => {
             </div>
 
             {/* Información adicional */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de la Cuenta</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>
-                  <p className="p-2 bg-green-50 text-green-700 rounded-lg font-medium">
+            <div className="mt-10 pt-8 border-t border-green-200">
+              <h3 className="text-xl font-semibold text-green-800 mb-6 flex items-center">
+                <span className="bg-green-100 p-2 rounded-lg mr-3 text-green-600">📋</span>
+                Información de la Cuenta
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                  <label className="block text-sm font-medium text-green-800 mb-2">Rol en el Sistema</label>
+                  <p className="p-3 bg-white text-green-700 font-medium rounded-lg border border-green-200">
                     {user.rol || "instructor"}
                   </p>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de Registro</label>
-                  <p className="p-2 bg-gray-50 rounded-lg text-gray-900">
-                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "No disponible"}
+                <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                  <label className="block text-sm font-medium text-green-800 mb-2">Fecha de Registro</label>
+                  <p className="p-3 bg-white text-green-700 rounded-lg border border-green-200">
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    }) : "No disponible"}
                   </p>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Nota al pie */}
+        <div className="mt-8 text-center text-green-600 text-sm">
+          <p>© {new Date().getFullYear()} Sistema de Instructores. Todos los derechos reservados.</p>
         </div>
       </div>
     </div>

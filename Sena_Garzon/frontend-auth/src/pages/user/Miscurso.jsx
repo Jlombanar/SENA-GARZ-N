@@ -9,6 +9,7 @@ const Miscurso = () => {
   const [inscripciones, setInscripciones] = useState({});
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState({});
+  const [activeSection, setActiveSection] = useState("todos");
   const token = localStorage.getItem("token");
   let user = null;
   try {
@@ -23,11 +24,9 @@ const Miscurso = () => {
       try {
         const res = await getCursos(token);
         setCursos(res.data);
-        // liked by current user
         const uid = user?._id;
         const liked = res.data.filter(c => Array.isArray(c.likes) && c.likes.some(l => l.userId === uid));
         setLikedCursos(liked);
-        // Si venimos de Bienvenidos con un courseId, enfocar/mostrar
         const params = new URLSearchParams(window.location.search);
         const courseId = params.get('courseId');
         if (courseId) {
@@ -106,7 +105,6 @@ const Miscurso = () => {
     setLoading(true);
     const formData = new FormData();
     
-    // Datos personales
     formData.append("nombreCompleto", datos.nombreCompleto);
     formData.append("correo", datos.correo);
     formData.append("telefono", datos.telefono);
@@ -115,7 +113,6 @@ const Miscurso = () => {
     if (datos.direccion) formData.append("direccion", datos.direccion);
     if (datos.ciudad) formData.append("ciudad", datos.ciudad);
     
-    // Datos de la inscripción
     formData.append("numeroTarjeta", datos.numeroTarjeta);
     formData.append("tarjetaPDF", datos.file);
 
@@ -124,7 +121,6 @@ const Miscurso = () => {
 
       toast.success(response.data.message || "Solicitud de inscripción enviada correctamente.");
       
-      // Limpiar el formulario y ocultarlo
       setInscripciones((prev) => ({
         ...prev,
         [cursoId]: { 
@@ -141,7 +137,6 @@ const Miscurso = () => {
       }));
       setShowForm(prev => ({ ...prev, [cursoId]: false }));
       
-      // Recargar los cursos para mostrar la inscripción
       const res = await getCursos(token);
       setCursos(res.data);
       
@@ -178,10 +173,10 @@ const Miscurso = () => {
 
   const getEstadoColor = (estado) => {
     switch (estado) {
-      case 'pendiente': return 'bg-yellow-100 text-yellow-800';
-      case 'aprobada': return 'bg-green-100 text-green-800';
-      case 'rechazada': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'pendiente': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'aprobada': return 'bg-green-100 text-green-800 border-green-300';
+      case 'rechazada': return 'bg-red-100 text-red-800 border-red-300';
+      default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
 
@@ -212,101 +207,226 @@ const Miscurso = () => {
     return ins?.estado === 'rechazada';
   }), [cursos, user]);
 
-  // Solo tus cursos (inscrito en cualquier estado)
   const cursosInscritos = useMemo(() => cursos.filter(c => {
     const uid = user?._id;
     return (c.inscritos || []).some(i => i.userId === uid);
   }), [cursos, user]);
 
-  return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-extrabold text-green-600">Mis Cursos</h1>
-        <p className="text-gray-600">Gestiona tus inscripciones y continúa tu aprendizaje</p>
-      </div>
-      
-      {!token && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          No estás autenticado. Por favor, inicia sesión.
-        </div>
-      )}
-      
-      {/* Tabs resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl shadow border p-4">
-          <p className="text-sm text-gray-500">Pendientes</p>
-          <p className="text-2xl font-bold text-yellow-600">{cursosPendientes.length}</p>
-        </div>
-        <div className="bg-white rounded-xl shadow border p-4">
-          <p className="text-sm text-gray-500">Aprobados</p>
-          <p className="text-2xl font-bold text-green-600">{cursosAprobados.length}</p>
-        </div>
-        <div className="bg-white rounded-xl shadow border p-4">
-          <p className="text-sm text-gray-500">Rechazados</p>
-          <p className="text-2xl font-bold text-red-600">{cursosRechazados.length}</p>
-        </div>
-        <div className="bg-white rounded-xl shadow border p-4">
-          <p className="text-sm text-gray-500">Favoritos</p>
-          <p className="text-2xl font-bold text-indigo-600">{likedCursos.length}</p>
-        </div>
-      </div>
-
-      {/* Grid de cursos */}
-      {/* Sección de favoritos */}
-      {likedCursos.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-3">Cursos que te gustan</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {likedCursos.map(curso => (
-              <div key={curso._id} className="bg-white p-4 rounded-xl shadow border border-gray-100">
-                <img src={curso.imagen} alt={curso.nombre} className="w-full h-44 object-cover rounded-lg mb-3" />
-                <h3 className="text-lg font-bold text-gray-900">{curso.nombre}</h3>
-                <p className="text-gray-600 text-sm">{curso.descripcion}</p>
-              </div>
-            ))}
+  // Función para renderizar una tarjeta de curso
+  const renderCursoCard = (curso) => {
+    const inscrito = isInscrito(curso);
+    const estado = getEstadoInscripcion(curso);
+    
+    return (
+      <div key={curso._id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+        <div className="relative">
+          <img
+            src={curso.imagen}
+            alt={curso.nombre}
+            className="w-full h-48 object-cover"
+          />
+          <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-bold text-green-900 shadow-md border border-green-700">
+            ${curso.valor?.toLocaleString()}
           </div>
         </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {cursosInscritos.map((curso) => {
-          const inscrito = isInscrito(curso);
-          const estado = getEstadoInscripcion(curso);
+        
+        <div className="p-5">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">{curso.nombre}</h2>
+          <p className="text-gray-600 text-sm mb-4 line-clamp-2">{curso.descripcion}</p>
           
-          return (
-            <div key={curso._id} className="bg-white p-4 rounded-xl shadow border border-gray-100">
-              <img
-                src={curso.imagen}
-                alt={curso.nombre}
-                className="w-full h-44 object-cover rounded-lg mb-3"
-              />
-              <h2 className="text-xl font-bold text-gray-900">{curso.nombre}</h2>
-              <p className="text-gray-600">{curso.descripcion}</p>
-              
-              {/* Información del curso */}
-              <div className="mt-3 space-y-2 text-sm text-gray-600">
-                <div className="flex items-center justify-between">
-                  <span>💳 Valor: ${curso.valor?.toLocaleString()}</span>
-                  <span>👥 Cupos: {curso.cantidad}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>❤️ Likes: {curso.likes ? curso.likes.length : 0}</span>
-                  <span>📚 Categoría: {curso.categoria || 'General'}</span>
-                </div>
+          {/* Información del curso */}
+          <div className="grid grid-cols-2 gap-3 text-sm text-gray-600 mb-4">
+            <div className="flex items-center">
+              <div className="bg-green-100 p-2 rounded-lg mr-2 border border-green-200">
+                <svg className="w-4 h-4 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
               </div>
-              
-              {inscrito ? (
-                <div className="mt-4 p-3 rounded">
-                  <div className={`p-3 rounded ${getEstadoColor(estado)}`}>
-                    {getEstadoTexto(estado)}
-                  </div>
-                </div>
-              ) : null}
-
-              {/* Sin formulario aquí: la inscripción se hace desde Bienvenidos */}
+              <span>{curso.cantidad} cupos</span>
             </div>
-          );
-        })}
+            <div className="flex items-center">
+              <div className="bg-green-100 p-2 rounded-lg mr-2 border border-green-200">
+                <svg className="w-4 h-4 text-green-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              </div>
+              <span>{curso.likes ? curso.likes.length : 0} likes</span>
+            </div>
+            <div className="flex items-center col-span-2">
+              <div className="bg-green-100 p-2 rounded-lg mr-2 border border-green-200">
+                <svg className="w-4 h-4 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+              </div>
+              <span>{curso.categoria || 'General'}</span>
+            </div>
+          </div>
+          
+          {inscrito ? (
+            <div className={`p-3 rounded-lg text-center font-medium border ${getEstadoColor(estado)}`}>
+              {getEstadoTexto(estado)}
+            </div>
+          ) : (
+            <button 
+              onClick={() => toggleForm(curso._id)}
+              className="w-full bg-gradient-to-r from-green-700 to-green-900 hover:from-green-800 hover:to-green-950 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
+            >
+              Inscribirse
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-green-900 mb-3">Mis Cursos SENA</h1>
+          <div className="w-20 h-1 bg-green-700 mx-auto mb-4 rounded-full"></div>
+          <p className="text-gray-600 max-w-2xl mx-auto">Gestiona tus inscripciones, revisa tu progreso y continúa tu aprendizaje</p>
+        </div>
+        
+        {!token && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-8 text-center">
+            No estás autenticado. Por favor, inicia sesión.
+          </div>
+        )}
+        
+        {/* Tarjetas de resumen */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+          <div 
+            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'todos' ? 'border-green-700' : 'border-white hover:border-green-300'}`}
+            onClick={() => setActiveSection('todos')}
+          >
+            <div className="flex items-center">
+              <div className="bg-green-100 p-3 rounded-xl mr-4 border border-green-200">
+                <svg className="w-6 h-6 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Total Inscritos</p>
+                <p className="text-2xl font-bold text-gray-800">{cursosInscritos.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'pendientes' ? 'border-yellow-500' : 'border-white hover:border-yellow-300'}`}
+            onClick={() => setActiveSection('pendientes')}
+          >
+            <div className="flex items-center">
+              <div className="bg-yellow-100 p-3 rounded-xl mr-4 border border-yellow-200">
+                <svg className="w-6 h-6 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Pendientes</p>
+                <p className="text-2xl font-bold text-gray-800">{cursosPendientes.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'aprobados' ? 'border-green-600' : 'border-white hover:border-green-300'}`}
+            onClick={() => setActiveSection('aprobados')}
+          >
+            <div className="flex items-center">
+              <div className="bg-green-100 p-3 rounded-xl mr-4 border border-green-200">
+                <svg className="w-6 h-6 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Aprobados</p>
+                <p className="text-2xl font-bold text-gray-800">{cursosAprobados.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'favoritos' ? 'border-pink-500' : 'border-white hover:border-pink-300'}`}
+            onClick={() => setActiveSection('favoritos')}
+          >
+            <div className="flex items-center">
+              <div className="bg-pink-100 p-3 rounded-xl mr-4 border border-pink-200">
+                <svg className="w-6 h-6 text-pink-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path>
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Favoritos</p>
+                <p className="text-2xl font-bold text-gray-800">{likedCursos.length}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sección de cursos favoritos */}
+        {activeSection === 'favoritos' && likedCursos.length > 0 && (
+          <div className="mb-10">
+            <div className="flex items-center mb-6">
+              <div className="bg-green-100 p-2 rounded-lg mr-3 border border-green-200">
+                <svg className="w-6 h-6 text-green-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-green-900">Cursos que te gustan</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {likedCursos.map(curso => renderCursoCard(curso))}
+            </div>
+          </div>
+        )}
+
+        {/* Sección de cursos según estado seleccionado */}
+        <div>
+          {activeSection !== 'favoritos' && (
+            <div className="flex items-center mb-6">
+              <div className="bg-green-100 p-2 rounded-lg mr-3 border border-green-200">
+                <svg className="w-6 h-6 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-green-900">
+                {activeSection === 'todos' && 'Todos mis cursos'}
+                {activeSection === 'pendientes' && 'Cursos pendientes de aprobación'}
+                {activeSection === 'aprobados' && 'Cursos aprobados'}
+              </h2>
+            </div>
+          )}
+
+          {/* Grid de cursos según la sección activa */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {activeSection === 'todos' && cursosInscritos.map(curso => renderCursoCard(curso))}
+            {activeSection === 'pendientes' && cursosPendientes.map(curso => renderCursoCard(curso))}
+            {activeSection === 'aprobados' && cursosAprobados.map(curso => renderCursoCard(curso))}
+            {activeSection === 'favoritos' && likedCursos.length === 0 && (
+              <div className="col-span-full text-center py-12 bg-white rounded-xl shadow-lg border border-green-200">
+                <div className="text-5xl mb-4 text-green-400">❤️</div>
+                <h3 className="text-xl font-medium text-green-900 mb-2">No tienes cursos favoritos</h3>
+                <p className="text-green-700">Haz clic en el corazón en los cursos para agregarlos a favoritos</p>
+              </div>
+            )}
+            {activeSection !== 'favoritos' && 
+              ((activeSection === 'todos' && cursosInscritos.length === 0) ||
+               (activeSection === 'pendientes' && cursosPendientes.length === 0) ||
+               (activeSection === 'aprobados' && cursosAprobados.length === 0)) && (
+              <div className="col-span-full text-center py-12 bg-white rounded-xl shadow-lg border border-green-200">
+                <div className="text-5xl mb-4 text-green-400">📚</div>
+                <h3 className="text-xl font-medium text-green-900 mb-2">
+                  {activeSection === 'todos' && 'No estás inscrito en ningún curso'}
+                  {activeSection === 'pendientes' && 'No tienes cursos pendientes'}
+                  {activeSection === 'aprobados' && 'No tienes cursos aprobados'}
+                </h3>
+                <p className="text-green-700">Explora nuestros cursos y comienza tu aprendizaje</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
