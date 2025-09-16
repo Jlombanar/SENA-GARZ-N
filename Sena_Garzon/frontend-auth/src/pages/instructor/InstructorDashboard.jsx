@@ -80,39 +80,25 @@ const InstructorDashboard = () => {
         setSelectedCurso(cursosData[0]);
       }
     } catch (err) {
-      setModoPrueba(true);
-      const cursosSimulados = [
-        { 
-          _id: '1', 
-          nombre: 'Curso de React', 
-          inscritos: [
-            {
-              _id: '1', nombreCompleto: 'Juan Pérez', correo: 'juan@email.com', telefono: '3001234567',
-              documentoIdentidad: '12345678', fechaInscripcion: new Date(), numeroTarjeta: '1234-5678-9012-3456',
-              direccion: 'Calle 123 #45-67', estado: 'pendiente', tarjetaPDFUrl: ''
-            },
-            {
-              _id: '2', nombreCompleto: 'María García', correo: 'maria@email.com', telefono: '3009876543',
-              documentoIdentidad: '87654321', fechaInscripcion: new Date(), numeroTarjeta: '9876-5432-1098-7654',
-              direccion: 'Avenida 456 #78-90', estado: 'aprobada', tarjetaPDFUrl: ''
-            }
-          ]
-        },
-        { 
-          _id: '2', nombre: 'Curso de Node.js', 
-          inscritos: [
-            {
-              _id: '3', nombreCompleto: 'Carlos López', correo: 'carlos@email.com', telefono: '3005555555',
-              documentoIdentidad: '55555555', fechaInscripcion: new Date(), numeroTarjeta: '5555-5555-5555-5555',
-              direccion: 'Carrera 789 #12-34', estado: 'pendiente', tarjetaPDFUrl: ''
-            }
-          ]
-        }
-      ];
-      setCursos(cursosSimulados);
-      setSelectedCurso(cursosSimulados[0]);
-      setInscripciones(cursosSimulados[0].inscritos);
-      setStats({ totalCursos: 2, totalInscripciones: 3, inscripcionesPendientes: 2 });
+      setModoPrueba(false);
+      const status = err?.response?.status;
+      const backendMsg = err?.response?.data?.message;
+      const isNetwork = err?.message?.includes('Network') || err?.code === 'ERR_NETWORK';
+
+      // Limpiar datos en error
+      setCursos([]);
+      setSelectedCurso(null);
+      setInscripciones([]);
+      setStats({ totalCursos: 0, totalInscripciones: 0, inscripcionesPendientes: 0 });
+
+      if (status === 401 || status === 403) {
+        toast.error('Tu sesión expiró o no tienes permisos. Inicia sesión nuevamente.');
+        navigate('/login');
+      } else if (isNetwork) {
+        toast.error('No se puede conectar al backend (Network/CORS). Verifica que el servidor esté activo.');
+      } else {
+        toast.error(backendMsg || 'Error al cargar tus cursos.');
+      }
     } finally {
       setLoading(false);
     }

@@ -83,14 +83,7 @@ const Home = () => {
   };
 
   const handleVerDetalles = (cursoId) => {
-    if (!user) {
-      toast.info("Debes registrarte para ver los detalles del curso");
-      navigate("/register");
-      return;
-    }
-    
-    // Redirigir a mis cursos
-    navigate("/dashboard/miscurso");
+    navigate(`/cursos/${cursoId}`);
   };
 
   const isLiked = (curso) => {
@@ -118,9 +111,10 @@ const Home = () => {
 
   if (loading) {
     return (
+      // ✅ Mejora: Animación de carga más visual y suave
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-white">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-green-600 mx-auto"></div>
           <p className="mt-4 text-gray-600 font-medium">Cargando cursos...</p>
         </div>
       </div>
@@ -133,6 +127,7 @@ const Home = () => {
       <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${isScrolled ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3 group">
+            {/* ✅ Mejora: Logo con borde y sombra dinámicos */}
             <div className={`p-2 rounded-xl transition-all ${isScrolled ? "bg-green-100/90 shadow-sm" : "bg-white/90 shadow-md"}`}>
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
@@ -141,6 +136,7 @@ const Home = () => {
                 style={{ filter: 'hue-rotate(85deg) saturate(2)' }}
               />
             </div>
+            {/* ✅ Mejora: Título con gradiente de texto y sombra */}
             <span className={`text-2xl font-bold transition-colors ${isScrolled ? "text-green-800" : "text-white drop-shadow-md"}`}>
               SENA Garzón 
             </span>
@@ -149,6 +145,7 @@ const Home = () => {
           <nav className="flex items-center space-x-4">
             {!user ? (
               <>
+                {/* ✅ Mejora: Botones con efectos de hover más llamativos */}
                 <Link
                   to="/login"
                   className={`px-4 py-2 font-medium rounded-lg transition-all ${isScrolled ? "text-gray-700 hover:text-green-700 hover:bg-green-50" : "text-white hover:text-green-200 hover:bg-white/10"}`}
@@ -178,7 +175,7 @@ const Home = () => {
 
       {/* Hero section con gradiente animado */}
       <div className="relative pt-32 pb-20 px-6 bg-gradient-to-br from-green-700 via-green-600 to-green-800 text-white overflow-hidden">
-        {/* Efecto de burbujas decorativas */}
+        {/* ✅ Mejora: Efecto de burbujas animadas como fondo */}
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
           {[...Array(10)].map((_, i) => (
             <div 
@@ -198,6 +195,7 @@ const Home = () => {
         
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center relative z-10">
           <div className="md:w-1/2 mb-10 md:mb-0">
+            {/* ✅ Mejora: Título con gradiente de texto para resaltar */}
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               Formación Técnica <span className="text-green-200 bg-gradient-to-r from-green-300 to-green-200 bg-clip-text text-transparent">de Excelencia</span> en el Huila
             </h1>
@@ -222,6 +220,7 @@ const Home = () => {
                   <FiArrowRight className="ml-2 animate-pulse" />
                 </Link>
               )}
+              {/* ✅ Mejora: Botón con borde y animación sutil */}
               <a
                 href="#cursos"
                 className="px-6 py-3 border-2 border-white/80 text-white rounded-lg hover:bg-white/10 transition-all font-medium flex items-center hover:-translate-y-0.5 backdrop-blur-sm"
@@ -232,6 +231,7 @@ const Home = () => {
             </div>
           </div>
           <div className="md:w-1/2 flex justify-center">
+            {/* ✅ Mejora: Marco de la imagen con efecto flotante y animación al pasar el mouse */}
             <div className="relative w-full max-w-md">
               <div className="absolute -top-4 -left-4 w-full h-full border-4 border-white/20 rounded-2xl"></div>
               <img 
@@ -250,6 +250,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12">
             <div className="text-center md:text-left mb-6 md:mb-0">
+              {/* ✅ Mejora: Título con gradiente de texto */}
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
                 Nuestros <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">Cursos</span>
               </h2>
@@ -259,11 +260,12 @@ const Home = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {getCursosOrdenadosPorLikes().slice(0, 6).map((curso, index) => (
+              // ✅ Mejora: Tarjetas con sombra, bordes redondeados y animaciones de hover
               <div 
                 key={curso._id}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-100 group relative"
+                className="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl hover:border-green-300 hover:ring-2 hover:ring-green-100 group relative"
               >
-                {/* Badge de ranking */}
+                {/* ✅ Mejora: Badge de ranking para los cursos más populares */}
                 {index < 3 && (
                   <div className="absolute top-4 left-4 z-10">
                     <div className={`px-3 py-1 rounded-full font-bold text-sm shadow-lg ${
@@ -282,6 +284,7 @@ const Home = () => {
                     alt={curso.nombre} 
                     className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
+                  {/* ✅ Mejora: Gradiente oscuro sobre la imagen para mejorar la legibilidad del texto */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <button 
                     onClick={() => handleLike(curso._id)}
@@ -298,17 +301,18 @@ const Home = () => {
                   </span>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{curso.nombre}</h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{curso.descripcion}</p>
+                  <h3 className="text-xl md:text-2xl font-serif font-extrabold text-gray-900 tracking-tight mb-2">{curso.nombre}</h3>
+                  <p className="text-gray-700 text-sm md:text-base mb-4 line-clamp-2">{curso.descripcion}</p>
                   <div className="flex items-center text-gray-500 mb-4">
                     <FiClock className="mr-1" />
-                    <span className="text-sm">{curso.duracion || '120 horas'}</span>
+                    <span className="text-sm">{curso.duracion || 'Por definir'}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
                       <span className="text-gray-600 text-sm font-medium">
                         {getLikesCount(curso)} likes
                       </span>
+                      {/* ✅ Mejora: Badge para el curso más popular */}
                       {index === 0 && getLikesCount(curso) > 0 && (
                         <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
                           🏆 Más popular
@@ -317,7 +321,7 @@ const Home = () => {
                     </div>
                     <button 
                       onClick={() => handleVerDetalles(curso._id)}
-                      className="text-green-600 hover:text-green-800 font-medium text-sm flex items-center transition-colors group-hover:underline"
+                      className="px-4 py-2 text-sm md:text-[15px] font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 rounded-full shadow-sm hover:shadow-lg hover:from-green-700 hover:to-green-800 transform hover:-translate-y-0.5 transition-all flex items-center"
                     >
                       Ver detalles <FiArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
                     </button>
@@ -329,6 +333,7 @@ const Home = () => {
           
           <div className="text-center mt-12">
             {!user ? (
+              // ✅ Mejora: Botones con gradiente y animaciones
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
                   to="/register" 
@@ -368,10 +373,12 @@ const Home = () => {
       {/* Sección de contacto con diseño profesional mejorado */}
       <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* ✅ Mejora: Contenedor con gradiente, esquinas redondeadas y sombra */}
           <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl shadow-xl overflow-hidden">
             <div className="grid md:grid-cols-2">
               {/* Columna izquierda - Información de contacto */}
               <div className="p-8 md:p-12 text-white relative overflow-hidden">
+                {/* ✅ Mejora: Círculos decorativos en el fondo */}
                 <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-green-500/20"></div>
                 <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full bg-green-500/20"></div>
                 <div className="relative z-10">
@@ -381,6 +388,7 @@ const Home = () => {
                   </p>
 
                   <div className="space-y-6 mb-10">
+                    {/* ✅ Mejora: Íconos en círculos con sombra */}
                     <div className="flex items-start">
                       <div className="bg-green-500 p-3 rounded-full mr-4 shadow-md flex-shrink-0">
                         <FiMapPin className="text-white text-lg" />
@@ -412,7 +420,7 @@ const Home = () => {
                     </div>
                   </div>
 
-                  {/* Mapa de Google Maps */}
+                  {/* ✅ Mejora: Mapa con bordes redondeados y sombra */}
                   <div className="mt-8 rounded-xl overflow-hidden shadow-lg border-4 border-white/30">
                     <iframe
                       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2070.644003999478!2d-75.62494117383825!3d2.199820151299732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3af6970b5bc09b%3A0x7a7cdbd6500c6b16!2sSENA%20Garz%C3%B3n!5e0!3m2!1ses!2sco!4v1638766782043!5m2!1ses!2sco"
@@ -491,6 +499,7 @@ const Home = () => {
                     ></textarea>
                   </div>
 
+                  {/* ✅ Mejora: Botón de envío con gradiente y efecto de escala */}
                   <button
                     type="submit"
                     className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-base font-medium text-white bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-[1.02]"
@@ -518,6 +527,7 @@ const Home = () => {
                     style={{ filter: 'hue-rotate(85deg) saturate(2)' }}
                   />
                 </div>
+                {/* ✅ Mejora: Título del footer con gradiente */}
                 <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">
                   SENA Garzón
                 </span>
@@ -530,20 +540,21 @@ const Home = () => {
             <div>
               <h3 className="text-lg font-semibold mb-4">Enlaces</h3>
               <ul className="space-y-2">
+                {/* ✅ Mejora: Efecto de hover en los enlaces */}
                 <li>
-                  <Link to="/" className="text-gray-400 hover:text-green-300 transition flex items-center">
+                  <Link to="/" className="text-gray-400 hover:text-green-300 transition flex items-center group">
                     <FiArrowRight className="mr-2 text-xs opacity-0 group-hover:opacity-100 transition" />
                     Inicio
                   </Link>
                 </li>
                 <li>
-                  <Link to="/dashboard/miscurso" className="text-gray-400 hover:text-green-300 transition flex items-center">
+                  <Link to="/dashboard/miscurso" className="text-gray-400 hover:text-green-300 transition flex items-center group">
                     <FiArrowRight className="mr-2 text-xs opacity-0 group-hover:opacity-100 transition" />
                     Cursos
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contacto" className="text-gray-400 hover:text-green-300 transition flex items-center">
+                  <Link to="/contacto" className="text-gray-400 hover:text-green-300 transition flex items-center group">
                     <FiArrowRight className="mr-2 text-xs opacity-0 group-hover:opacity-100 transition" />
                     Contacto
                   </Link>

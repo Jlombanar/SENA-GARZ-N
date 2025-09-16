@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const InstructorPerfil = () => {
   const [user, setUser] = useState(null);
@@ -11,7 +12,8 @@ const InstructorPerfil = () => {
     telefono: "",
     especialidad: "",
     direccion: "",
-    experiencia: ""
+    experiencia: "",
+    avatar: null
   });
 
   useEffect(() => {
@@ -45,13 +47,50 @@ const InstructorPerfil = () => {
     }));
   };
 
-  const handleSave = () => {
-    // Simular guardado
-    const updatedUser = { ...user, ...formData };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setUser(updatedUser);
-    setIsEditing(false);
-    toast.success("Perfil actualizado exitosamente");
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0] || null;
+    setFormData(prev => ({ ...prev, avatar: file }));
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const isMultipart = Boolean(formData.avatar);
+      let body;
+      let headers;
+      if (isMultipart) {
+        body = new FormData();
+        body.append('nombre', formData.nombre || '');
+        body.append('email', formData.email || '');
+        body.append('telefono', formData.telefono || '');
+        body.append('especialidad', formData.especialidad || '');
+        body.append('direccion', formData.direccion || '');
+        body.append('experiencia', formData.experiencia || '');
+        if (formData.avatar) body.append('avatar', formData.avatar);
+        headers = { Authorization: `Bearer ${token}` };
+      } else {
+        body = {
+          nombre: formData.nombre || '',
+          email: formData.email || '',
+          telefono: formData.telefono || '',
+          especialidad: formData.especialidad || '',
+          direccion: formData.direccion || '',
+          experiencia: formData.experiencia || ''
+        };
+        headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+      }
+
+      const res = await axios.put('http://localhost:5000/api/auth/users/profile', body, { headers });
+      const updatedUser = res.data.user;
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      setIsEditing(false);
+      setFormData(prev => ({ ...prev, avatar: null }));
+      toast.success('Perfil actualizado exitosamente');
+    } catch (err) {
+      console.error('Error actualizando perfil', err);
+      toast.error(err?.response?.data?.message || 'No se pudo actualizar el perfil');
+    }
   };
 
   const handleCancel = () => {
@@ -135,8 +174,12 @@ const InstructorPerfil = () => {
           {/* Header con gradiente verde */}
           <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 md:p-8">
             <div className="flex flex-col md:flex-row items-center">
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mr-0 md:mr-6 mb-4 md:mb-0 shadow-lg">
-                <span className="text-4xl">👤</span>
+              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mr-0 md:mr-6 mb-4 md:mb-0 shadow-lg overflow-hidden">
+                {user.avatarUrl ? (
+                  <img src={user.avatarUrl} alt="Avatar" className="w-24 h-24 object-cover" />
+                ) : (
+                  <span className="text-4xl">👤</span>
+                )}
               </div>
               <div className="text-center md:text-left">
                 <h2 className="text-2xl md:text-3xl font-bold">{user.nombre || "Instructor"}</h2>
@@ -151,6 +194,19 @@ const InstructorPerfil = () => {
           {/* Contenido del formulario */}
           <div className="p-6 md:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Avatar uploader */}
+              <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">
+                  <span className="mr-2 text-green-600">🖼️</span> Foto de perfil
+                </label>
+                {isEditing ? (
+                  <input type="file" accept="image/*" onChange={handleAvatarChange} className="w-full p-2 border border-green-200 rounded-lg" />
+                ) : (
+                  <p className="p-3 bg-white rounded-lg text-gray-900 border border-green-100">
+                    {user.avatarUrl ? 'Foto configurada' : 'Sin foto de perfil'}
+                  </p>
+                )}
+              </div>
               {/* Nombre */}
               <div className="bg-green-50 p-4 rounded-xl border border-green-100">
                 <label className="block text-sm font-medium text-green-800 mb-2 flex items-center">

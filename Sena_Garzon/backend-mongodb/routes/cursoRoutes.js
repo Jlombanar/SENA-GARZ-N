@@ -14,6 +14,7 @@ import {
   getCursosPorLikes,
   getEstadisticasLikes
 } from '../controllers/cursoController.js';
+import { getCursoById } from '../controllers/cursoController.js';
 import { verificarToken, esInstructor, esUsuarioAutenticado } from '../middleware/authMiddleware.js';
 import upload from "../middleware/multer.js";
 
@@ -49,5 +50,8 @@ router.post(
 router.get('/:id/inscripciones', verificarToken, esInstructor, getInscripcionesCurso);
 router.put('/:cursoId/inscripciones/:inscripcionId/revisar', verificarToken, esInstructor, revisarInscripcion);
 router.delete('/:cursoId/inscripciones/:inscripcionId', verificarToken, esUsuarioAutenticado, eliminarInscripcion);
+
+// Esta ruta debe ir al final para no interceptar rutas específicas como '/instructor', '/top-likes', etc.
+router.get('/:id', getCursoById);
 
 export default router;

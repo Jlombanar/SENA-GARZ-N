@@ -6,10 +6,11 @@ const cursoSchema = new mongoose.Schema(
     nombre: { type: String, required: true },
     descripcion: { type: String, required: true },
     cantidad: { type: Number, required: true },
-    valor: { type: Number, required: true },
+    // valor eliminado para cursos gratuitos
     imagen: { type: String },
     categoria: { type: String, default: 'general' },
-    duracion: { type: String, default: '120 horas' },
+    duracion: { type: String, default: 'Por definir' },
+    modalidad: { type: String, default: 'Por definir' },
     instructorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -219,21 +219,12 @@ const TopCursos = () => {
                     {curso.categoria || 'General'}
                   </div>
                   
-                  {user ? (
-                    <Link 
-                      to="/dashboard/miscurso"
-                      className="text-green-600 hover:text-green-800 font-medium text-sm flex items-center transition-colors group-hover:underline"
-                    >
-                      Ver detalles <FiArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  ) : (
-                    <Link 
-                      to="/register"
-                      className="text-green-600 hover:text-green-800 font-medium text-sm flex items-center transition-colors group-hover:underline"
-                    >
-                      Registrarse <FiArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  )}
+                  <Link 
+                    to={`/cursos/${curso._id}`}
+                    className="text-green-600 hover:text-green-800 font-medium text-sm flex items-center transition-colors group-hover:underline"
+                  >
+                    Ver detalles <FiArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
+                  </Link>
                 </div>
               </div>
             </div>

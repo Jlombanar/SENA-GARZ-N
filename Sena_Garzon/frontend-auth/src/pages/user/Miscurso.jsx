@@ -218,24 +218,24 @@ const Miscurso = () => {
     const estado = getEstadoInscripcion(curso);
     
     return (
-      <div key={curso._id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+      <div key={curso._id} className="bg-white rounded-3xl shadow-xl shadow-green-200 overflow-hidden border border-green-100 transition-all duration-300 hover:shadow-green-400 hover:scale-[1.02] relative z-10">
         <div className="relative">
           <img
             src={curso.imagen}
             alt={curso.nombre}
             className="w-full h-48 object-cover"
           />
-          <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-bold text-green-900 shadow-md border border-green-700">
+          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm font-bold text-green-900 shadow-lg border border-green-700 animate-pulse-slow">
             ${curso.valor?.toLocaleString()}
           </div>
         </div>
         
-        <div className="p-5">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">{curso.nombre}</h2>
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-green-950 mb-2">{curso.nombre}</h2>
           <p className="text-gray-600 text-sm mb-4 line-clamp-2">{curso.descripcion}</p>
           
           {/* Información del curso */}
-          <div className="grid grid-cols-2 gap-3 text-sm text-gray-600 mb-4">
+          <div className="grid grid-cols-2 gap-3 text-sm text-gray-600 mb-6">
             <div className="flex items-center">
               <div className="bg-green-100 p-2 rounded-lg mr-2 border border-green-200">
                 <svg className="w-4 h-4 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -263,15 +263,18 @@ const Miscurso = () => {
           </div>
           
           {inscrito ? (
-            <div className={`p-3 rounded-lg text-center font-medium border ${getEstadoColor(estado)}`}>
+            <div className={`p-4 rounded-xl text-center font-medium border-2 ${getEstadoColor(estado)}`}>
               {getEstadoTexto(estado)}
             </div>
           ) : (
-            <button 
+            <button
               onClick={() => toggleForm(curso._id)}
-              className="w-full bg-gradient-to-r from-green-700 to-green-900 hover:from-green-800 hover:to-green-950 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
+              className="w-full relative group overflow-hidden font-bold py-3 px-4 rounded-full shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50 transform hover:scale-105"
             >
-              Inscribirse
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-green-800 opacity-90 transition-opacity duration-300 group-hover:opacity-100 group-active:scale-95 group-active:brightness-125"></div>
+              <span className="relative z-10 text-white group-hover:text-green-50">
+                Inscribirse
+              </span>
             </button>
           )}
         </div>
@@ -280,11 +283,11 @@ const Miscurso = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
+    <div className="min-h-screen bg-white text-green-950 font-sans p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-green-900 mb-3">Mis Cursos SENA</h1>
-          <div className="w-20 h-1 bg-green-700 mx-auto mb-4 rounded-full"></div>
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-green-950 mb-3">Mis Cursos SENA</h1>
+          <div className="w-24 h-1.5 bg-green-500 mx-auto rounded-full mb-4"></div>
           <p className="text-gray-600 max-w-2xl mx-auto">Gestiona tus inscripciones, revisa tu progreso y continúa tu aprendizaje</p>
         </div>
         
@@ -295,71 +298,71 @@ const Miscurso = () => {
         )}
         
         {/* Tarjetas de resumen */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <div 
-            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'todos' ? 'border-green-700' : 'border-white hover:border-green-300'}`}
+            className={`bg-white rounded-2xl shadow-xl p-6 border-4 transition-all duration-300 cursor-pointer hover:shadow-green-400 hover:-translate-y-1 ${activeSection === 'todos' ? 'border-green-700 shadow-green-300' : 'border-white hover:border-green-300'}`}
             onClick={() => setActiveSection('todos')}
           >
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-xl mr-4 border border-green-200">
+              <div className="bg-green-100 p-4 rounded-xl mr-4 border border-green-200">
                 <svg className="w-6 h-6 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Total Inscritos</p>
-                <p className="text-2xl font-bold text-gray-800">{cursosInscritos.length}</p>
+                <p className="text-3xl font-bold text-gray-800">{cursosInscritos.length}</p>
               </div>
             </div>
           </div>
           
           <div 
-            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'pendientes' ? 'border-yellow-500' : 'border-white hover:border-yellow-300'}`}
+            className={`bg-white rounded-2xl shadow-xl p-6 border-4 transition-all duration-300 cursor-pointer hover:shadow-green-400 hover:-translate-y-1 ${activeSection === 'pendientes' ? 'border-yellow-500 shadow-yellow-300' : 'border-white hover:border-yellow-300'}`}
             onClick={() => setActiveSection('pendientes')}
           >
             <div className="flex items-center">
-              <div className="bg-yellow-100 p-3 rounded-xl mr-4 border border-yellow-200">
+              <div className="bg-yellow-100 p-4 rounded-xl mr-4 border border-yellow-200">
                 <svg className="w-6 h-6 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Pendientes</p>
-                <p className="text-2xl font-bold text-gray-800">{cursosPendientes.length}</p>
+                <p className="text-3xl font-bold text-gray-800">{cursosPendientes.length}</p>
               </div>
             </div>
           </div>
           
           <div 
-            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'aprobados' ? 'border-green-600' : 'border-white hover:border-green-300'}`}
+            className={`bg-white rounded-2xl shadow-xl p-6 border-4 transition-all duration-300 cursor-pointer hover:shadow-green-400 hover:-translate-y-1 ${activeSection === 'aprobados' ? 'border-green-600 shadow-green-300' : 'border-white hover:border-green-300'}`}
             onClick={() => setActiveSection('aprobados')}
           >
             <div className="flex items-center">
-              <div className="bg-green-100 p-3 rounded-xl mr-4 border border-green-200">
+              <div className="bg-green-100 p-4 rounded-xl mr-4 border border-green-200">
                 <svg className="w-6 h-6 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Aprobados</p>
-                <p className="text-2xl font-bold text-gray-800">{cursosAprobados.length}</p>
+                <p className="text-3xl font-bold text-gray-800">{cursosAprobados.length}</p>
               </div>
             </div>
           </div>
           
           <div 
-            className={`bg-white rounded-xl shadow-lg p-5 border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${activeSection === 'favoritos' ? 'border-pink-500' : 'border-white hover:border-pink-300'}`}
+            className={`bg-white rounded-2xl shadow-xl p-6 border-4 transition-all duration-300 cursor-pointer hover:shadow-green-400 hover:-translate-y-1 ${activeSection === 'favoritos' ? 'border-pink-500 shadow-pink-300' : 'border-white hover:border-pink-300'}`}
             onClick={() => setActiveSection('favoritos')}
           >
             <div className="flex items-center">
-              <div className="bg-pink-100 p-3 rounded-xl mr-4 border border-pink-200">
+              <div className="bg-pink-100 p-4 rounded-xl mr-4 border border-pink-200">
                 <svg className="w-6 h-6 text-pink-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path>
                 </svg>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Favoritos</p>
-                <p className="text-2xl font-bold text-gray-800">{likedCursos.length}</p>
+                <p className="text-3xl font-bold text-gray-800">{likedCursos.length}</p>
               </div>
             </div>
           </div>
@@ -376,7 +379,7 @@ const Miscurso = () => {
               </div>
               <h2 className="text-2xl font-bold text-green-900">Cursos que te gustan</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {likedCursos.map(curso => renderCursoCard(curso))}
             </div>
           </div>
@@ -400,13 +403,13 @@ const Miscurso = () => {
           )}
 
           {/* Grid de cursos según la sección activa */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {activeSection === 'todos' && cursosInscritos.map(curso => renderCursoCard(curso))}
             {activeSection === 'pendientes' && cursosPendientes.map(curso => renderCursoCard(curso))}
             {activeSection === 'aprobados' && cursosAprobados.map(curso => renderCursoCard(curso))}
             {activeSection === 'favoritos' && likedCursos.length === 0 && (
-              <div className="col-span-full text-center py-12 bg-white rounded-xl shadow-lg border border-green-200">
-                <div className="text-5xl mb-4 text-green-400">❤️</div>
+              <div className="col-span-full text-center py-12 bg-white rounded-3xl shadow-lg border border-green-200">
+                <div className="text-5xl mb-4 text-green-400 animate-pulse">❤️</div>
                 <h3 className="text-xl font-medium text-green-900 mb-2">No tienes cursos favoritos</h3>
                 <p className="text-green-700">Haz clic en el corazón en los cursos para agregarlos a favoritos</p>
               </div>
@@ -415,8 +418,8 @@ const Miscurso = () => {
               ((activeSection === 'todos' && cursosInscritos.length === 0) ||
                (activeSection === 'pendientes' && cursosPendientes.length === 0) ||
                (activeSection === 'aprobados' && cursosAprobados.length === 0)) && (
-              <div className="col-span-full text-center py-12 bg-white rounded-xl shadow-lg border border-green-200">
-                <div className="text-5xl mb-4 text-green-400">📚</div>
+              <div className="col-span-full text-center py-12 bg-white rounded-3xl shadow-lg border border-green-200">
+                <div className="text-5xl mb-4 text-green-400 animate-bounce">📚</div>
                 <h3 className="text-xl font-medium text-green-900 mb-2">
                   {activeSection === 'todos' && 'No estás inscrito en ningún curso'}
                   {activeSection === 'pendientes' && 'No tienes cursos pendientes'}

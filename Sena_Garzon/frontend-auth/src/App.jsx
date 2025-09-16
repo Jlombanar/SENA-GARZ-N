@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import TopCursos from "./pages/TopCursos";
+import CursoDetalle from "./pages/CursoDetalle";
 import NotFound from "./pages/NotFound";
 
 // Componentes de ruta y layout
@@ -53,6 +54,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/top-cursos" element={<TopCursos />} />
+          <Route path="/cursos/:cursoId" element={<CursoDetalle />} />
           
           {/* Rutas privadas con UserLayout */}
           <Route path="/dashboard" element={<PrivateRoute><UserLayout><Dashboard /></UserLayout></PrivateRoute>} />

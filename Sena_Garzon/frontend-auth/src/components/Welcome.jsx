@@ -1,4 +1,3 @@
-// src/pages/Welcome.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -14,9 +13,125 @@ import {
   FaBookmark,
   FaGraduationCap,
   FaArrowRight,
-  FaArrowUp
+  FaArrowUp,
+  FaEye,
+  FaPlayCircle,
+  FaFileAlt,
+  FaUsers,
+  FaTrophy,
+  FaCalendarAlt,
+  FaMapMarkerAlt
 } from "react-icons/fa";
 
+// Componente Carrusel
+const Carousel = ({ onSearchChange, searchTerm }) => {
+  const images = [
+    { src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Desarrollo y Programación", title: "Transforma tu Futuro con", subtitle: "Cursos Complementarios", description: "Desarrolla nuevas habilidades, potencia tu carrera profesional y alcanza tus metas con nuestros cursos especializados." },
+    { src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Innovación Tecnológica", title: "Aprende lo Último en", subtitle: "Tecnología e Innovación", description: "Explora las herramientas y metodologías más avanzadas para destacarte en el mercado laboral." },
+    { src: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Emprendimiento y Gestión", title: "Impulsa tu Idea con", subtitle: "Cursos de Emprendimiento", description: "Convierte tus proyectos en realidad y adquiere las claves para una gestión exitosa." },
+    { src: "https://images.unsplash.com/photo-1552588147-de9426f0436d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Ambientes de Aprendizaje", title: "Experimenta Nuevos", subtitle: "Ambientes de Aprendizaje", description: "Formación práctica y colaborativa en las mejores instalaciones de SENA Garzón." },
+    { src: "https://images.unsplash.com/photo-1509062324303-df5e67041793?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Habilidades para el Futuro", title: "Desarrolla las", subtitle: "Habilidades del Mañana", description: "Prepárate para los desafíos del mercado laboral con programas actualizados y relevantes." }
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 7000); // Cambio automático cada 7 segundos
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleVerCursosClick = () => {
+    document.getElementById('cursos-section').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '24px', boxShadow: '0 12px 24px rgba(0,0,0,0.1)', marginBottom: '60px', height: '600px' }}>
+      <div style={{ display: 'flex', transition: 'transform 0.8s ease-in-out', transform: `translateX(-${currentIndex * 100}%)`, height: '100%' }}>
+        {images.map((image, index) => (
+          <div key={index} style={{ minWidth: '100%', height: '100%', position: 'relative' }}>
+            <img 
+              src={image.src} 
+              alt={image.alt} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <div style={{ 
+              position: 'absolute', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0, 
+              background: 'rgba(0, 0, 0, 0.65)', // Más oscuro para mejor legibilidad
+              display: 'flex', 
+              flexDirection: 'column',
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              padding: '0 40px',
+              textAlign: 'center'
+            }}>
+              <h2 style={{ fontSize: "3.5rem", fontWeight: "800", marginBottom: "15px", lineHeight: "1.1", textShadow: "0 4px 10px rgba(0,0,0,0.6)", color: "white" }}>
+                {image.title} <br />
+                <span style={{ background: "linear-gradient(135deg, #A8E063 0%, #56AB2F 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  {image.subtitle}
+                </span>
+              </h2>
+              <p style={{ fontSize: "1.2rem", marginBottom: "32px", lineHeight: "1.6", opacity: "0.95", maxWidth: "600px", margin: "0 auto 32px auto", color: "white", textShadow: "0 2px 5px rgba(0,0,0,0.4)" }}>
+                {image.description}
+              </p>
+              <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", zIndex: 3 }}>
+                <button onClick={handleVerCursosClick} style={{ background: "linear-gradient(135deg, #A8E063 0%, #56AB2F 100%)", color: "#FFFFFF", border: "none", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", boxShadow: "0 8px 16px rgba(86, 171, 47, 0.3)" }} className="hero-btn">
+                  Ver Cursos Disponibles <FaArrowRight />
+                </button>
+                <button style={{ background: "rgba(255, 255, 255, 0.15)", color: "white", border: "2px solid rgba(255, 255, 255, 0.3)", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", backdropFilter: "blur(4px)" }} className="hero-btn-secondary">
+                  Conocer Más
+                </button>
+              </div>
+              <div style={{ marginTop: "40px", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: '100%', maxWidth: '400px', zIndex: 3 }}>
+                <input
+                  type="text"
+                  placeholder="Buscar cursos..."
+                  value={searchTerm}
+                  onChange={onSearchChange}
+                  style={{ background: "rgba(255, 255, 255, 0.95)", border: "2px solid rgba(255, 255, 255, 0.2)", padding: "16px 20px 16px 50px", borderRadius: "16px", color: "#1A202C", width: "100%", fontSize: "16px", outline: "none", transition: "all 0.2s ease", boxShadow: "0 8px 24px rgba(0,0,0,0.1)", backdropFilter: "blur(4px)" }}
+                />
+                <FaSearch style={{ position: "absolute", left: "20px", color: "#64748b", fontSize: "18px" }} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button 
+        onClick={prevSlide}
+        style={{ position: 'absolute', top: '50%', left: '20px', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.3)', border: 'none', borderRadius: '50%', width: '50px', height: '50px', cursor: 'pointer', display: 'grid', placeItems: 'center', fontSize: '24px', color: 'white', backdropFilter: 'blur(4px)', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', zIndex: 5 }}
+      >
+        &#10094;
+      </button>
+      <button 
+        onClick={nextSlide}
+        style={{ position: 'absolute', top: '50%', right: '20px', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.3)', border: 'none', borderRadius: '50%', width: '50px', height: '50px', cursor: 'pointer', display: 'grid', placeItems: 'center', fontSize: '24px', color: 'white', backdropFilter: 'blur(4px)', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', zIndex: 5 }}
+      >
+        &#10095;
+      </button>
+      <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '10px', zIndex: 5 }}>
+        {images.map((_, index) => (
+          <div 
+            key={index}
+            style={{ width: '10px', height: '10px', borderRadius: '50%', background: currentIndex === index ? 'white' : 'rgba(255,255,255,0.5)', transition: 'background-color 0.3s' }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Componente Welcome
 const Welcome = () => {
   const [user, setUser] = useState({});
   const [likes, setLikes] = useState({});
@@ -28,6 +143,11 @@ const Welcome = () => {
   const [inscOpen, setInscOpen] = useState(false);
   const [inscCourseId, setInscCourseId] = useState(null);
   const [showAllCourses, setShowAllCourses] = useState(false);
+  
+  // Estados para el modal de detalles
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  
   const [ins, setIns] = useState({
     nombreCompleto: "",
     correo: "",
@@ -54,8 +174,14 @@ const Welcome = () => {
       setUser({ nombre: 'Aprendiz', rol: 'aprendiz' });
     }
     const initialCounts = {};
-    // Idealmente, esto debería venir del backend
     setLikesCount(initialCounts);
+    // Si llega query ?inscribir=ID abrir el formulario de ese curso
+    const params = new URLSearchParams(window.location.search);
+    const insId = params.get('inscribir');
+    if (insId) {
+      setInscCourseId(insId);
+      setInscOpen(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -64,19 +190,49 @@ const Welcome = () => {
         const { data } = await axios.get("http://localhost:5000/api/cursos");
         const mapeados = data.map(c => ({
           id: c._id,
-          titulo: c.nombre,
-          descripcion: c.descripcion || "",
+          titulo: c.nombre || 'Curso sin título',
+          descripcion: c.descripcion || 'Descripción no disponible',
+          informacionAdicional: c.informacionAdicional || '',
           imagen: c.imagen || "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop",
           categoria: c.categoria || "General",
-          duracion: c.duracion || "120 horas",
-          nivel: c.nivel || "Intermedio",
+          duracion: c.duracion || "Por definir",
+          cantidad: typeof c.cantidad === 'number' ? c.cantidad : Number(c.cantidad) || 0,
+          nivel: c.nivel || "Por definir",
           estudiantes: (c.inscritos?.length) || 0,
-          rating: 4.7, // Rating de ejemplo
-          likesArr: c.likes || []
+          rating: c.rating || 4.7,
+          likesArr: c.likes || [],
+          
+          // Datos específicos para el modal de detalles
+          fechaInicio: c.fechaInicio || null,
+          fechaFin: c.fechaFin || null,
+          modalidad: c.modalidad || "Por definir",
+          precio: c.precio || "Consultar",
+          instructor: c.instructor || "Instructor SENA",
+          capacidadMaxima: c.capacidadMaxima || null,
+          horario: c.horario || null,
+          ubicacion: c.ubicacion || null,
+          
+          // Arrays de información detallada
+          objetivos: c.objetivos && Array.isArray(c.objetivos) && c.objetivos.length > 0 
+            ? c.objetivos 
+            : null,
+          contenido: c.contenido && Array.isArray(c.contenido) && c.contenido.length > 0 
+            ? c.contenido 
+            : null,
+          requisitos: c.requisitos && Array.isArray(c.requisitos) && c.requisitos.length > 0 
+            ? c.requisitos 
+            : null,
+          
+          // Datos adicionales
+          estado: c.estado || 'activo',
+          certificacion: c.certificacion || null,
+          metodologia: c.metodologia || null
         }));
         setCursosDB(mapeados);
-      } catch (_) {
+      } catch (error) {
+        console.error('Error cargando cursos:', error);
         setCursosDB([]);
+        toast.error('Error al cargar los cursos');
       } finally {
         setCargandoCursos(false);
       }
@@ -101,7 +257,6 @@ const Welcome = () => {
         await axios.post(`http://localhost:5000/api/cursos/${idStr}/like`, {}, { headers: { Authorization: `Bearer ${token}` } });
       }
     } catch (e) {
-      // Revertir el estado si la API falla
       setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
       setLikesCount((prev) => ({ ...prev, [id]: Math.max((prev[id] || 1) - 1, 0) }));
     }
@@ -112,6 +267,11 @@ const Welcome = () => {
     setInscOpen(true);
   };
 
+  const handleVerDetalles = (curso) => {
+    setSelectedCourse(curso);
+    setDetailsOpen(true);
+  };
+
   const submitInscripcion = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -120,9 +280,17 @@ const Welcome = () => {
         return;
       }
       const isObjectId = /^[a-fA-F0-9]{24}$/.test(String(inscCourseId || ''));
-      if (!isObjectId) { toast.info("Este es un curso de ejemplo. La inscripción solo está habilitada para cursos reales."); return; }
+      if (!isObjectId) { 
+        toast.info("Este es un curso de ejemplo. La inscripción solo está habilitada para cursos reales."); 
+        return; 
+      }
       const required = ["nombreCompleto","correo","telefono","documentoIdentidad","numeroTarjeta","file"];
-      for (const k of required) { if (!ins[k]) { toast.error(`El campo ${k} es obligatorio.`); return; } }
+      for (const k of required) { 
+        if (!ins[k]) { 
+          toast.error(`El campo ${k} es obligatorio.`); 
+          return; 
+        } 
+      }
       
       setInsLoading(true);
       const fd = new FormData();
@@ -150,12 +318,27 @@ const Welcome = () => {
     }
   };
 
+  // Función para formatear fechas
+  const formatearFecha = (fecha) => {
+    if (!fecha) return 'Por definir';
+    try {
+      return new Date(fecha).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch {
+      return 'Fecha inválida';
+    }
+  };
+
   const categorias = ["Todos", ...Array.from(new Set(cursosDB.map(c => c.categoria))).filter(Boolean)];
 
   const filteredCursos = cursosDB.filter(curso =>
     (curso.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
     curso.descripcion.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (activeCategory === "Todos" || curso.categoria === activeCategory)
+    (activeCategory === "Todos" || curso.categoria === activeCategory) &&
+    curso.estado === 'activo' // Solo mostrar cursos activos
   );
 
   const cursosToShow = showAllCourses ? filteredCursos : filteredCursos.slice(0, 6);
@@ -180,6 +363,9 @@ const Welcome = () => {
           alt={curso.titulo}
           style={{ width: "100%", height: "200px", objectFit: "cover", transition: "transform 0.5s ease" }}
           className="card-image"
+          onError={(e) => {
+            e.target.src = "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop";
+          }}
         />
         <div style={{ position: "absolute", top: "12px", right: "12px", background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", color: "white", padding: "6px 12px", borderRadius: "20px", fontSize: "12px", fontWeight: "600", zIndex: 2 }}>
           {curso.categoria}
@@ -193,7 +379,7 @@ const Welcome = () => {
           <h3 style={{ color: "#111827", fontSize: "18px", fontWeight: "700", marginBottom: "12px", lineHeight: "1.3" }}>
             {curso.titulo}
           </h3>
-          <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px", lineHeight: "1.5" }}>
+          <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px", lineHeight: "1.5", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
             {curso.descripcion}
           </p>
         </div>
@@ -213,16 +399,26 @@ const Welcome = () => {
               ))}
             </div>
           </div>
-          <div style={{ display: "flex", gap: "12px" }}>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <button
               onClick={() => handleLike(curso.id)}
-              style={{ background: likes[curso.id] ? "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)" : "#F0F0F0", color: likes[curso.id] ? "white" : "#374151", border: "none", padding: "10px 16px", borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", transition: "all 0.2s ease", fontWeight: "600", fontSize: "14px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}
+              style={{ background: likes[curso.id] ? "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)" : "#F0F0F0", color: likes[curso.id] ? "white" : "#374151", border: "none", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", transition: "all 0.2s ease", fontWeight: "600", fontSize: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}
             >
-              <FaBookmark style={{ fontSize: "14px" }} />
-              {likesCount[curso.id] || 0}
+              <FaBookmark style={{ fontSize: "12px" }} />
+              {likesCount[curso.id] || curso.likesArr?.length || 0}
             </button>
-            <button onClick={() => handleInscribirse(curso.id)} style={{ background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", color: "white", border: "none", padding: "10px 16px", borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", fontWeight: "600", fontSize: "14px", transition: "all 0.2s ease", boxShadow: "0 4px 6px rgba(76, 175, 80, 0.3)" }}>
-              <FaCheckCircle style={{ fontSize: "14px" }} />
+            <button 
+              onClick={() => handleVerDetalles(curso)} 
+              style={{ background: "#3B82F6", color: "white", border: "none", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", fontWeight: "600", fontSize: "12px", transition: "all 0.2s ease", boxShadow: "0 4px 6px rgba(59, 130, 246, 0.3)" }}
+            >
+              <FaEye style={{ fontSize: "12px" }} />
+              Ver más
+            </button>
+            <button 
+              onClick={() => handleInscribirse(curso.id)} 
+              style={{ background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", color: "white", border: "none", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", fontWeight: "600", fontSize: "12px", transition: "all 0.2s ease", boxShadow: "0 4px 6px rgba(76, 175, 80, 0.3)" }}
+            >
+              <FaCheckCircle style={{ fontSize: "12px" }} />
               Inscribirse
             </button>
           </div>
@@ -241,7 +437,7 @@ const Welcome = () => {
               <FaBookOpen />
             </div>
             <h1 style={{ fontSize: 28, fontWeight: 800, color: "#1A202C", letterSpacing: "-0.5px", display: 'flex', alignItems: 'baseline' }}>
-              Bienvenido a <span style={{ fontFamily: "'Dancing Script', cursive", fontSize: '1.2em', marginLeft: '8px', background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>SENA Garzón</span>
+              Bienvenido a <span style={{ fontFamily: "inherit", fontSize: '1em', marginLeft: '8px', background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>SENA Garzón</span>
             </h1>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
@@ -251,198 +447,143 @@ const Welcome = () => {
           </div>
         </div>
       </header>
-
+      
       {/* Main Content */}
       <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px" }}>
-        {/* Hero Section */}
-        <div style={{ position: "relative", height: "500px", borderRadius: "24px", overflow: "hidden", marginBottom: "60px", backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop')", backgroundSize: "cover", backgroundPosition: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0, 0, 0, 0.6)", zIndex: 1 }}></div>
-          <div style={{ position: "relative", zIndex: 2, textAlign: "center", color: "white", maxWidth: "800px", padding: "0 20px" }}>
-            <h2 style={{ fontSize: "3.5rem", fontWeight: "800", marginBottom: "20px", lineHeight: "1.1", textShadow: "0 4px 8px rgba(0,0,0,0.3)" }}>
-              Transforma tu Futuro con <br />
-              <span style={{ background: "linear-gradient(135deg, #A8E063 0%, #56AB2F 100%)", backgroundClip: "text", WebkitBackgroundClip: "text", color: "transparent" /* Eliminar backdropFilter de aquí */ }}>
-                Cursos Complementarios
-              </span>
-            </h2>
-            <p style={{ fontSize: "1.2rem", marginBottom: "32px", lineHeight: "1.6", opacity: "0.95", maxWidth: "600px", margin: "0 auto 32px auto" }}>
-              Desarrolla nuevas habilidades, potencia tu carrera profesional y alcanza tus metas con nuestros cursos especializados.
-            </p>
-            <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-              <button onClick={() => document.getElementById('cursos-section').scrollIntoView({ behavior: 'smooth' })} style={{ background: "linear-gradient(135deg, #A8E063 0%, #56AB2F 100%)", color: "#FFFFFF", border: "none", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", boxShadow: "0 8px 16px rgba(86, 171, 47, 0.3)" }} className="hero-btn">
-                Ver Cursos Disponibles <FaArrowRight />
-              </button>
-              <button style={{ background: "rgba(255, 255, 255, 0.15)", color: "white", border: "2px solid rgba(255, 255, 255, 0.3)", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", backdropFilter: "blur(4px)" }} className="hero-btn-secondary">
-                Conocer Más
-              </button>
-            </div>
-            {/* Barra de búsqueda */}
-            <div style={{ marginTop: "40px", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ position: "relative", display: "flex", alignItems: "center", width: '100%', maxWidth: '400px' }}>
-                <input
-                  type="text"
-                  placeholder="Buscar cursos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ background: "rgba(255, 255, 255, 0.95)", border: "2px solid rgba(255, 255, 255, 0.2)", padding: "16px 20px 16px 50px", borderRadius: "16px", color: "#1A202C", width: "100%", fontSize: "16px", outline: "none", transition: "all 0.2s ease", boxShadow: "0 8px 24px rgba(0,0,0,0.1)", backdropFilter: "blur(4px)" }}
-                />
-                <FaSearch style={{ position: "absolute", left: "20px", color: "#64748b", fontSize: "18px" }} />
-              </div>
-            </div>
-          </div>
+        {/* Carrusel Section - Ahora con contenido del Hero */}
+        <div style={{ marginBottom: "60px" }}>
+          <Carousel onSearchChange={(e) => setSearchTerm(e.target.value)} searchTerm={searchTerm} />
         </div>
-
-        {/* Filtros de categoría */}
-        <div style={{ display: "flex", gap: "12px", marginBottom: "32px", flexWrap: "wrap", justifyContent: "center" }}>
-          {categorias.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              style={{ background: activeCategory === cat ? "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)" : "#ffffff", color: activeCategory === cat ? "#ffffff" : "#4A5568", border: "1px solid #E2E8F0", padding: "10px 20px", borderRadius: "12px", cursor: "pointer", fontWeight: "500", fontSize: "14px", transition: "all 0.2s ease", boxShadow: "0 4px 6px rgba(0,0,0,0.03)" }}
-              className="category-btn"
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Cursos Section */}
-        <section id="cursos-section">
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "32px", justifyContent: "center" }}>
-            <div style={{ width: "4px", height: "32px", background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", borderRadius: "2px" }}></div>
-            <h3 style={{ fontSize: "28px", fontWeight: "700", color: "#1A202C" }}>
-              Cursos disponibles
-            </h3>
+        
+        {/* Categories Section */}
+        <section style={{ marginBottom: "60px" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}>
+            {categorias.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "20px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  border: `2px solid ${activeCategory === cat ? '#4CAF50' : '#d1d5db'}`,
+                  background: activeCategory === cat ? 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)' : '#F9FAFB',
+                  color: activeCategory === cat ? 'white' : '#4b5563',
+                  boxShadow: activeCategory === cat ? '0 4px 8px rgba(76, 175, 80, 0.2)' : 'none'
+                }}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
-          
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
-            {cursosToShow.map(curso => renderCard(curso))}
-          </div>
+        </section>
 
+        {/* Courses Section */}
+        <section id="cursos-section" style={{ marginBottom: "60px" }}>
+          <h2 style={{ fontSize: "2.5rem", fontWeight: "800", marginBottom: "40px", textAlign: "center", color: "#1A202C" }}>
+            Explora Nuestros Cursos
+          </h2>
+          {cargandoCursos ? (
+            <div style={{ textAlign: "center", padding: "40px" }}>
+              <p>Cargando cursos...</p>
+            </div>
+          ) : (
+            <>
+              {filteredCursos.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "40px", color: "#6b7280" }}>
+                  <FaSearch size={48} style={{ marginBottom: "20px" }} />
+                  <p>No se encontraron cursos que coincidan con tu búsqueda.</p>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "32px" }}>
+                  {cursosToShow.map(renderCard)}
+                </div>
+              )}
+            </>
+          )}
           <div style={{ textAlign: "center", marginTop: "40px" }}>
             {!showAllCourses && filteredCursos.length > 6 && (
-              <button onClick={() => setShowAllCourses(true)} style={{ background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", color: "white", border: "none", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", boxShadow: "0 8px 16px rgba(76, 175, 80, 0.3)" }} className="more-courses-btn">
-                Ver más cursos <FaArrowRight />
+              <button 
+                onClick={() => setShowAllCourses(true)} 
+                style={{ background: "#16A34A", color: "white", border: "none", padding: "12px 24px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", transition: "background-color 0.3s" }}
+              >
+                Ver más cursos
               </button>
             )}
-            
-            {showAllCourses && filteredCursos.length > 6 && (
-              <button onClick={() => { setShowAllCourses(false); setTimeout(() => { document.getElementById('cursos-section').scrollIntoView({ behavior: 'smooth' }); }, 100); }} style={{ background: "#F0F0F0", color: "#1A202C", border: "1px solid #E2E8F0", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease" }} className="less-courses-btn">
-                Ver menos cursos <FaArrowUp />
+            {showAllCourses && (
+              <button 
+                onClick={() => setShowAllCourses(false)} 
+                style={{ background: "#16A34A", color: "white", border: "none", padding: "12px 24px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", transition: "background-color 0.3s" }}
+              >
+                Mostrar menos cursos
               </button>
             )}
           </div>
-
-          {cargandoCursos && <p style={{textAlign: 'center', padding: '40px', color: '#4A5568'}}>Cargando cursos...</p>}
-
-          {!cargandoCursos && filteredCursos.length === 0 && (
-            <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b" }}>
-              <FaSearch style={{ fontSize: "48px", marginBottom: "16px", opacity: 0.5 }} />
-              <h4 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "8px" }}>
-                No se encontraron cursos
-              </h4>
-              <p>Intenta con otros términos de búsqueda o selecciona otra categoría.</p>
-            </div>
-          )}
         </section>
       </main>
-
+      
       {/* Modal Inscripción */}
       {inscOpen && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: '20px' }}>
-          <div style={{ background: "#ffffff", width: "min(700px, 94%)", borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
-            <div style={{ padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e5e7eb" }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: "#1A202C" }}>Inscribirse al curso</h3>
-              <button onClick={() => setInscOpen(false)} style={{ background: "transparent", border: 0, fontSize: 24, cursor: "pointer", color: '#4A5568' }}>×</button>
-            </div>
-            <div style={{ padding: 16, maxHeight: '80vh', overflowY: 'auto' }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <input placeholder="Nombre completo *" value={ins.nombreCompleto} onChange={e=>setIns({ ...ins, nombreCompleto: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px"}} />
-                <input placeholder="Correo *" type="email" value={ins.correo} onChange={e=>setIns({ ...ins, correo: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px"}} />
-                <input placeholder="Teléfono *" value={ins.telefono} onChange={e=>setIns({ ...ins, telefono: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px"}} />
-                <input placeholder="Documento *" value={ins.documentoIdentidad} onChange={e=>setIns({ ...ins, documentoIdentidad: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px"}} />
-                <input placeholder="Fecha nacimiento" type="date" value={ins.fechaNacimiento} onChange={e=>setIns({ ...ins, fechaNacimiento: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px"}} />
-                <input placeholder="Ciudad" value={ins.ciudad} onChange={e=>setIns({ ...ins, ciudad: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px"}} />
-                <input placeholder="Dirección" value={ins.direccion} onChange={e=>setIns({ ...ins, direccion: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px", gridColumn: "span 2"}} />
-                <input placeholder="Número de tarjeta *" value={ins.numeroTarjeta} onChange={e=>setIns({ ...ins, numeroTarjeta: e.target.value })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px", gridColumn: "span 2"}} />
-                <label style={{gridColumn: "span 2", fontSize: "14px", color: "#4A5568", marginTop: '8px'}}>Sube tu tarjeta de identidad (PDF)*</label>
-                <input type="file" accept="application/pdf" onChange={e=>setIns({ ...ins, file: e.target.files?.[0] || null })} style={{border: "1px solid #E2E8F0", padding: "10px", borderRadius: "8px", gridColumn: "span 2"}} />
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 200, padding: '20px' }}>
+          <div style={{ background: 'white', padding: '40px', borderRadius: '16px', maxWidth: '600px', width: '100%', boxShadow: '0 8px 32px rgba(0,0,0,0.2)', position: 'relative' }}>
+            <button onClick={() => setInscOpen(false)} style={{ position: 'absolute', top: '15px', right: '15px', background: 'transparent', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#6b7280' }}><FaTimes /></button>
+            <h3 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>Formulario de Inscripción</h3>
+            <form onSubmit={(e) => { e.preventDefault(); submitInscripcion(); }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <input type="text" placeholder="Nombre Completo" value={ins.nombreCompleto} onChange={(e) => setIns({ ...ins, nombreCompleto: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <input type="email" placeholder="Correo Electrónico" value={ins.correo} onChange={(e) => setIns({ ...ins, correo: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <input type="tel" placeholder="Teléfono" value={ins.telefono} onChange={(e) => setIns({ ...ins, telefono: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <input type="text" placeholder="Documento de Identidad" value={ins.documentoIdentidad} onChange={(e) => setIns({ ...ins, documentoIdentidad: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <input type="date" placeholder="Fecha de Nacimiento" value={ins.fechaNacimiento} onChange={(e) => setIns({ ...ins, fechaNacimiento: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <input type="text" placeholder="Dirección" value={ins.direccion} onChange={(e) => setIns({ ...ins, direccion: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <input type="text" placeholder="Ciudad" value={ins.ciudad} onChange={(e) => setIns({ ...ins, ciudad: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <input type="text" placeholder="Número de Tarjeta de Identidad o Cédula" value={ins.numeroTarjeta} onChange={(e) => setIns({ ...ins, numeroTarjeta: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '14px', fontWeight: '600', color: '#4b5563' }}>Adjuntar Tarjeta de Identidad o Cédula (PDF)</label>
+                <input type="file" accept="application/pdf" onChange={(e) => setIns({ ...ins, file: e.target.files[0] })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '16px' }} />
               </div>
-            </div>
-            <div style={{ padding: 16, display: "flex", gap: 8, justifyContent: "flex-end", borderTop: "1px solid #e5e7eb" }}>
-              <button onClick={()=>setInscOpen(false)} style={{ background: "#E2E8F0", color: "#1A202C", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: "600", transition: "all 0.2s ease" }}>Cancelar</button>
-              <button onClick={submitInscripcion} disabled={insLoading} style={{ background: insLoading ? "#A0AEC0" : "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", color: "#ffffff", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: "600", transition: "all 0.2s ease" }}>{insLoading ? "Enviando..." : "Enviar solicitud"}</button>
-            </div>
+              <button type="submit" disabled={insLoading} style={{ background: insLoading ? '#9ca3af' : 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', color: 'white', padding: '12px', borderRadius: '8px', border: 'none', fontSize: '16px', fontWeight: '600', cursor: 'pointer' }}>
+                {insLoading ? 'Enviando...' : 'Enviar Solicitud'}
+              </button>
+            </form>
           </div>
         </div>
       )}
 
-      {/* Notification */}
-      {showNotification && (
-        <div style={{ position: "fixed", bottom: "24px", right: "24px", background: "linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)", color: "white", padding: "16px 24px", borderRadius: "12px", boxShadow: "0 10px 15px rgba(0,0,0,0.3)", zIndex: "1000", animation: "slideIn 0.3s ease", display: "flex", alignItems: "center", fontWeight: "600", backdropFilter: "blur(4px)" }}>
-          <FaBookmark style={{ marginRight: "10px" }} />
-          Curso guardado en favoritos
+      {/* Modal de Detalles */}
+      {detailsOpen && selectedCourse && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 200, overflowY: 'auto' }}>
+          <div style={{ background: 'white', padding: '40px', borderRadius: '16px', maxWidth: '800px', width: '100%', boxShadow: '0 8px 32px rgba(0,0,0,0.2)', position: 'relative', margin: '20px' }}>
+            <button onClick={() => setDetailsOpen(false)} style={{ position: 'absolute', top: '15px', right: '15px', background: 'transparent', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#6b7280' }}><FaTimes /></button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {selectedCourse.imagen && (
+                <img src={selectedCourse.imagen} alt={selectedCourse.titulo} style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '12px' }} />
+              )}
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ fontSize: '28px', fontWeight: '700', color: '#111827', marginBottom: '10px' }}>{selectedCourse.titulo}</h3>
+                <p style={{ fontSize: '16px', color: '#6b7280', whiteSpace: 'pre-line' }}>
+                  {selectedCourse.descripcion}
+                </p>
+                <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'center', gap: '16px', color: '#065F46' }}>
+                  <span style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', padding: '6px 12px', borderRadius: '9999px', fontSize: '14px' }}>
+                    Cupos: {selectedCourse.cantidad}
+                  </span>
+                </div>
+                {selectedCourse.informacionAdicional && (
+                  <div style={{ marginTop: '16px', padding: '16px', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '12px', color: '#065F46', textAlign: 'left' }}>
+                    <strong>Más información:</strong>
+                    <div style={{ marginTop: '8px', whiteSpace: 'pre-line' }}>{selectedCourse.informacionAdicional}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
-
-      {/* Estilos CSS-in-JS (JSX Styled) */}
-      <style jsx>{`
-        .card-hover:hover {
-          transform: translateY(-8px) !important;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
-        }
-        .card-hover:hover .card-image {
-          transform: scale(1.05);
-        }
-        .category-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 12px rgba(0,0,0,0.08) !important;
-        }
-        .hero-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.2) !important;
-        }
-        .hero-btn-secondary:hover {
-          background: rgba(255, 255, 255, 0.25) !important;
-          border-color: rgba(255, 255, 255, 0.6) !important;
-        }
-        .more-courses-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.3) !important;
-        }
-        .less-courses-btn:hover {
-          background: #d1d5db !important;
-          transform: translateY(-2px);
-        }
-        @keyframes slideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-        }
-        @media (max-width: 768px) {
-          .mobile-menu-btn {
-            display: flex !important;
-          }
-          h1 {
-            font-size: 24px !important;
-          }
-          h1 span {
-            font-size: 1.1em !important;
-            margin-left: 6px !important;
-          }
-          h2 {
-             font-size: 2.5rem !important;
-          }
-          .hero-section button {
-              padding: 12px 24px !important;
-              font-size: 14px !important;
-          }
-          .modal-content > div {
-            grid-template-columns: 1fr !important;
-          }
-          .modal-content input, .modal-content label {
-            grid-column: span 1 !important;
-          }
-        }
-      `}</style>
+      
+      
     </div>
   );
 };

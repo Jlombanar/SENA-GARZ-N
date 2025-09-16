@@ -19,12 +19,16 @@ import { toast } from "react-toastify";
 const InstructorCursos = () => {
   const [cursos, setCursos] = useState([]);
   const [editandoId, setEditandoId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAll, setShowAll] = useState(false);
   const [nuevoCurso, setNuevoCurso] = useState({
     nombre: "",
     descripcion: "",
+    informacionAdicional: "",
     imagen: "",
     cantidad: 0,
-    valor: 0
+    duracion: "",
+    modalidad: ""
   });
 
   const token = localStorage.getItem("token");
@@ -51,10 +55,20 @@ const InstructorCursos = () => {
 
   const handleGuardar = async () => {
     try {
+      const payload = {
+        nombre: nuevoCurso.nombre || "",
+        descripcion: nuevoCurso.descripcion || "",
+        informacionAdicional: typeof nuevoCurso.informacionAdicional === 'string' ? nuevoCurso.informacionAdicional : "",
+        imagen: nuevoCurso.imagen || "",
+        cantidad: Number(nuevoCurso.cantidad) || 0,
+        duracion: nuevoCurso.duracion || "",
+        modalidad: nuevoCurso.modalidad || ""
+      };
+
       if (editandoId) {
-        await updateCurso(editandoId, nuevoCurso, token);
+        await updateCurso(editandoId, payload, token);
       } else {
-        await createCurso(nuevoCurso, token);
+        await createCurso(payload, token);
       }
       setNuevoCurso({
         nombre: "",
@@ -73,7 +87,16 @@ const InstructorCursos = () => {
   };
 
   const handleEditar = (curso) => {
-    setNuevoCurso(curso);
+    setNuevoCurso({
+      nombre: curso.nombre || "",
+      descripcion: curso.descripcion || "",
+      informacionAdicional: curso.informacionAdicional || "",
+      imagen: curso.imagen || "",
+      cantidad: typeof curso.cantidad === 'number' ? curso.cantidad : Number(curso.cantidad) || 0,
+      valor: typeof curso.valor === 'number' ? curso.valor : Number(curso.valor) || 0,
+      duracion: curso.duracion || "",
+      modalidad: curso.modalidad || ""
+    });
     setEditandoId(curso._id);
   };
 
@@ -96,6 +119,20 @@ const InstructorCursos = () => {
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold text-green-700 mb-4">Mis Cursos</h1>
 
+      {/* Barra de búsqueda */}
+      <div className="mb-6 flex justify-end">
+        <div className="relative w-full max-w-md">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar por nombre o descripción..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-green-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm placeholder-gray-400"
+          />
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600">🔎</span>
+        </div>
+      </div>
+
       <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
         <h2 className="text-xl font-semibold mb-4 text-green-800">
           Agregar / Editar Curso
@@ -115,6 +152,13 @@ const InstructorCursos = () => {
             onChange={handleChange}
             className="border p-2 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
           />
+          <textarea
+            name="informacionAdicional"
+            placeholder="Información adicional del curso (temario, requisitos, modalidad, etc.)"
+            value={nuevoCurso.informacionAdicional}
+            onChange={handleChange}
+            className="border p-2 rounded-lg focus:ring-2 focus:ring-green-500 outline-none col-span-2 h-28"
+          />
           <input
             name="imagen"
             placeholder="URL Imagen"
@@ -131,13 +175,23 @@ const InstructorCursos = () => {
             className="border p-2 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
           />
           <input
-            name="valor"
-            placeholder="Valor ($)"
-            type="number"
-            value={nuevoCurso.valor}
+            name="duracion"
+            placeholder="Duración (ej: 120 horas)"
+            value={nuevoCurso.duracion}
             onChange={handleChange}
             className="border p-2 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
           />
+          <select
+            name="modalidad"
+            value={nuevoCurso.modalidad}
+            onChange={handleChange}
+            className="border p-2 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+          >
+            <option value="">Seleccionar modalidad</option>
+            <option value="Presencial">Presencial</option>
+            <option value="Virtual">Virtual</option>
+            <option value="Mixta">Mixta</option>
+          </select>
         </div>
         <button
           onClick={handleGuardar}
@@ -148,8 +202,18 @@ const InstructorCursos = () => {
       </div>
 
       {/* Cards de Cursos */}
+      {(() => {
+        const term = searchTerm.trim().toLowerCase();
+        const filtered = term
+          ? cursos.filter(c =>
+              (c.nombre || "").toLowerCase().includes(term) ||
+              (c.descripcion || "").toLowerCase().includes(term)
+            )
+          : cursos;
+        const cursosToShow = showAll ? filtered : filtered.slice(0, 6);
+        return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cursos.map((curso) => (
+        {cursosToShow.map((curso) => (
           <div
             key={curso._id}
             className="bg-white rounded-2xl shadow-lg p-4 hover:shadow-xl transition-shadow duration-200"
@@ -195,6 +259,27 @@ const InstructorCursos = () => {
             </div>
           </div>
         ))}
+      </div>
+        );
+      })()}
+
+      {/* Ver más / menos */}
+      <div className="mt-6 flex justify-center">
+        {!showAll ? (
+          <button
+            onClick={() => setShowAll(true)}
+            className="px-5 py-2 rounded-full bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold shadow hover:from-green-700 hover:to-green-800"
+          >
+            Ver más cursos
+          </button>
+        ) : (
+          <button
+            onClick={() => setShowAll(false)}
+            className="px-5 py-2 rounded-full bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold shadow hover:from-green-700 hover:to-green-800"
+          >
+            Mostrar menos
+          </button>
+        )}
       </div>
     </div>
   );

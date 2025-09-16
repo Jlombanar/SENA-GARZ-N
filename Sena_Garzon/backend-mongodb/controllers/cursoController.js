@@ -12,6 +12,17 @@ export const getCursos = async (req, res) => {
   }
 };
 
+// Obtener curso por ID (público)
+export const getCursoById = async (req, res) => {
+  try {
+    const curso = await Curso.findById(req.params.id);
+    if (!curso) return res.status(404).json({ message: "Curso no encontrado" });
+    res.json(curso);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el curso" });
+  }
+};
+
 // Obtener cursos de un instructor específico
 export const getCursosInstructor = async (req, res) => {
   try {
@@ -46,7 +57,7 @@ export const getCursosGallery = async (req, res) => {
 
 // Crear nuevo curso (solo instructores)
 export const createCurso = async (req, res) => {
-  const { nombre, descripcion, cantidad, valor, imagen } = req.body;
+  const { nombre, descripcion, informacionAdicional, cantidad, imagen, duracion, modalidad } = req.body;
 
   try {
     if (!req.user) {
@@ -58,9 +69,11 @@ export const createCurso = async (req, res) => {
     const nuevoCurso = new Curso({
       nombre,
       descripcion,
+      informacionAdicional: informacionAdicional || '',
       cantidad,
-      valor,
       imagen,
+      duracion,
+      modalidad,
       instructorId,
     });
 
@@ -87,17 +100,19 @@ export const deleteCurso = async (req, res) => {
 
 // Actualizar un curso
 export const updateCurso = async (req, res) => {
-  const { nombre, descripcion, cantidad, valor, imagen } = req.body;
+  const { nombre, descripcion, informacionAdicional, cantidad, imagen, duracion, modalidad } = req.body;
 
   try {
     const curso = await Curso.findById(req.params.id);
     if (!curso) return res.status(404).json({ message: "Curso no encontrado" });
 
-    curso.nombre = nombre;
-    curso.descripcion = descripcion;
-    curso.cantidad = cantidad;
-    curso.valor = valor;
-    if (imagen) curso.imagen = imagen;
+    if (typeof nombre !== 'undefined') curso.nombre = nombre;
+    if (typeof descripcion !== 'undefined') curso.descripcion = descripcion;
+    if (typeof informacionAdicional !== 'undefined') curso.informacionAdicional = informacionAdicional;
+    if (typeof cantidad !== 'undefined') curso.cantidad = cantidad;
+    if (typeof imagen !== 'undefined' && imagen !== null && imagen !== '') curso.imagen = imagen;
+    if (typeof duracion !== 'undefined') curso.duracion = duracion;
+    if (typeof modalidad !== 'undefined') curso.modalidad = modalidad;
 
     await curso.save();
     res.json({ message: "Curso actualizado", curso });

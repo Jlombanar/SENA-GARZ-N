@@ -2,6 +2,27 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/cursos";
 
+// --- NUEVAS FUNCIONES PÚBLICAS ---
+
+/**
+ * Obtiene todos los cursos para mostrarlos públicamente (ej. en la página de bienvenida).
+ * No requiere token de autenticación.
+ */
+export const getPublicCursos = () => {
+  return axios.get(API_URL);
+};
+
+/**
+ * Obtiene un curso específico por su ID para mostrar su página de detalles.
+ * No requiere token de autenticación.
+ */
+export const getCursoById = (cursoId) => {
+  return axios.get(`${API_URL}/${cursoId}`);
+};
+
+
+// --- TUS FUNCIONES EXISTENTES (SIN CAMBIOS) ---
+
 export const getCursos = (token) =>
   axios.get(API_URL, {
     headers: { Authorization: `Bearer ${token}` },
