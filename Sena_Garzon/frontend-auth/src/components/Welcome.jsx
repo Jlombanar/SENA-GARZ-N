@@ -20,17 +20,54 @@ import {
   FaUsers,
   FaTrophy,
   FaCalendarAlt,
-  FaMapMarkerAlt
+  FaMapMarkerAlt,
+  FaLaptopCode,
+  FaCogs,
+  FaChartLine,
+  FaLeaf,
+  FaHeart,
+  FaInfoCircle
 } from "react-icons/fa";
 
 // Componente Carrusel
-const Carousel = ({ onSearchChange, searchTerm }) => {
+const Carousel = ({ onSearchChange, searchTerm, onKnowMoreClick }) => {
+  // Imágenes específicas de cursos complementarios del SENA
   const images = [
-    { src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Desarrollo y Programación", title: "Transforma tu Futuro con", subtitle: "Cursos Complementarios", description: "Desarrolla nuevas habilidades, potencia tu carrera profesional y alcanza tus metas con nuestros cursos especializados." },
-    { src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Innovación Tecnológica", title: "Aprende lo Último en", subtitle: "Tecnología e Innovación", description: "Explora las herramientas y metodologías más avanzadas para destacarte en el mercado laboral." },
-    { src: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Emprendimiento y Gestión", title: "Impulsa tu Idea con", subtitle: "Cursos de Emprendimiento", description: "Convierte tus proyectos en realidad y adquiere las claves para una gestión exitosa." },
-    { src: "https://images.unsplash.com/photo-1552588147-de9426f0436d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Ambientes de Aprendizaje", title: "Experimenta Nuevos", subtitle: "Ambientes de Aprendizaje", description: "Formación práctica y colaborativa en las mejores instalaciones de SENA Garzón." },
-    { src: "https://images.unsplash.com/photo-1509062324303-df5e67041793?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80", alt: "Habilidades para el Futuro", title: "Desarrolla las", subtitle: "Habilidades del Mañana", description: "Prepárate para los desafíos del mercado laboral con programas actualizados y relevantes." }
+    { 
+      src: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80", 
+      alt: "Programación y Desarrollo Web", 
+      title: "Domina la", 
+      subtitle: "Programación Web", 
+      description: "Aprende HTML, CSS, JavaScript y frameworks modernos. Conviértete en desarrollador full-stack con nuestros cursos complementarios." 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80", 
+      alt: "Gestión Empresarial", 
+      title: "Impulsa tu", 
+      subtitle: "Gestión Empresarial", 
+      description: "Desarrolla habilidades en administración, liderazgo y gestión de proyectos para destacar en el mundo empresarial." 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1581092921461-eab62e97a780?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80", 
+      alt: "Marketing Digital", 
+      title: "Conquista el", 
+      subtitle: "Marketing Digital", 
+      description: "Estrategias de redes sociales, SEO, publicidad online y analítica web para potenciar tu presencia digital." 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80", 
+      alt: "Servicios de Salud", 
+      title: "Especialízate en", 
+      subtitle: "Servicios de Salud", 
+      description: "Primeros auxilios, cuidado de pacientes y técnicas de atención en salud para una carrera con propósito." 
+    },
+    { 
+      src: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80", 
+      alt: "Agricultura Sostenible", 
+      title: "Innova en", 
+      subtitle: "Agricultura Sostenible", 
+      description: "Técnicas modernas de cultivo, agricultura orgánica y gestión sostenible de recursos naturales." 
+    }
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,7 +81,7 @@ const Carousel = ({ onSearchChange, searchTerm }) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(nextSlide, 7000); // Cambio automático cada 7 segundos
+    const interval = setInterval(nextSlide, 7000);
     return () => clearInterval(interval);
   }, []);
 
@@ -68,7 +105,7 @@ const Carousel = ({ onSearchChange, searchTerm }) => {
               left: 0, 
               right: 0, 
               bottom: 0, 
-              background: 'rgba(0, 0, 0, 0.65)', // Más oscuro para mejor legibilidad
+              background: 'rgba(0, 0, 0, 0.65)', 
               display: 'flex', 
               flexDirection: 'column',
               alignItems: 'center', 
@@ -89,7 +126,8 @@ const Carousel = ({ onSearchChange, searchTerm }) => {
                 <button onClick={handleVerCursosClick} style={{ background: "linear-gradient(135deg, #A8E063 0%, #56AB2F 100%)", color: "#FFFFFF", border: "none", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", boxShadow: "0 8px 16px rgba(86, 171, 47, 0.3)" }} className="hero-btn">
                   Ver Cursos Disponibles <FaArrowRight />
                 </button>
-                <button style={{ background: "rgba(255, 255, 255, 0.15)", color: "white", border: "2px solid rgba(255, 255, 255, 0.3)", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", backdropFilter: "blur(4px)" }} className="hero-btn-secondary">
+                <button onClick={onKnowMoreClick} style={{ background: "rgba(255, 255, 255, 0.15)", color: "white", border: "2px solid rgba(255, 255, 255, 0.3)", padding: "16px 32px", borderRadius: "12px", fontSize: "16px", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", transition: "all 0.3s ease", backdropFilter: "blur(4px)" }} className="hero-btn-secondary">
+                  <FaInfoCircle />
                   Conocer Más
                 </button>
               </div>
@@ -131,7 +169,161 @@ const Carousel = ({ onSearchChange, searchTerm }) => {
   );
 };
 
-// Componente Welcome
+// Componente de Información del SENA
+const AboutSena = ({ onClose }) => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', zIndex: 300, overflowY: 'auto', padding: '20px' }}>
+      <div style={{ background: 'white', borderRadius: '20px', maxWidth: '900px', width: '100%', position: 'relative', marginTop: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: '20px', right: '20px', background: 'transparent', border: 'none', fontSize: '28px', cursor: 'pointer', color: '#6b7280', zIndex: 5 }}>
+          <FaTimes />
+        </button>
+        
+        {/* Header con imagen */}
+        <div style={{ position: 'relative', height: '300px', borderRadius: '20px 20px 0 0', overflow: 'hidden' }}>
+          <img 
+            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+            alt="SENA Garzón" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.9) 0%, rgba(46, 125, 50, 0.9) 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '40px' }}>
+            <h2 style={{ fontSize: '3rem', fontWeight: '800', color: 'white', marginBottom: '16px', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
+              SENA Garzón
+            </h2>
+            <p style={{ fontSize: '1.2rem', color: 'white', opacity: '0.95', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+              Centro de Formación para el Desarrollo del Huila
+            </p>
+          </div>
+        </div>
+
+        <div style={{ padding: '40px' }}>
+          {/* Misión y Visión */}
+          <div style={{ marginBottom: '40px' }}>
+            <h3 style={{ fontSize: '2rem', fontWeight: '700', color: '#1A202C', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <FaTrophy style={{ color: '#4CAF50' }} />
+              Nuestra Misión
+            </h3>
+            <p style={{ fontSize: '1.1rem', color: '#4b5563', lineHeight: '1.7', marginBottom: '24px' }}>
+              El SENA Garzón está comprometido con la formación profesional integral que contribuye al desarrollo competitivo 
+              del país a través del mejoramiento de la productividad empresarial y el desarrollo social y tecnológico de los trabajadores.
+            </p>
+            
+            <h3 style={{ fontSize: '2rem', fontWeight: '700', color: '#1A202C', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <FaEye style={{ color: '#4CAF50' }} />
+              Nuestra Visión
+            </h3>
+            <p style={{ fontSize: '1.1rem', color: '#4b5563', lineHeight: '1.7', marginBottom: '32px' }}>
+              Ser reconocida como la institución líder en formación profesional integral y desarrollo tecnológico 
+              del sur del Huila, formando talento humano competente y competitivo.
+            </p>
+          </div>
+
+          {/* Áreas de formación */}
+          <div style={{ marginBottom: '40px' }}>
+            <h3 style={{ fontSize: '2rem', fontWeight: '700', color: '#1A202C', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <FaGraduationCap style={{ color: '#4CAF50' }} />
+              Áreas de Formación
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+              <div style={{ background: '#F0FDF4', padding: '24px', borderRadius: '16px', border: '1px solid #BBF7D0' }}>
+                <FaLaptopCode style={{ fontSize: '2rem', color: '#4CAF50', marginBottom: '12px' }} />
+                <h4 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#065F46', marginBottom: '8px' }}>Tecnologías de la Información</h4>
+                <p style={{ color: '#047857', fontSize: '0.95rem' }}>Programación, desarrollo web, bases de datos y sistemas de información.</p>
+              </div>
+              <div style={{ background: '#F0F9FF', padding: '24px', borderRadius: '16px', border: '1px solid #BAE6FD' }}>
+                <FaCogs style={{ fontSize: '2rem', color: '#0284C7', marginBottom: '12px' }} />
+                <h4 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#0C4A6E', marginBottom: '8px' }}>Gestión Empresarial</h4>
+                <p style={{ color: '#0369A1', fontSize: '0.95rem' }}>Administración, liderazgo, gestión de proyectos y emprendimiento.</p>
+              </div>
+              <div style={{ background: '#FEF7FF', padding: '24px', borderRadius: '16px', border: '1px solid #E9D5FF' }}>
+                <FaChartLine style={{ fontSize: '2rem', color: '#9333EA', marginBottom: '12px' }} />
+                <h4 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#581C87', marginBottom: '8px' }}>Marketing Digital</h4>
+                <p style={{ color: '#7C3AED', fontSize: '0.95rem' }}>Redes sociales, SEO, publicidad online y analítica web.</p>
+              </div>
+              <div style={{ background: '#FFF7ED', padding: '24px', borderRadius: '16px', border: '1px solid #FED7AA' }}>
+                <FaLeaf style={{ fontSize: '2rem', color: '#EA580C', marginBottom: '12px' }} />
+                <h4 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#9A3412', marginBottom: '8px' }}>Agricultura Sostenible</h4>
+                <p style={{ color: '#C2410C', fontSize: '0.95rem' }}>Técnicas modernas, agricultura orgánica y gestión sostenible.</p>
+              </div>
+              <div style={{ background: '#FDF2F8', padding: '24px', borderRadius: '16px', border: '1px solid #FBBF24' }}>
+                <FaHeart style={{ fontSize: '2rem', color: '#EC4899', marginBottom: '12px' }} />
+                <h4 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#9D174D', marginBottom: '8px' }}>Servicios de Salud</h4>
+                <p style={{ color: '#BE185D', fontSize: '0.95rem' }}>Primeros auxilios, cuidado de pacientes y atención en salud.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Estadísticas */}
+          <div style={{ marginBottom: '40px' }}>
+            <h3 style={{ fontSize: '2rem', fontWeight: '700', color: '#1A202C', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <FaChartLine style={{ color: '#4CAF50' }} />
+              Nuestro Impacto
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>2,500+</div>
+                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Estudiantes Formados</div>
+              </div>
+              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #2196F3 0%, #1565C0 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>15+</div>
+                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Años de Experiencia</div>
+              </div>
+              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #FF9800 0%, #F57C00 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>50+</div>
+                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Cursos Disponibles</div>
+              </div>
+              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #9C27B0 0%, #6A1B9A 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>95%</div>
+                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Empleabilidad</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Contacto */}
+          <div style={{ background: '#F8FAFC', padding: '32px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+            <h3 style={{ fontSize: '2rem', fontWeight: '700', color: '#1A202C', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <FaMapMarkerAlt style={{ color: '#4CAF50' }} />
+              Información de Contacto
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+              <div>
+                <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Dirección:</strong></p>
+                <p style={{ color: '#6b7280' }}>Carrera 11 No. 1-50, Garzón, Huila</p>
+              </div>
+              <div>
+                <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Teléfono:</strong></p>
+                <p style={{ color: '#6b7280' }}>(8) 838-7676</p>
+              </div>
+              <div>
+                <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Email:</strong></p>
+                <p style={{ color: '#6b7280' }}>info@sena.edu.co</p>
+              </div>
+              <div>
+                <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Horario:</strong></p>
+                <p style={{ color: '#6b7280' }}>Lunes a Viernes: 7:00 AM - 5:00 PM</p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <button 
+              onClick={scrollToTop} 
+              style={{ background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', fontSize: '16px', fontWeight: '600', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+            >
+              <FaArrowUp />
+              Volver al Inicio
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Componente Welcome Principal
 const Welcome = () => {
   const [user, setUser] = useState({});
   const [likes, setLikes] = useState({});
@@ -143,6 +335,7 @@ const Welcome = () => {
   const [inscOpen, setInscOpen] = useState(false);
   const [inscCourseId, setInscCourseId] = useState(null);
   const [showAllCourses, setShowAllCourses] = useState(false);
+  const [showAboutSena, setShowAboutSena] = useState(false);
   
   // Estados para el modal de detalles
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -270,6 +463,10 @@ const Welcome = () => {
   const handleVerDetalles = (curso) => {
     setSelectedCourse(curso);
     setDetailsOpen(true);
+  };
+
+  const handleKnowMoreClick = () => {
+    setShowAboutSena(true);
   };
 
   const submitInscripcion = async () => {
@@ -452,7 +649,11 @@ const Welcome = () => {
       <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px" }}>
         {/* Carrusel Section - Ahora con contenido del Hero */}
         <div style={{ marginBottom: "60px" }}>
-          <Carousel onSearchChange={(e) => setSearchTerm(e.target.value)} searchTerm={searchTerm} />
+          <Carousel 
+            onSearchChange={(e) => setSearchTerm(e.target.value)} 
+            searchTerm={searchTerm}
+            onKnowMoreClick={handleKnowMoreClick}
+          />
         </div>
         
         {/* Categories Section */}
@@ -525,6 +726,11 @@ const Welcome = () => {
         </section>
       </main>
       
+      {/* Modal About SENA */}
+      {showAboutSena && (
+        <AboutSena onClose={() => setShowAboutSena(false)} />
+      )}
+      
       {/* Modal Inscripción */}
       {inscOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 200, padding: '20px' }}>
@@ -583,7 +789,41 @@ const Welcome = () => {
         </div>
       )}
       
-      
+      {/* Notificación */}
+      {showNotification && (
+        <div style={{ position: 'fixed', top: '20px', right: '20px', background: '#10B981', color: 'white', padding: '12px 20px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <FaCheckCircle />
+          ¡Curso guardado en favoritos!
+        </div>
+      )}
+
+      {/* Estilos CSS adicionales */}
+      <style jsx>{`
+        .card-hover:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-image:hover {
+          transform: scale(1.05);
+        }
+        
+        .hero-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 24px rgba(86, 171, 47, 0.4);
+        }
+        
+        .hero-btn-secondary:hover {
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+          .mobile-menu-btn {
+            display: flex !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };

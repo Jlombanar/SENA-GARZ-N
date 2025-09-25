@@ -231,16 +231,16 @@ const Home = () => {
             </div>
           </div>
           <div className="md:w-1/2 flex justify-center">
-            {/* ✅ Mejora: Marco de la imagen con efecto flotante y animación al pasar el mouse */}
-            <div className="relative w-full max-w-md">
-              <div className="absolute -top-4 -left-4 w-full h-full border-4 border-white/20 rounded-2xl"></div>
-              <img 
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-                alt="Estudiantes SENA"
-                className="relative rounded-2xl shadow-2xl w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          </div>
+  {/* ✅ Marco con gradiente verde-amarillo y efecto flotante */}
+  <div className="relative w-full max-w-md p-[4px] rounded-2xl bg-gradient-to-r from-green-500 to-yellow-400">
+    <img
+      className="rounded-2xl shadow-2xl w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500"
+      src="./imagen_inicio.png"
+      alt="SENA Garzón"
+    />
+  </div>
+</div>
+
         </div>
       </div>
 
@@ -301,8 +301,9 @@ const Home = () => {
                   </span>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl md:text-2xl font-serif font-extrabold text-gray-900 tracking-tight mb-2">{curso.nombre}</h3>
-                  <p className="text-gray-700 text-sm md:text-base mb-4 line-clamp-2">{curso.descripcion}</p>
+                <h3 className="text-2xl md:text-2xl font-sans font-extrabold text-gray-700 tracking-wide mb-3">{curso.nombre}</h3>
+                <p className="text-gray-1300text-sm md:text-base mb-4 line-clamp-2">{curso.descripcion}</p>
+
                   <div className="flex items-center text-gray-500 mb-4">
                     <FiClock className="mr-1" />
                     <span className="text-sm">{curso.duracion || 'Por definir'}</span>
