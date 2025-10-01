@@ -54,7 +54,8 @@ const AdminCursoTable = ({
                 <td className="px-4 py-3">
                   {curso.imagen ? (
                     <img
-                      src={`http://localhost:5000/uploads/${curso.imagen}`}
+                     src={`${import.meta.env.VITE_API_URL}/uploads/${curso.imagen}`}
+
                       alt="curso"
                       className="h-12 w-12 object-cover rounded-md"
                     />

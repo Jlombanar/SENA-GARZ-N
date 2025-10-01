@@ -45,7 +45,9 @@ const TopCursos = () => {
 
   const cargarEstadisticas = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/cursos/estadisticas-likes");
+    const response = await fetch("https://sena-garz-n.onrender.com/api/cursos/estadisticas-likes");
+
+
       const data = await response.json();
       setEstadisticas(data);
     } catch (error) {

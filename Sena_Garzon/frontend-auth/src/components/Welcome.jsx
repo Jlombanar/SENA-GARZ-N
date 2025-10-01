@@ -360,7 +360,8 @@ const Welcome = () => {
   useEffect(() => {
     const cargarCursos = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/cursos");
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/cursos`);
+
         const mapeados = data.map(c => ({
           id: c._id,
           titulo: c.nombre || 'Curso sin título',
@@ -427,7 +428,8 @@ const Welcome = () => {
       const idStr = String(id);
       const isObjectId = /^[a-fA-F0-9]{24}$/.test(idStr);
       if (isObjectId) {
-        await axios.post(`http://localhost:5000/api/cursos/${idStr}/like`, {}, { headers: { Authorization: `Bearer ${token}` } });
+       await axios.post(`${import.meta.env.VITE_API_URL}/cursos/${idStr}/like`, {}, { headers: { Authorization: `Bearer ${token}` } });
+
       }
     } catch (e) {
       setLikes((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -481,7 +483,7 @@ const Welcome = () => {
       fd.append('numeroTarjeta', ins.numeroTarjeta);
       fd.append('tarjetaPDF', ins.file);
       
-      await axios.post(`http://localhost:5000/api/cursos/${inscCourseId}/inscribirse`, fd, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/cursos/${inscCourseId}/inscribirse`,fd, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
       });
       

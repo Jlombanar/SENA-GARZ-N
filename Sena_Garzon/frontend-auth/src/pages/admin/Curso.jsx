@@ -49,7 +49,7 @@ const CursoList = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/api/cursos/${id}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL}/cursos/${id}`);
         setCursos((prev) => prev.filter((c) => c._id !== id));
         toast.success("Curso eliminado correctamente");
       } catch (error) {
@@ -79,10 +79,7 @@ const CursoList = () => {
         formData.append("imagen", selectedCurso.imagen);
       }
 
-      const res = await axios.put(
-        `http://localhost:5000/api/curso/${selectedCurso._id}`,
-        formData
-      );
+      await axios.put(`${import.meta.env.VITE_API_URL}/curso/${selectedCurso._id}`, formData);
 
       const updatedCurso = res.data.curso;
       setCursos((prev) =>

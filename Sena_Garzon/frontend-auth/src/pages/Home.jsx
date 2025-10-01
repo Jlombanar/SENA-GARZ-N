@@ -50,7 +50,9 @@ const Home = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:5000/api/cursos/${cursoId}/like`,
+        await axios.post(
+  `${import.meta.env.VITE_API_URL}/cursos/${cursoId}/like`
+),
         {},
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -477,7 +479,7 @@ const Home = () => {
                       return;
                     }
                     try {
-                      await axios.post("http://localhost:5000/api/contact", { nombre, correo, mensaje });
+                      await axios.post(`${import.meta.env.VITE_API_URL}/contact`, { nombre, correo, mensaje });
                       toast.success("Mensaje enviado correctamente");
                       e.currentTarget.reset();
                     } catch (err) {

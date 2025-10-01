@@ -16,7 +16,7 @@ const UserList = () => {
 
   const fetchUsuarios = async () => {
     try {
-const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
       setUsuarios(res.data);
     } catch (error) {
       console.error("Error al obtener usuarios:", error);
@@ -40,7 +40,7 @@ const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/api/users/${id}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL}/users/${id}`);
         setUsuarios((prev) => prev.filter((u) => u._id !== id));
         toast.success("Usuario eliminado correctamente");
       } catch (error) {
@@ -58,7 +58,7 @@ const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
   const handleSaveChanges = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/users/${selectedUser._id}`,
+        `${import.meta.env.VITE_API_URL}/users/${selectedUser._id}`,
         selectedUser
       );
 

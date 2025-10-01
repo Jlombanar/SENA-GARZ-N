@@ -23,7 +23,7 @@ const AdminWelcome = () => {
     try {
       setErrorStats(null);
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/admin/stats', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Error al cargar estadísticas');
@@ -45,7 +45,7 @@ const AdminWelcome = () => {
         setErrorNotifications('No hay token de autenticación');
         return;
       }
-      const res = await fetch('http://localhost:5000/api/admin/notifications', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) {

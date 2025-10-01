@@ -12,7 +12,8 @@ const AdminEditCursoModal = ({
 
   const [previewImage, setPreviewImage] = useState(
     curso.imagen && typeof curso.imagen === 'string'
-      ? `http://localhost:5000/uploads/${curso.imagen}`
+      ? `${import.meta.env.VITE_API_URL}/uploads/${curso.imagen}`
+
       : null
   );
 
