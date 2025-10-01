@@ -30,7 +30,8 @@ const TopCursos = () => {
         setCursos(response);
       } else {
         // Si no hay token, hacer petición pública
-        const response = await fetch("http://localhost:5000/api/cursos/top-likes");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/cursos/top-likes`);
+
         const data = await response.json();
         setCursos(data);
       }

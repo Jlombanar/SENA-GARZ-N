@@ -79,8 +79,8 @@ const InstructorPerfil = () => {
         };
         headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
       }
-
-      const res = await axios.put('http://localhost:5000/api/auth/users/profile', body, { headers });
+const res = await axios.put(
+  `${import.meta.env.VITE_API_URL}/auth/users/profile`, body,{ headers });
       const updatedUser = res.data.user;
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setUser(updatedUser);

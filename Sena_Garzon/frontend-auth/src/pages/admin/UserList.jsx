@@ -16,7 +16,7 @@ const UserList = () => {
 
   const fetchUsuarios = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users");
+const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
       setUsuarios(res.data);
     } catch (error) {
       console.error("Error al obtener usuarios:", error);

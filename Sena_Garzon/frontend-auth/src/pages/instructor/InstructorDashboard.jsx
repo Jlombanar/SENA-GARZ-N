@@ -34,7 +34,8 @@ const InstructorDashboard = () => {
     if (!path.startsWith('/uploads/')) {
       if (path.startsWith('uploads/')) path = `/${path}`; else path = `/uploads/${path}`;
     }
-    return `http://localhost:5000${path}`;
+  return `${import.meta.env.VITE_API_URL}${path}`;
+
   };
 
   useEffect(() => {

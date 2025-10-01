@@ -20,7 +20,8 @@ const ForgotPassword = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/forgot-password", { correo });
+      await axios.post(`${import.meta.env.VITE_API_URL}/forgot-password`, { correo });
+
       toast.success("Revisa tu correo para restablecer tu contraseña");
     } catch (err) {
       toast.error(err.response?.data?.message || "Error al enviar el correo");

@@ -30,7 +30,8 @@ const Home = () => {
 
   const cargarCursos = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/cursos");
+     const response = await axios.get(`${import.meta.env.VITE_API_URL}/cursos`);
+
       setCursos(response.data);
       setLoading(false);
     } catch (error) {
