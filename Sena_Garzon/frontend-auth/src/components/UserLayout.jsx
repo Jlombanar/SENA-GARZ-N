@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
-import { getStoredUser } from "../utils/storage";
+import { getStoredUser, touchActivity } from "../utils/storage";
 
 const UserLayout = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,6 +18,21 @@ const UserLayout = ({ children }) => {
       setUser(storedUser);
     }
   }, [navigate]);
+
+  // Registrar actividad dentro del layout para mantener la sesión viva hasta el límite
+  useEffect(() => {
+    const onAct = () => touchActivity();
+    window.addEventListener('click', onAct);
+    window.addEventListener('keydown', onAct);
+    window.addEventListener('mousemove', onAct);
+    window.addEventListener('scroll', onAct);
+    return () => {
+      window.removeEventListener('click', onAct);
+      window.removeEventListener('keydown', onAct);
+      window.removeEventListener('mousemove', onAct);
+      window.removeEventListener('scroll', onAct);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");

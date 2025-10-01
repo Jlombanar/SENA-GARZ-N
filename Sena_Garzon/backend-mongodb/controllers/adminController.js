@@ -128,6 +128,7 @@ export const getAdminNotifications = async (req, res) => {
         titulo: `Nuevo usuario registrado`,
         descripcion: `${user.nombre || 'Usuario'} se registró`,
         tiempo,
+        timestamp: new Date(user.createdAt).getTime(),
         color: 'bg-blue-50',
         iconColor: 'bg-blue-500'
       });
@@ -142,6 +143,7 @@ export const getAdminNotifications = async (req, res) => {
         titulo: `Nuevo instructor registrado`,
         descripcion: `${instructor.nombre || 'Instructor'} se registró como instructor`,
         tiempo,
+        timestamp: new Date(instructor.createdAt).getTime(),
         color: 'bg-purple-50',
         iconColor: 'bg-purple-500'
       });
@@ -156,6 +158,7 @@ export const getAdminNotifications = async (req, res) => {
         titulo: 'Nuevo curso creado',
         descripcion: `Curso "${curso.nombre}" fue creado`,
         tiempo,
+        timestamp: new Date(curso.createdAt).getTime(),
         color: 'bg-green-50',
         iconColor: 'bg-green-500'
       });
@@ -170,13 +173,14 @@ export const getAdminNotifications = async (req, res) => {
         titulo: 'Nueva inscripción pendiente',
         descripcion: `${inscripcion.nombreUsuario || 'Usuario'} se inscribió a "${inscripcion.nombreCurso}"`,
         tiempo,
+        timestamp: new Date(inscripcion.fecha).getTime(),
         color: 'bg-yellow-50',
         iconColor: 'bg-yellow-500'
       });
     });
 
-    // Ordenar por fecha más reciente
-    notificaciones.sort((a, b) => new Date(b.tiempo) - new Date(a.tiempo));
+    // Ordenar por fecha más reciente usando timestamp numérico
+    notificaciones.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
     
     res.json(notificaciones.slice(0, 6)); // Máximo 6 notificaciones
   } catch (error) {

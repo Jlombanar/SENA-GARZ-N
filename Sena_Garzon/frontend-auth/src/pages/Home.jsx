@@ -120,6 +120,30 @@ const Home = () => {
       </div>
     );
   }
+  
+  // ====================================================================
+  // --- ESTILO DEL FONDO DEL FOOTER ---
+  // OPACIDAD BAJADA A 0.06, para que se vea sutil sobre el nuevo verde.
+  // ====================================================================
+  const senaBackgroundStyle = {
+    // RUTA LOCAL: Asegúrate de que este archivo exista en tu carpeta 'public'
+    backgroundImage: `url('/sena-logo-transparente.svg')`, 
+    backgroundSize: '400px', 
+    backgroundRepeat: 'repeat',
+    backgroundPosition: 'center',
+    // 🛑 OPACIDAD FINAL AJUSTADA para que sea sutil
+    opacity: 0.06, 
+    zIndex: -1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    // Filtro para aclarar el logo sobre el fondo oscuro
+    filter: 'saturate(0.5) brightness(1.5)', 
+    transform: 'translateZ(-1px)', 
+    backgroundColor: 'rgba(255, 255, 255, 0.01)'
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white font-sans antialiased">
@@ -514,71 +538,107 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Footer moderno */}
-      <footer className="py-12 bg-gradient-to-b from-gray-900 to-black text-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="md:col-span-2">
+      {/* ========================================================================================================
+        FOOTER ADAPTADO con el nuevo color verde (bg-gradient-to-br from-green-600 to-green-700)
+        ========================================================================================================
+      */}
+      <footer className="relative py-12 bg-gradient-to-br from-green-600 to-green-700 text-white overflow-hidden">
+        
+        {/* Fondo Transparente SENA con opacidad ajustada para el nuevo color */}
+        <div style={senaBackgroundStyle} className="hidden lg:block"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid md:grid-cols-3 gap-10">
+            
+            {/* Columna 1: Logo y Dirección General */}
+            <div className="space-y-4">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-white p-2 rounded-lg shadow-md">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
-                    alt="SENA"
-                    className="h-8"
-                    style={{ filter: 'hue-rotate(85deg) saturate(2)' }}
-                  />
-                </div>
-                {/* ✅ Mejora: Título del footer con gradiente */}
-                <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">
+                {/* Logo principal más visible */}
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/8/83/Sena_Colombia_logo.svg"
+                  alt="SENA Logo"
+                  // Invertido para que se vea blanco sobre el verde
+                  className="h-10 w-auto filter brightness-0 invert" 
+                />
+                <span className="text-2xl font-extrabold tracking-tight text-white">
                   SENA Garzón
                 </span>
               </div>
-              <p className="text-gray-400">
-                Centro de formación profesional comprometido con el desarrollo del Huila a través de la educación técnica.
+              
+              <h3 className="text-lg font-semibold border-b border-green-300 pb-2 mb-2">
+                Dirección General
+              </h3>
+              <p className="text-gray-100 flex items-start">
+                <FiMapPin className="mt-1 mr-3 flex-shrink-0 text-green-200" />
+                Calle 7 Sur # 2-33, Vía El Agrado. Centro de Formación Agroindustrial 'La Angostura', Garzón, Huila.
               </p>
+              
+              {/* Información de cumplimiento (similar a los sellos de la imagen) */}
+              <div className="pt-4">
+                <span className="text-sm text-green-200 font-medium">Calidad y Compromiso:</span>
+                <p className="text-xs text-gray-300">
+                  Formación certificada por el SENA. Contribuyendo al desarrollo económico y social del Huila.
+                </p>
+              </div>
             </div>
             
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Enlaces</h3>
-              <ul className="space-y-2">
-                {/* ✅ Mejora: Efecto de hover en los enlaces */}
-                <li>
-                  <Link to="/" className="text-gray-400 hover:text-green-300 transition flex items-center group">
-                    <FiArrowRight className="mr-2 text-xs opacity-0 group-hover:opacity-100 transition" />
-                    Inicio
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/dashboard/miscurso" className="text-gray-400 hover:text-green-300 transition flex items-center group">
-                    <FiArrowRight className="mr-2 text-xs opacity-0 group-hover:opacity-100 transition" />
-                    Cursos
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contacto" className="text-gray-400 hover:text-green-300 transition flex items-center group">
-                    <FiArrowRight className="mr-2 text-xs opacity-0 group-hover:opacity-100 transition" />
-                    Contacto
-                  </Link>
-                </li>
-              </ul>
+            {/* Columna 2: Horario de Atención */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b border-green-300 pb-2 mb-2">
+                Horario de Atención
+              </h3>
+              <div className="text-gray-100 space-y-2">
+                <div className="flex items-center">
+                  <FiClock className="mr-3 flex-shrink-0 text-green-200" />
+                  <span className="font-semibold w-24">Lunes a Viernes:</span>
+                  <span>7:00 a.m. a 5:00 p.m.</span>
+                </div>
+                <div className="flex items-center">
+                  <FiClock className="mr-3 flex-shrink-0 text-green-200" />
+                  <span className="font-semibold w-24">Sábados:</span>
+                  <span>8:00 a.m. a 12:00 p.m.</span>
+                </div>
+                <p className="pt-4 text-sm italic text-gray-200">
+                  (Horario de atención en oficinas administrativas. Consulta la disponibilidad de talleres.)
+                </p>
+              </div>
             </div>
             
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contacto</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li className="flex items-start">
-                  <FiMapPin className="mt-1 mr-2 flex-shrink-0 text-green-300" />
-                  Garzón, Huila
+            {/* Columna 3: Líneas de Atención */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b border-green-300 pb-2 mb-2">
+                Líneas de Atención
+              </h3>
+              <ul className="space-y-3 text-gray-100">
+                <li className="flex items-center group">
+                  <FiPhone className="mr-3 flex-shrink-0 text-green-200 group-hover:text-white transition" />
+                  <span className="font-semibold">Bogotá:</span>
+                  <a href="tel:+576015925555" className="ml-2 hover:text-green-300 transition">
+                    (+57) 601 592 5555
+                  </a>
                 </li>
-                <li className="flex items-start">
-                  <FiPhone className="mt-1 mr-2 flex-shrink-0 text-green-300" />
-                  (8) 123 4567
+                <li className="flex items-center group">
+                  <FiPhone className="mr-3 flex-shrink-0 text-green-200 group-hover:text-white transition" />
+                  <span className="font-semibold">Línea Nacional:</span>
+                  <a href="tel:018000910270" className="ml-2 hover:text-green-300 transition">
+                    018000 910270
+                  </a>
+                </li>
+                <li className="flex items-start group">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ filter: 'hue-rotate(85deg) saturate(2) invert(1)' }} />
+                  <div className="flex flex-col">
+                    <span className="font-semibold">WhatsApp:</span>
+                    <a href="https://wa.me/573155554545" target="_blank" rel="noopener noreferrer" className="hover:text-green-300 transition">
+                      315 555 4545 (Soporte)
+                    </a>
+                  </div>
                 </li>
               </ul>
             </div>
           </div>
           
-          <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-500">
+          {/* Derechos de Autor */}
+          <div className="mt-12 pt-8 border-t border-green-600 text-center text-gray-300">
             <p>© {new Date().getFullYear()} Centro de Formación SENA Garzón. Todos los derechos reservados.</p>
           </div>
         </div>

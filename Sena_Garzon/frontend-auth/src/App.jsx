@@ -28,7 +28,6 @@ import InstructorDashboard from "./pages/instructor/InstructorDashboard";
 // Páginas de admin
 import UserList from "./pages/admin/UserList";
 import Curso from "./pages/admin/Curso";
-import InstructorList from "./pages/admin/InstructorList";
 // Reportes integrado al dashboard
 
 // Páginas de instructor
@@ -65,7 +64,6 @@ function App() {
           <Route path="/admin" element={<AdminRoute><AdminLayout><AdminDashboard /></AdminLayout></AdminRoute>} />
           <Route path="/admin/users" element={<AdminRoute><AdminLayout><UserList /></AdminLayout></AdminRoute>} />
           <Route path="/admin/cursos" element={<AdminRoute><AdminLayout><Curso /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/instructores" element={<AdminRoute><AdminLayout><InstructorList /></AdminLayout></AdminRoute>} />
           <Route path="/admin/reportes" element={<AdminRoute><AdminLayout><AdminDashboard /></AdminLayout></AdminRoute>} />
           
           {/* Rutas de instructor con InstructorLayout */}

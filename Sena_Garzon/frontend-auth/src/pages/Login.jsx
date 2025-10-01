@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaSignInAlt, FaUserPlus, FaHome } from "react-icons/fa";
+import { initAuthSession, touchActivity } from "../utils/storage";
 
 // Paleta de colores verde intenso
 const PRIMARY_GREEN = '#2E8B57';
@@ -48,6 +49,7 @@ const Login = () => {
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      initAuthSession();
 
       toast.success("Inicio de sesión exitoso");
       
@@ -66,6 +68,17 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+  // Registrar actividad del usuario en esta pantalla (tecleo/click) para consistencia
+  useEffect(() => {
+    const onAnyActivity = () => touchActivity();
+    window.addEventListener('click', onAnyActivity);
+    window.addEventListener('keydown', onAnyActivity);
+    return () => {
+      window.removeEventListener('click', onAnyActivity);
+      window.removeEventListener('keydown', onAnyActivity);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black to-gray-900 overflow-hidden relative">

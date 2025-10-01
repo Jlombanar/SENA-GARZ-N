@@ -28,6 +28,7 @@ import {
   FaHeart,
   FaInfoCircle
 } from "react-icons/fa";
+import aboutSena from "../utils/aboutSena";
 
 // Componente Carrusel
 const Carousel = ({ onSearchChange, searchTerm, onKnowMoreClick }) => {
@@ -186,15 +187,15 @@ const AboutSena = ({ onClose }) => {
         <div style={{ position: 'relative', height: '300px', borderRadius: '20px 20px 0 0', overflow: 'hidden' }}>
           <img 
             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
-            alt="SENA Garzón" 
+            alt={aboutSena.name} 
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.9) 0%, rgba(46, 125, 50, 0.9) 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '40px' }}>
             <h2 style={{ fontSize: '3rem', fontWeight: '800', color: 'white', marginBottom: '16px', textShadow: '0 4px 8px rgba(0,0,0,0.3)' }}>
-              SENA Garzón
+              {aboutSena.name}
             </h2>
             <p style={{ fontSize: '1.2rem', color: 'white', opacity: '0.95', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-              Centro de Formación para el Desarrollo del Huila
+              {aboutSena.slogan}
             </p>
           </div>
         </div>
@@ -207,8 +208,7 @@ const AboutSena = ({ onClose }) => {
               Nuestra Misión
             </h3>
             <p style={{ fontSize: '1.1rem', color: '#4b5563', lineHeight: '1.7', marginBottom: '24px' }}>
-              El SENA Garzón está comprometido con la formación profesional integral que contribuye al desarrollo competitivo 
-              del país a través del mejoramiento de la productividad empresarial y el desarrollo social y tecnológico de los trabajadores.
+              {aboutSena.mission}
             </p>
             
             <h3 style={{ fontSize: '2rem', fontWeight: '700', color: '#1A202C', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -216,8 +216,7 @@ const AboutSena = ({ onClose }) => {
               Nuestra Visión
             </h3>
             <p style={{ fontSize: '1.1rem', color: '#4b5563', lineHeight: '1.7', marginBottom: '32px' }}>
-              Ser reconocida como la institución líder en formación profesional integral y desarrollo tecnológico 
-              del sur del Huila, formando talento humano competente y competitivo.
+              {aboutSena.vision}
             </p>
           </div>
 
@@ -256,31 +255,8 @@ const AboutSena = ({ onClose }) => {
             </div>
           </div>
 
-          {/* Estadísticas */}
-          <div style={{ marginBottom: '40px' }}>
-            <h3 style={{ fontSize: '2rem', fontWeight: '700', color: '#1A202C', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <FaChartLine style={{ color: '#4CAF50' }} />
-              Nuestro Impacto
-            </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>2,500+</div>
-                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Estudiantes Formados</div>
-              </div>
-              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #2196F3 0%, #1565C0 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>15+</div>
-                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Años de Experiencia</div>
-              </div>
-              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #FF9800 0%, #F57C00 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>50+</div>
-                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Cursos Disponibles</div>
-              </div>
-              <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #9C27B0 0%, #6A1B9A 100%)', color: 'white', padding: '24px', borderRadius: '16px' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '8px' }}>95%</div>
-                <div style={{ fontSize: '1rem', opacity: '0.9' }}>Empleabilidad</div>
-              </div>
-            </div>
-          </div>
+        
+ 
 
           {/* Contacto */}
           <div style={{ background: '#F8FAFC', padding: '32px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
@@ -291,26 +267,30 @@ const AboutSena = ({ onClose }) => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
               <div>
                 <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Dirección:</strong></p>
-                <p style={{ color: '#6b7280' }}>Carrera 11 No. 1-50, Garzón, Huila</p>
+                <a href={aboutSena.mapUrl} target="_blank" rel="noreferrer" style={{ color: '#2563eb' }}>{aboutSena.address}</a>
               </div>
               <div>
                 <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Teléfono:</strong></p>
-                <p style={{ color: '#6b7280' }}>(8) 838-7676</p>
+                <a href={`tel:${aboutSena.phone.replace(/[^+0-9]/g,'')}`} style={{ color: '#2563eb' }}>{aboutSena.phone}</a>
               </div>
               <div>
                 <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Email:</strong></p>
-                <p style={{ color: '#6b7280' }}>info@sena.edu.co</p>
+                <a href={`mailto:${aboutSena.email}`} style={{ color: '#2563eb' }}>{aboutSena.email}</a>
               </div>
               <div>
                 <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '8px' }}><strong>Horario:</strong></p>
                 <p style={{ color: '#6b7280' }}>Lunes a Viernes: 7:00 AM - 5:00 PM</p>
               </div>
             </div>
+            <div style={{ marginTop: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <a href={aboutSena.website} target="_blank" rel="noreferrer" style={{ color: '#16a34a' }}>Sitio web</a>
+              <a href={`https://wa.me/${aboutSena.whatsapp.replace(/[^0-9]/g,'')}`} target="_blank" rel="noreferrer" style={{ color: '#16a34a' }}>WhatsApp</a>
+            </div>
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '32px' }}>
             <button 
-              onClick={scrollToTop} 
+              onClick={() => { onClose(); setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0); }} 
               style={{ background: 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', fontSize: '16px', fontWeight: '600', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
             >
               <FaArrowUp />
